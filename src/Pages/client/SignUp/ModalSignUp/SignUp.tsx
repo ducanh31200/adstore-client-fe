@@ -1,8 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Link, useHistory } from "react-router-dom";
-import useAuth from "../../../store/auth";
-import { notifyError, notifySuccess } from "../../../utils/notify";
+import useAuth from "../../../../store/auth";
+import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./style.css";
 
 interface Props {

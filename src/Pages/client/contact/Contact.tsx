@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Nav from "../../Components/common/Nav/nav";
-import payment from "../../img/payments.png";
+import Nav from "../../../Components/common/Nav/nav";
+import payment from "../../../img/payments.png";
 const Contact = () => {
   return (
     <div>

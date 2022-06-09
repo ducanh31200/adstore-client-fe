@@ -2,12 +2,12 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import { PrivateRoute } from "./privateRoute";
-import HomePage from "../Pages/homepage/HomePage";
-import Product from "../Pages/product/Product";
-import ProductDetail from "../Pages/product/ProductDetail";
-import Cart from "../Pages/cart/Cart";
-import Bill from "../Pages/cart/Bill";
-import Contact from "../Pages/contact/Contact";
+import HomePage from "../Pages/client/homepage/HomePage";
+import Product from "../Pages/client/product/Product";
+import ProductDetail from "../Pages/client/product/ProductDetail";
+import Cart from "../Pages/client/cart/Cart";
+import Bill from "../Pages/client/cart/Bill";
+import Contact from "../Pages/client/contact/Contact";
 
 function Router() {
   return (

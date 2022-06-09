@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import ModalSignIn from "../../../Pages/SignIn/ModalSignIn";
-import ModalSignUp from "../../../Pages/SignUp/ModalSignUp/SignUp";
+import ModalSignIn from "../../../Pages/client/SignIn/ModalSignIn";
+import ModalSignUp from "../../../Pages/client/SignUp/ModalSignUp/SignUp";
 import useAuth from "../../../store/auth";
 import { ContainerModal } from "../ContainerModal";
 import ModalInfo from "../PersonalInfo/ModalInfo/personalInfo";

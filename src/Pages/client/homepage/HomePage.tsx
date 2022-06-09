@@ -1,29 +1,22 @@
 import React, { useEffect, useState } from "react";
-import vendor1 from "../../img/amd.jpg";
-import vendor2 from "../../img/apple.jpg";
-import vendor3 from "../../img/asus.png";
-import vendor4 from "../../img/intel.png";
-import vendor5 from "../../img/oppo.jpg";
-import vendor6 from "../../img/dell.jpg";
-import vendor7 from "../../img/samsung.png";
-import vendor8 from "../../img/msi.png";
-import "./style.css";
-import offer1 from "../../img/iphone13.jpg";
-import offer2 from "../../img/samsungs22.jpg";
 
-import payment from "../../img/payments.png";
+import "./style.css";
+import offer1 from "../../../img/iphone13.jpg";
+import offer2 from "../../../img/samsungs22.jpg";
+
+import payment from "../../../img/payments.png";
 import { Link } from "react-router-dom";
-import CategoryCard from "../../Components/pages/homepage/CategoryCard";
+import CategoryCard from "../../../Components/pages/homepage/CategoryCard";
 import {
   FAKE_PRODUCT_DATA,
   CAROUSEL_ITEMS,
-} from "../../constants/base.constants";
+} from "../../../constants/base.constants";
 
-import useAuth from "../../store/auth";
-import Nav from "../../Components/common/Nav/nav";
-import { Carousel } from "../../Components/common/Carousel/Carousel";
-import categoryApi from "../../api/category/category";
-import { ProductCard } from "../../Components/common/Product/ProductCard";
+import useAuth from "../../../store/auth";
+import Nav from "../../../Components/common/Nav/nav";
+import { Carousel } from "../../../Components/common/Carousel/Carousel";
+import categoryApi from "../../../api/category/category";
+import { ProductCard } from "../../../Components/common/Product/ProductCard";
 
 const HomePage = () => {
   const [listCategory, setListCategory] = useState<Array<any>>([]);

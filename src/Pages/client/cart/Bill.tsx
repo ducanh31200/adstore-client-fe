@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Nav from "../../Components/common/Nav/nav";
+import Nav from "../../../Components/common/Nav/nav";
 
-import payment from "../../img/payments.png";
+import payment from "../../../img/payments.png";
 type Props = {};
 const Bill = (props: Props) => {
   return (

@@ -1,13 +1,13 @@
 import React from "react";
-import product1 from "../../img/iphone13.jpg";
-import product2 from "../../img/samsungs22.jpg";
-import product3 from "../../img/laptopasus.jpg";
-import product4 from "../../img/macbook.jpg";
-import product5 from "../../img/applewatch.jpg";
-import payment from "../../img/payments.png";
-import user from "../../img/user.jpg";
+import product1 from "../../../img/iphone13.jpg";
+import product2 from "../../../img/samsungs22.jpg";
+import product3 from "../../../img/laptopasus.jpg";
+import product4 from "../../../img/macbook.jpg";
+import product5 from "../../../img/applewatch.jpg";
+import payment from "../../../img/payments.png";
+import user from "../../../img/user.jpg";
 import { Link, useParams } from "react-router-dom";
-import Nav from "../../Components/common/Nav/nav";
+import Nav from "../../../Components/common/Nav/nav";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
