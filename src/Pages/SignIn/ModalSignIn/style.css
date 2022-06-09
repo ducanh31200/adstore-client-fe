@@ -1,0 +1,19 @@
+.btn-sign-up {
+  position: relative;
+}
+.angle-right {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.radio-password-sign-in {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+.btn-get-otp {
+  color: #fff;
+  background-color: #47c0d0;
+}
