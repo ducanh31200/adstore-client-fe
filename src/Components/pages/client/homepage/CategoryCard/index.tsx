@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ICategory } from "../../../../model/category.model";
+import { ICategory } from "../../../../../model/category.model";
 import "./style.css";
 
 const CategoryCard = (props: ICategory) => {

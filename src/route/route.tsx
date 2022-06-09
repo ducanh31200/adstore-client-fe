@@ -8,6 +8,7 @@ import ProductDetail from "../Pages/client/product/ProductDetail";
 import Cart from "../Pages/client/cart/Cart";
 import Bill from "../Pages/client/cart/Bill";
 import Contact from "../Pages/client/contact/Contact";
+import Dashboard from "../Pages/admin/dashboard/Dashboard";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
       />
       <PrivateRoute path="/cart" component={Cart} exact />
       <PrivateRoute path="/bill" component={Bill} exact />
+      <PrivateRoute path="/dashboard" component={Dashboard} exact />
       <PrivateRoute path="/contact" component={Contact} exact />
     </Switch>
   );

@@ -6,7 +6,7 @@ import offer2 from "../../../img/samsungs22.jpg";
 
 import payment from "../../../img/payments.png";
 import { Link } from "react-router-dom";
-import CategoryCard from "../../../Components/pages/homepage/CategoryCard";
+import CategoryCard from "../../../Components/pages/client/homepage/CategoryCard";
 import {
   FAKE_PRODUCT_DATA,
   CAROUSEL_ITEMS,
