@@ -9,6 +9,7 @@ import Cart from "../Pages/client/cart/Cart";
 import Bill from "../Pages/client/cart/Bill";
 import Contact from "../Pages/client/contact/Contact";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
+import List from "../Pages/admin/user/User";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
       <PrivateRoute path="/bill" component={Bill} exact />
       <PrivateRoute path="/dashboard" component={Dashboard} exact />
       <PrivateRoute path="/contact" component={Contact} exact />
+      <PrivateRoute path="/listuser" component={List} exact />
     </Switch>
   );
 }

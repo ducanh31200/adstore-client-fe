@@ -1,15 +1,15 @@
+// import "./list.scss"
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import Chart from "../../../Components/pages/admin/chart/Chart";
-import Sidebar from "../../../Components/pages/admin/sidabar/Sidebar";
+import Datatable from "../../../Components/pages/admin/datatable/Datatable";
 import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
 
-import "./home.scss";
-
-const Dashboard = () => {
+const List = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
@@ -17,53 +17,6 @@ const Dashboard = () => {
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-  const rows = [
-    {
-      id: 1143155,
-      product: "Acer Nitro 5",
-      img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 785,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2235235,
-      product: "Playstation 5",
-      img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 900,
-      stock: "0",
-      status: "Pending",
-    },
-    {
-      id: 2342353,
-      product: "Redragon S101",
-      img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 35,
-      stock: "10",
-      status: "Pending",
-    },
-    {
-      id: 2357741,
-      product: "Razer Blade 15",
-      img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 920,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2342355,
-      product: "ASUS ROG Strix",
-      img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 2000,
-      stock: "10",
-      status: "Pending",
-    },
-  ];
   return (
     <div className="home">
       <div className="sidebar">
@@ -265,47 +218,10 @@ const Dashboard = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <div className="widgets">
-                <Widget type="user" />
-                <Widget type="order" />
-                <Widget type="earning" />
-                <Widget type="balance" />
-              </div>
-            </div>
-            <Chart title="Doanh thu 6 tháng qua" aspect={2 / 1} />
-            <div className="chart">
-              {" "}
-              <div className="title">Sản phẩm bán chạy</div>
-              <table className="content-table" style={{ width: "100%" }}>
-                <thead>
-                  <tr>
-                    <th>Mã sản phẩm</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng đã bán</th>
-                    <th>Số lượng trong kho</th>
-                    <th>Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.id}</td>
-                      <td className="cellWrapper">
-                        <img className="image" src={item.img}></img>
-                        {item.product}
-                      </td>
-                      <td>{item.amount}</td>
-                      <td>{item.stock}</td>
-                      <td className={`status ${item.status}`}>{item.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <Datatable />;
             </div>
           </div>
         </div>
-
-        <div className="bottom"></div>
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
@@ -314,4 +230,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default List;

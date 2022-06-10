@@ -4,9 +4,57 @@ import { Link } from "react-router-dom";
 // import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import Widget from "../widget/Widget";
+import Chart from "../chart/Chart";
 
 const Sidebar = () => {
   //   const { dispatch } = useContext(DarkModeContext);
+  const rows = [
+    {
+      id: 1143155,
+      product: "Acer Nitro 5",
+      img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
+
+      amount: 785,
+      stock: "10",
+      status: "Approved",
+    },
+    {
+      id: 2235235,
+      product: "Playstation 5",
+      img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
+
+      amount: 900,
+      stock: "0",
+      status: "Pending",
+    },
+    {
+      id: 2342353,
+      product: "Redragon S101",
+      img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
+
+      amount: 35,
+      stock: "10",
+      status: "Pending",
+    },
+    {
+      id: 2357741,
+      product: "Razer Blade 15",
+      img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
+
+      amount: 920,
+      stock: "10",
+      status: "Approved",
+    },
+    {
+      id: 2342355,
+      product: "ASUS ROG Strix",
+      img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
+
+      amount: 2000,
+      stock: "10",
+      status: "Pending",
+    },
+  ];
   return (
     <div className="sidebar">
       <div className="container-fluid">
@@ -85,9 +133,6 @@ const Sidebar = () => {
                 <span className="badge">0</span>
               </a>
             </div>
-
-            <a className="nav-item nav-link">Sign In</a>
-            <a className="nav-item nav-link">Sign Up</a>
           </div>
         </div>
       </div>
@@ -138,8 +183,8 @@ const Sidebar = () => {
             <span>Discount</span>
           </li> */}
         <div className="mb-5">
-          <div className="row border-top px-xl-5">
-            <div className="d-none d-lg-block">
+          <div className="row border-top pr">
+            <div className="d-none d-lg-block" style={{ width: "150px" }}>
               <a
                 className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                 data-toggle="collapse"
@@ -147,25 +192,15 @@ const Sidebar = () => {
                 style={{
                   height: "65px",
                   marginTop: "-1px",
-                  padding: "0 30px",
                 }}
               >
-                <h6 className="m-0">Categories</h6>
-                <i className="fa fa-angle-down text-dark"></i>
+                <i className="fa-solid fa-user i"></i>
+                <h6 className="m-0">Người dùng</h6>
               </a>
               <nav
                 className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
                 id="navbar-vertical"
-              >
-                <div
-                  className="navbar-nav w-100 overflow-hidden"
-                  // style={{ height: "410px" }}
-                >
-                  <a href="" className="nav-item nav-link">
-                    Shoes
-                  </a>
-                </div>
-              </nav>
+              ></nav>
               <a
                 className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                 data-toggle="collapse"
@@ -173,22 +208,25 @@ const Sidebar = () => {
                 style={{
                   height: "65px",
                   marginTop: "-1px",
-                  padding: "0 30px",
                 }}
               >
-                <h6 className="m-0">Categories</h6>
+                <i className="fa-solid fa-box i"></i>
+                <h6 className="m-0">Hàng hóa</h6>
                 <i className="fa fa-angle-down text-dark"></i>
               </a>
               <nav
                 className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
                 id="navbar-vertical2"
               >
-                <div
-                  className="navbar-nav w-100 overflow-hidden"
-                  // style={{ height: "410px" }}
-                >
+                <div className="navbar-nav w-100 overflow-hidden">
                   <a href="" className="nav-item nav-link">
-                    Shoes
+                    Loại hàng
+                  </a>
+                  <a href="" className="nav-item nav-link">
+                    Sản phẩm
+                  </a>
+                  <a href="" className="nav-item nav-link">
+                    Khuyến mãi
                   </a>
                 </div>
               </nav>
@@ -199,10 +237,10 @@ const Sidebar = () => {
                 style={{
                   height: "65px",
                   marginTop: "-1px",
-                  padding: "0 30px",
                 }}
               >
-                <h6 className="m-0">Categories</h6>
+                <i className="fa-solid fa-chart-line i"></i>
+                <h6 className="m-0">Thống kê</h6>
                 <i className="fa fa-angle-down text-dark"></i>
               </a>
               <nav
@@ -214,7 +252,10 @@ const Sidebar = () => {
                   // style={{ height: "410px" }}
                 >
                   <a href="" className="nav-item nav-link">
-                    Shoes
+                    Doanh thu
+                  </a>
+                  <a href="" className="nav-item nav-link">
+                    Đơn hàng
                   </a>
                 </div>
               </nav>
@@ -265,8 +306,42 @@ const Sidebar = () => {
           </div>
         </div>
         <div className="flex-1">
-          Dau khac
-          <div>Dau khac</div>
+          <div className="homeContainer">
+            <div className="widgets">
+              <Widget type="user" />
+              <Widget type="order" />
+              <Widget type="earning" />
+              <Widget type="balance" />
+            </div>
+          </div>
+          <Chart title="Last 6 Months (Revenue)" aspect={2 / 1} />
+          <div>
+            <table className="content-table" style={{ width: "100%" }}>
+              <thead>
+                <tr>
+                  <th>Mã sản phẩm</th>
+                  <th>Tên sản phẩm</th>
+                  <th>Số lượng đã bán</th>
+                  <th>Số lượng trong kho</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.id}</td>
+                    <td className="cellWrapper">
+                      <img className="image" src={item.img}></img>
+                      {item.product}
+                    </td>
+                    <td>{item.amount}</td>
+                    <td>{item.stock}</td>
+                    <td className={`status ${item.status}`}>{item.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 

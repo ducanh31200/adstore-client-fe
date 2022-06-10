@@ -55,7 +55,9 @@ const Widget = (props: Props) => {
         <span className="counter">
           {data.isMoney && "$"} {amount}
         </span>
-        <span className="link">{data.link}</span>
+        <span className="link">
+          <a href="#">{data.link}</a>
+        </span>
       </div>
       <div className="right">
         <div className="percentage positive">
