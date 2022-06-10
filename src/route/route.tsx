@@ -10,6 +10,8 @@ import Bill from "../Pages/client/cart/Bill";
 import Contact from "../Pages/client/contact/Contact";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
 import List from "../Pages/admin/user/User";
+import New from "../Pages/admin/new/New";
+import { categoryInputs, productInputs } from "./formSource";
 
 function Router() {
   return (
@@ -27,6 +29,9 @@ function Router() {
       <PrivateRoute path="/dashboard" component={Dashboard} exact />
       <PrivateRoute path="/contact" component={Contact} exact />
       <PrivateRoute path="/listuser" component={List} exact />
+      <PrivateRoute path="/new" exact>
+        <New inputs={categoryInputs} title="Add New Product" />
+      </PrivateRoute>
     </Switch>
   );
 }
