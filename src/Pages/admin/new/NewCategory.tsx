@@ -1,11 +1,13 @@
 import "./new.scss";
 import style from "./style.module.css";
 import React, { useState } from "react";
-import Specs from "./specs";
+
 import { useForm } from "react-hook-form";
 import _ from "lodash";
 import addimg from "../../../img/addimg.png";
 import removeimg from "../../../img/removeimg.png";
+import Specs from "./specs";
+
 type Props = {
   inputs: any;
   title: any;
@@ -111,18 +113,12 @@ const NewCategory = (props: Props) => {
                       className="col-span-1 h-[200px] w-full rounded-[10px] border relative"
                       key={index}
                     >
-                      <img
-                        className="left-imageShow"
-                        src={item}
-                        alt="images"
-                        // className="rounded-[10px] h-full w-full object-cover"
-                      />
+                      <img className="left-imageShow" src={item} alt="images" />
                       <div className="absolute rounded-[50%] top-[-10px] right-[-10px] h-[30px] w-[30px] bg-red-600 cursor-pointer">
                         <img
                           className="left-imageAdd"
                           src={removeimg}
                           alt="remove"
-                          // className="rounded-[50%] h-full w-full object-cover"
                           onClick={function () {
                             handleRemoveImage(index);
                           }}
@@ -130,21 +126,6 @@ const NewCategory = (props: Props) => {
                       </div>
                     </div>
                   ))}
-
-                  {pickedImages.length < 10 && (
-                    <label
-                      className="col-span-1 h-[200px] w-full flex items-center justify-center rounded-[10px] cursor-pointer bg-gray-100 hover:opacity-50 active:scale-95"
-                      htmlFor="product_images"
-                    >
-                      <div className="w-[100px] h-[100px]">
-                        <img
-                          src="/icons/ic_add_image.png"
-                          alt="add_image"
-                          className="w-full h-full"
-                        />
-                      </div>
-                    </label>
-                  )}
                 </div>
               ) : (
                 <label
