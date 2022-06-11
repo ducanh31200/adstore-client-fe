@@ -9,10 +9,15 @@ type Props = {
 
 const Specs = ({ register, id }: Props) => {
   return (
-    <div>
-      <label>Specs</label>
-      <input {...register(`name_${id}`)} type="text" placeholder="Name Specs" />
-      <input {...register(`values_${id}`)} type="text" placeholder="Value" />
+    <div className="formInput">
+      <div className="specs-input">
+        <input
+          {...register(`name_${id}`)}
+          type="text"
+          placeholder="Name Spec"
+        />
+        <input {...register(`values_${id}`)} type="text" placeholder="Value" />
+      </div>
     </div>
   );
 };
