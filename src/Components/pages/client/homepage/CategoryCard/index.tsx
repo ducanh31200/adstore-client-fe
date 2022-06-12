@@ -10,7 +10,7 @@ const CategoryCard = (props: ICategory) => {
       <div className="card product-item border-0 mb-4">
         <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
           <p className="text-right">{products_length} Products</p>
-          <Link to={`/product/${name}`}>
+          <Link to={`/products/${name}`}>
             <img
               className="img-fluid h-full w-full object-contain"
               src={image_url}

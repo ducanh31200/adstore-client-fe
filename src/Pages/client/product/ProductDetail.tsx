@@ -11,7 +11,7 @@ import Nav from "../../../Components/common/Nav/nav";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
-  console.log("params", params);
+  // console.log("params", params);
   const { name } = params;
   React.useEffect(() => {
     if (name) {

@@ -21,7 +21,7 @@ function Router() {
       <PrivateRoute path="/products" component={Product} exact />
       <PrivateRoute path="/products/:name" component={Product} exact />
       <PrivateRoute
-        path="/product/:category/:id"
+        path="/products/:category/:id"
         component={ProductDetail}
         exact
       />

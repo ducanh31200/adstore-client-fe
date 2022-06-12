@@ -7,6 +7,9 @@ import _ from "lodash";
 import addimg from "../../../img/addimg.png";
 import removeimg from "../../../img/removeimg.png";
 import Specs from "./specs";
+import categoryApi from "../../../api/category/category";
+import { notifyError, notifySuccess } from "../../../utils/notify";
+import { useHistory, useLocation } from "react-router-dom";
 
 type Props = {
   inputs: any;
@@ -19,8 +22,9 @@ const NewCategory = (props: Props) => {
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-
-  const { register, handleSubmit } = useForm();
+  const history = useHistory();
+  const location = useLocation();
+  const { register, handleSubmit, reset } = useForm();
 
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
@@ -58,7 +62,7 @@ const NewCategory = (props: Props) => {
     // setValue(name, newImagesFiles);
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
     const nameCategory = data.name;
     delete data.name;
     var arr1 = Object.keys(data);
@@ -89,7 +93,15 @@ const NewCategory = (props: Props) => {
       specsModel: specs_model,
       image_base64: imagesBase64,
     };
-    console.log(payload);
+    if (imagesBase64) {
+      const res = await categoryApi.create(payload);
+      if (res.status === 200) {
+        reset();
+        handleRemoveImage(0);
+        notifySuccess(res.data.msg);
+        window.location.reload();
+      } else notifyError(res.message);
+    } else notifyError("Vui lòng thêm hình ảnh !");
   };
 
   return (
@@ -154,6 +166,7 @@ const NewCategory = (props: Props) => {
                   <label>{input.label}</label>
                   <input
                     type={input.type}
+                    required
                     placeholder={input.label}
                     {...register(`${input.key}`)}
                   />

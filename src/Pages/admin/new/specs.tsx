@@ -14,9 +14,15 @@ const Specs = ({ register, id }: Props) => {
         <input
           {...register(`name_${id}`)}
           type="text"
+          required
           placeholder="Name Spec"
         />
-        <input {...register(`values_${id}`)} type="text" placeholder="Value" />
+        <input
+          {...register(`values_${id}`)}
+          type="text"
+          placeholder="Value"
+          required
+        />
       </div>
     </div>
   );

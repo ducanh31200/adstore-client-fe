@@ -9,6 +9,8 @@ import removeimg from "../../../img/removeimg.png";
 import categoryApi from "../../../api/category/category";
 import ShowSpecs from "./showSpecs";
 import useCate from "../../../store/category";
+import { notifyError, notifySuccess } from "../../../utils/notify";
+import productApi from "../../../api/product/productApi";
 type Props = {
   inputs: any;
   title: any;
@@ -84,8 +86,8 @@ const NewProduct = (props: Props) => {
     setCurrentCate(value);
   };
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
+    // console.log(data);
     let arr1 = Object.keys(data);
     let specs: { [k: string]: any } = {};
     const indexName = arr1.filter((item) => item.toString().startsWith("spec"));
@@ -109,8 +111,15 @@ const NewProduct = (props: Props) => {
       image_base64: imagesBase64,
     };
     console.log(payload);
-    reset();
-    handleRemoveImage(0);
+    if (imagesBase64) {
+      const res = await productApi.create(payload);
+      if (res.status === 200) {
+        reset();
+        handleRemoveImage(0);
+        notifySuccess(res.data.msg);
+        window.location.reload();
+      } else notifyError(res.message);
+    } else notifyError("Vui lòng thêm hình ảnh !");
   };
 
   return (

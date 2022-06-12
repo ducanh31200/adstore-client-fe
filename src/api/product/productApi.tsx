@@ -4,10 +4,8 @@ import axiosClient from "../axiosClient";
 import { ReturnReponse } from "../response.interface";
 
 const productApi = {
-  productCategory(
-    data: IProductCategory
-  ): Promise<ReturnReponse<{ data: Array<ICategory> }>> {
-    const url = "category/query";
+  create(data: any): Promise<ReturnReponse<any>> {
+    const url = "product/create";
     return axiosClient.post(url, data);
   },
 };

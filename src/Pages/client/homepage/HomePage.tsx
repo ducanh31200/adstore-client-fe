@@ -24,14 +24,14 @@ const HomePage = () => {
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();
-      console.log(list);
+      // console.log(list);
       setListCategory(list.data.data);
     })();
   }, []);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-
+  // console.log(stateAuth.data?.data?.bag_items_length);
   return (
     <div>
       <div className="container-fluid">
@@ -106,7 +106,13 @@ const HomePage = () => {
             </a>
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.bag_items_length
+                  ? stateAuth.data?.data?.bag_items_length
+                  : 0}
+              </span>
             </a>
           </div>
         </div>

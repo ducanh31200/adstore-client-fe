@@ -11,10 +11,14 @@ const categoryApi = {
     const url = "category/read";
     return axiosClient.post(url, data);
   },
-  // signup(data: IReqSignUp): Promise<ReturnReponse<IResLogin>> {
-  //   const url = "default/login"; //params
-  //   return axiosClient.post(url, data);
-  // },
+  getProduct(data: any): Promise<ReturnReponse<any>> {
+    const url = "category/query"; //params
+    return axiosClient.post(url, data);
+  },
+  create(data: any): Promise<ReturnReponse<any>> {
+    const url = "category/create"; //params
+    return axiosClient.post(url, data);
+  },
 };
 
 export default categoryApi;

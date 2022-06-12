@@ -5,6 +5,8 @@ import {
   logoutAsync,
   getOTPAsync,
   signUpAsync,
+  changePhoneAsync,
+  updateInfoAsync,
 } from "./auth.action";
 import { selector } from "./auth.selector";
 
@@ -32,6 +34,8 @@ const actions = {
   logoutAsync,
   getOTPAsync,
   signUpAsync,
+  changePhoneAsync,
+  updateInfoAsync,
 };
 
 const Store = createStore({

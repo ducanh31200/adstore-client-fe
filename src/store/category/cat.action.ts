@@ -11,7 +11,7 @@ export const getCategory =
 
     if (result.status === 200) {
       setState({ ...getState(), data: result.data });
-      console.log(result.data);
+      // console.log(result.data);
       return true;
     }
     return false;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import categoryApi from "../../../api/category/category";
 import productApi from "../../../api/product/productApi";
 import Nav from "../../../Components/common/Nav/nav";
 import product7 from "../../../img/airpods.jpg";
@@ -15,18 +16,21 @@ type Props = { name: string; id: string };
 const Product = (props: Props) => {
   const params = useParams<any>();
   const [listProduct, setListProduct] = useState<Array<any>>([]);
-  console.log("params", params);
-  const { nameCategory } = params;
-  // React.useEffect(() => {
-  //   (async () => {
-  //     if (nameCategory) {
-  //       const list = await productApi.productCategory({ name: nameCategory });
-  //       console.log(list);
-  //       setListProduct(list.data.data);
-  //     }
-  //   })();
-  // }, []);
 
+  const { nameCategory } = params;
+  if (params) {
+    React.useEffect(() => {
+      (async () => {
+        const result = await categoryApi.getProduct(params);
+        const { data } = result.data;
+        console.log(data);
+        setListProduct(data);
+      })();
+    }, []);
+  } else {
+  }
+
+  // console.log(listProduct);
   return (
     <div>
       <div className="container-fluid">

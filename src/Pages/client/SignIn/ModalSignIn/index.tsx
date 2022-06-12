@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useAuth from "../../../../store/auth";
 import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./style.css";
@@ -19,16 +19,25 @@ const ModalSignIn = (props: Props) => {
     closeModal();
     openSignUpModal();
   };
-  const history = useHistory();
 
   const submit = async (data: any, e: any) => {
     e.preventDefault();
+    const phoneRegex =
+      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    const res = phoneRegex.test(data.email_or_phone);
+    if (res) {
+      if (data.email_or_phone[0] === "0") {
+        const head = "+84";
+        const number = data.email_or_phone.slice(1);
+        data.email_or_phone = head.concat(number);
+      }
+    }
     const result = await actionAuth.loginAsync(data);
-    // console.log("result", result);
+
     if (result) {
+      const info = await actionAuth.getUserAsync();
       reset();
       closeModal();
-      history.push("/");
     }
   };
   const handleGetOTP = async () => {

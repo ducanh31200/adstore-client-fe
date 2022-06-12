@@ -25,7 +25,7 @@ export const getProductCategory =
   (payload: IReqSignUp) =>
   async ({ setState, getState }: Actions) => {
     const result = await authApi.signup(payload);
-    console.log(result);
+    // console.log(result);
     if (result.status === 200) {
       setState({ ...getState(), isLoggedIn: true, data: result.data });
       return result.data.msg;

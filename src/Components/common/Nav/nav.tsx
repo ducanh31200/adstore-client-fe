@@ -20,6 +20,10 @@ const Nav = () => {
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
+  const handleShowInfo = () => {
+    openInfoModal();
+    const info = actionAuth.getUserAsync();
+  };
 
   const location = useLocation();
   return (
@@ -107,17 +111,17 @@ const Nav = () => {
                   Home
                 </Link>
                 <Link
-                  to="/product"
+                  to="/products"
                   className={`nav-item nav-link ${
-                    location.pathname === "/product" ? "active" : ""
+                    location.pathname === "/products" ? "active" : ""
                   }`}
                 >
                   Product
                 </Link>
                 <Link
-                  to="/productDetail"
+                  to="/products"
                   className={`nav-item nav-link ${
-                    location.pathname === "/productDetail" ? "active" : ""
+                    location.pathname === "/products" ? "active" : ""
                   }`}
                 >
                   Product Detail
@@ -176,22 +180,26 @@ const Nav = () => {
                     <div className="wrap_contentHover">
                       <div className="contentHover py-[16px]">
                         <Link
-                          to="/"
-                          onClick={openInfoModal}
+                          to={location.pathname}
+                          onClick={handleShowInfo}
                           className="menuProfile menuLinkHover"
                         >
                           Thông tin cá nhân
                         </Link>
-                        <Link to="/" className="menuProfile menuLinkHover">
+                        <Link
+                          to={location.pathname}
+                          className="menuProfile menuLinkHover"
+                        >
                           Tin nhắn
                         </Link>
                         <div className="lineMenu"></div>
-                        <a
+                        <Link
+                          to={location.pathname}
                           className="menuProfile menuLinkHover text-red-500 font-bold"
                           onClick={handleLogout}
                         >
                           Đăng xuất
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>

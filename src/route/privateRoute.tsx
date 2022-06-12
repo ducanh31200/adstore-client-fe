@@ -19,7 +19,6 @@ export const PrivateRoute = (props: IPrivateRoute) => {
 
   const fetchAuth = async () => {
     const token = getFromLocalStorage("accessToken");
-    console.log("token", token);
     if (!token) {
     } else {
       const res = await actionAuth.getUserAsync();
