@@ -12,6 +12,14 @@ const productApi = {
     const url = "product/list";
     return axiosClient.post(url, data);
   },
+  read(data: any): Promise<ReturnReponse<any>> {
+    const url = "product/read";
+    return axiosClient.post(url, data);
+  },
+  comment(data: any): Promise<ReturnReponse<any>> {
+    const url = "product/readComments";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default productApi;

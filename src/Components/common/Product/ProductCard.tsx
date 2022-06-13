@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export const ProductCard = ({ product }: { product: any }) => {
+  console.log("cat", product.category);
   return (
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="card product-item border-0 mb-4">

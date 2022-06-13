@@ -57,7 +57,7 @@ const Product = (props: Props) => {
   listCategory.forEach((item: any) => {
     totalproductcat = totalproductcat + item.products_length;
   });
-
+  console.log(listProduct);
   return (
     <div>
       <div className="container-fluid">
@@ -354,78 +354,6 @@ const Product = (props: Props) => {
                 </form>
               </div>
             )}
-            {/* <div className="mb-5">
-              <h5 className="font-weight-semi-bold mb-4">Filter by size</h5>
-              <form>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    defaultChecked
-                    id="size-all"
-                  />
-                  <label className="custom-control-label" htmlFor="size-all">
-                    All Size
-                  </label>
-                  <span className="badge border font-weight-normal">1000</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="size-1"
-                  />
-                  <label className="custom-control-label" htmlFor="size-1">
-                    XS
-                  </label>
-                  <span className="badge border font-weight-normal">150</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="size-2"
-                  />
-                  <label className="custom-control-label" htmlFor="size-2">
-                    S
-                  </label>
-                  <span className="badge border font-weight-normal">295</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="size-3"
-                  />
-                  <label className="custom-control-label" htmlFor="size-3">
-                    M
-                  </label>
-                  <span className="badge border font-weight-normal">246</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="size-4"
-                  />
-                  <label className="custom-control-label" htmlFor="size-4">
-                    L
-                  </label>
-                  <span className="badge border font-weight-normal">145</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="size-5"
-                  />
-                  <label className="custom-control-label" htmlFor="size-5">
-                    XL
-                  </label>
-                  <span className="badge border font-weight-normal">168</span>
-                </div>
-              </form>
-            </div> */}
           </div>
 
           <div className="col-lg-9 col-md-12">
@@ -484,40 +412,6 @@ const Product = (props: Props) => {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
               />
-
-              {/* <div className="col-12 pb-1">
-                <nav aria-label="Page navigation">
-                  <ul className="pagination justify-content-center mb-3">
-                    <li className="page-item disabled">
-                      <a className="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                        <span className="sr-only">Previous</span>
-                      </a>
-                    </li>
-                    <li className="page-item active">
-                      <a className="page-link" href="#">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                        <span className="sr-only">Next</span>
-                      </a>
-                    </li>
-                  </ul>
-                </nav>
-              </div> */}
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import product1 from "../../../img/iphone13.jpg";
 import product2 from "../../../img/samsungs22.jpg";
 import product3 from "../../../img/laptopasus.jpg";
@@ -8,16 +8,46 @@ import payment from "../../../img/payments.png";
 import user from "../../../img/user.jpg";
 import { Link, useParams } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
+import productApi from "../../../api/product/productApi";
+import { IProduct } from "../../../model/product.model";
+import { moneyFormater } from "../../../utils/moneyFormater";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
-  // console.log("params", params);
-  const { name } = params;
-  React.useEffect(() => {
-    if (name) {
-      // API have name here
-    }
-  }, []);
+  const { name, id } = params;
+  const initProduct: IProduct = {
+    quantity: 0,
+    colors: [],
+    enable: true,
+    _id: "",
+    name: "",
+    code: "",
+    image_url: "",
+    category: "",
+    desc: "",
+    specs: [],
+    price: 0,
+    sale: 0,
+    total_rate: 0,
+  };
+  const [product, setProduct] = useState(initProduct);
+  const [comment, setComment] = useState(initProduct);
+  if (id) {
+    React.useEffect(() => {
+      (async () => {
+        const result = await productApi.read({
+          _id: id,
+        });
+        const comment = await productApi.comment({
+          _id: id,
+        });
+        setComment(comment.data.data);
+        setProduct(result.data.data);
+      })();
+    }, []);
+  }
+  console.log("product", product);
+  console.log("product", comment);
   return (
     <div>
       <div className="container-fluid">
@@ -110,7 +140,7 @@ const ProductDetail = (props: Props) => {
               <a href="">Home</a>
             </p>
             <p className="m-0 px-2">-</p>
-            <p className="m-0">Shop Detail</p>
+            <p className="m-0">Product Detail</p>
           </div>
         </div>
       </div>
@@ -165,7 +195,18 @@ const ProductDetail = (props: Props) => {
               </div>
               <small className="pt-1">(50 Reviews)</small>
             </div>
-            <h3 className="font-weight-semi-bold mb-4">$150.00</h3>
+            <div className="justify-content-center">
+              <h6>{moneyFormater(product.price - product.sale)}</h6>
+
+              {product.sale !== 0 && (
+                <h6
+                  className="text-muted"
+                  style={{ textDecoration: "line-through" }}
+                >
+                  {moneyFormater(product.price)}
+                </h6>
+              )}
+            </div>
             <p className="mb-4"></p>
             <div className="d-flex mb-3">
               <p className="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
@@ -366,41 +407,32 @@ const ProductDetail = (props: Props) => {
             <div className="tab-content">
               <div className="tab-pane fade show active" id="tab-pane-1">
                 <h4 className="mb-3">Product Description</h4>
-                <p></p>
+                <p>{product.desc}</p>
                 <p></p>
               </div>
               <div className="tab-pane fade" id="tab-pane-2">
                 <h4 className="mb-3">Additional Information</h4>
                 <p></p>
-                <div className="row">
-                  <div className="col-md-6">
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item px-0"></li>
-                      <li className="list-group-item px-0"></li>
-                      <li className="list-group-item px-0"></li>
-                      <li className="list-group-item px-0"></li>
-                    </ul>
-                  </div>
-                  <div className="col-md-6">
-                    <ul className="list-group list-group-flush">
-                      <li className="list-group-item px-0">
-                        Sit erat duo lorem duo ea consetetur, et eirmod
-                        takimata.
-                      </li>
-                      <li className="list-group-item px-0">
-                        Amet kasd gubergren sit sanctus et lorem eos sadipscing
-                        at.
-                      </li>
-                      <li className="list-group-item px-0">
-                        Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                      </li>
-                      <li className="list-group-item px-0">
-                        Takimata ea clita labore amet ipsum erat justo voluptua.
-                        Nonumy.
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+
+                <table
+                  className="content-table"
+                  style={{ width: "50%", margin: "0 auto" }}
+                >
+                  <thead>
+                    <tr>
+                      <th key="1"></th>
+                      <th key="2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.specs.map((item, index) => (
+                      <tr>
+                        <td>{product.specs[index].name}</td>
+                        <td>{item.value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
               <div className="tab-pane fade" id="tab-pane-3">
                 <div className="row">
@@ -414,13 +446,6 @@ const ProductDetail = (props: Props) => {
                         style={{ width: "45px" }}
                       />
                       <div className="media-body">
-                        <h6>
-                          John Doe
-                          <small>
-                            {" "}
-                            - <i>01 Jan 2045</i>
-                          </small>
-                        </h6>
                         <div className="text-primary mb-2">
                           <i className="fas fa-star"></i>
                           <i className="fas fa-star"></i>
@@ -428,11 +453,7 @@ const ProductDetail = (props: Props) => {
                           <i className="fas fa-star-half-alt"></i>
                           <i className="far fa-star"></i>
                         </div>
-                        <p>
-                          Diam amet duo labore stet elitr ea clita ipsum, tempor
-                          labore accusam ipsum et no at. Kasd diam tempor rebum
-                          magna dolores sed sed eirmod ipsum.
-                        </p>
+                        <p></p>
                       </div>
                     </div>
                   </div>
@@ -650,56 +671,6 @@ const ProductDetail = (props: Props) => {
             </div>
             <div className="col-lg-8 col-md-12">
               <div className="row">
-                <div className="col-md-4 mb-5">
-                  <h5 className="font-weight-bold text-dark mb-4">
-                    Quick Links
-                  </h5>
-                  <div className="d-flex flex-column justify-content-start">
-                    <a className="text-dark mb-2" href="index.html">
-                      <i className="fa fa-angle-right mr-2"></i>Home
-                    </a>
-                    <a className="text-dark mb-2" href="shop.html">
-                      <i className="fa fa-angle-right mr-2"></i>Our Shop
-                    </a>
-                    <a className="text-dark mb-2" href="detail.html">
-                      <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                    </a>
-                    <a className="text-dark mb-2" href="cart.html">
-                      <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                    </a>
-                    <a className="text-dark mb-2" href="checkout.html">
-                      <i className="fa fa-angle-right mr-2"></i>Checkout
-                    </a>
-                    <a className="text-dark" href="contact.html">
-                      <i className="fa fa-angle-right mr-2"></i>Contact Us
-                    </a>
-                  </div>
-                </div>
-                <div className="col-md-4 mb-5">
-                  <h5 className="font-weight-bold text-dark mb-4">
-                    Quick Links
-                  </h5>
-                  <div className="d-flex flex-column justify-content-start">
-                    <a className="text-dark mb-2" href="index.html">
-                      <i className="fa fa-angle-right mr-2"></i>Home
-                    </a>
-                    <a className="text-dark mb-2" href="shop.html">
-                      <i className="fa fa-angle-right mr-2"></i>Our Shop
-                    </a>
-                    <a className="text-dark mb-2" href="detail.html">
-                      <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                    </a>
-                    <a className="text-dark mb-2" href="cart.html">
-                      <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                    </a>
-                    <a className="text-dark mb-2" href="checkout.html">
-                      <i className="fa fa-angle-right mr-2"></i>Checkout
-                    </a>
-                    <a className="text-dark" href="contact.html">
-                      <i className="fa fa-angle-right mr-2"></i>Contact Us
-                    </a>
-                  </div>
-                </div>
                 <div className="col-md-4 mb-5">
                   <h5 className="font-weight-bold text-dark mb-4">
                     Newsletter
