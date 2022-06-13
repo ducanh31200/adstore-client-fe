@@ -19,8 +19,8 @@ import categoryApi from "../../../api/category/category";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
 
 const HomePage = () => {
-  const [listCategory, setListCategory] = useState<Array<any>>([]);
   const [stateAuth, actionAuth] = useAuth();
+  const [listCategory, setListCategory] = useState<Array<any>>([]);
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();
@@ -28,10 +28,7 @@ const HomePage = () => {
       setListCategory(list.data.data);
     })();
   }, []);
-  const handleLogout = () => {
-    actionAuth.logoutAsync();
-  };
-  // console.log(stateAuth.data?.data?.bag_items_length);
+
   return (
     <div>
       <div className="container-fluid">
@@ -102,7 +99,13 @@ const HomePage = () => {
           <div className="col-lg-3 col-6 text-right">
             <a href="" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
             </a>
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>

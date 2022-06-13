@@ -15,6 +15,7 @@ const ModalInfo = (props: Props) => {
   const [authState, actionAuth] = useAuth();
   const [phoneOTP, setPhoneOTP] = useState(false);
   const [emailOTP, setEmailOTP] = useState(false);
+  let formatPhone = "0";
   const submit = async (data: any, e: any) => {
     e.preventDefault();
     const address = {
@@ -95,9 +96,19 @@ const ModalInfo = (props: Props) => {
     }
   };
   const handleChangePhone = async () => {
-    const phone = (document.getElementById("phone") as HTMLInputElement).value;
+    let phone = (document.getElementById("phone") as HTMLInputElement).value;
     const code = (document.getElementById("phoneotp") as HTMLInputElement)
       .value;
+    const phoneRegex =
+      /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    const res = phoneRegex.test(phone);
+    if (res) {
+      if (phone[0] === "0") {
+        const head = "+84";
+        const number = phone.slice(1);
+        phone = head.concat(number);
+      }
+    }
     if (phone === "") {
       notifyError("Vui lòng nhập số điện thoại");
       return;
@@ -202,7 +213,7 @@ const ModalInfo = (props: Props) => {
                     ? ""
                     : authState.data?.data?.phone === ""
                     ? "Chưa có"
-                    : authState.data?.data?.phone
+                    : formatPhone.concat(authState.data?.data?.phone.slice(3))
                 }
                 aria-describedby="basic-addon1"
                 {...register("phone")}

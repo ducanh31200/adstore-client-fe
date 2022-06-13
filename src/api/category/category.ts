@@ -1,3 +1,4 @@
+import { AnySchema } from "yup";
 import { ICategory } from "../../model/category.model";
 import axiosClient from "../axiosClient";
 import { ReturnListReponse, ReturnReponse } from "../response.interface";
@@ -7,7 +8,7 @@ const categoryApi = {
     const url = "category/list";
     return axiosClient.get(url);
   },
-  read(data: any): Promise<ReturnReponse<{ data: any }>> {
+  read(data: any): Promise<ReturnReponse<any>> {
     const url = "category/read";
     return axiosClient.post(url, data);
   },

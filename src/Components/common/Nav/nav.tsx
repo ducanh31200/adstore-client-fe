@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import categoryApi from "../../../api/category/category";
 import ModalSignIn from "../../../Pages/client/SignIn/ModalSignIn";
 import ModalSignUp from "../../../Pages/client/SignUp/ModalSignUp/SignUp";
 import useAuth from "../../../store/auth";
@@ -17,6 +18,14 @@ const Nav = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [listCategory, setListCategory] = useState<Array<any>>([]);
+  React.useEffect(() => {
+    (async () => {
+      const list = await categoryApi.list();
+      // console.log(list);
+      setListCategory(list.data.data);
+    })();
+  }, []);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
@@ -45,37 +54,11 @@ const Nav = () => {
             style={{ width: "calc(100% - 30px)", zIndex: "10" }}
           >
             <div className="navbar-nav w-100 overflow-hidden">
-              <div className="nav-item dropdown">
-                <a href="#" className="nav-link" data-toggle="dropdown">
-                  Phone <i className="fa fa-angle-down float-right mt-1"></i>
+              {listCategory.map((item, index) => (
+                <a key={index} href="" className="nav-item nav-link">
+                  {item.name}
                 </a>
-                <div className="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                  <a href="" className="dropdown-item">
-                    Iphone
-                  </a>
-                  <a href="" className="dropdown-item">
-                    Samsung
-                  </a>
-                  <a href="" className="dropdown-item">
-                    Nokia
-                  </a>
-                </div>
-              </div>
-              <a href="" className="nav-item nav-link">
-                Laptop
-              </a>
-              <a href="" className="nav-item nav-link">
-                PC
-              </a>
-              <a href="" className="nav-item nav-link">
-                Máy tính bảng
-              </a>
-              <a href="" className="nav-item nav-link">
-                Thiết bị thông minh
-              </a>
-              <a href="" className="nav-item nav-link">
-                Phụ kiện
-              </a>
+              ))}
             </div>
           </nav>
         </div>
@@ -117,14 +100,6 @@ const Nav = () => {
                   }`}
                 >
                   Product
-                </Link>
-                <Link
-                  to="/products"
-                  className={`nav-item nav-link ${
-                    location.pathname === "/products" ? "active" : ""
-                  }`}
-                >
-                  Product Detail
                 </Link>
                 <div className="nav-item dropdown">
                   <a

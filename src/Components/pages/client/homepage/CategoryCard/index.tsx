@@ -12,7 +12,7 @@ const CategoryCard = (props: ICategory) => {
           <p className="text-right">{products_length} Products</p>
           <Link to={`/products/${name}`}>
             <img
-              className="img-fluid h-full w-full object-contain"
+              className="img-fluid h-75 w-75 object-contain"
               src={image_url}
               alt=""
             />

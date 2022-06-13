@@ -81,9 +81,11 @@ const NewProduct = (props: Props) => {
   };
 
   const handleShowSpecs = (e: any) => {
-    setValue("category", e.target.value);
-    const value = e.target.value;
-    setCurrentCate(value);
+    if (e.target.index !== 0) {
+      setValue("category", e.target.value);
+      const value = e.target.value;
+      setCurrentCate(value);
+    }
   };
 
   const onSubmit = async (data: any) => {
@@ -114,9 +116,9 @@ const NewProduct = (props: Props) => {
     if (imagesBase64) {
       const res = await productApi.create(payload);
       if (res.status === 200) {
+        notifySuccess("Thêm sản phẩm thành công !");
         reset();
         handleRemoveImage(0);
-        notifySuccess(res.data.msg);
         window.location.reload();
       } else notifyError(res.message);
     } else notifyError("Vui lòng thêm hình ảnh !");
@@ -202,6 +204,7 @@ const NewProduct = (props: Props) => {
                   ) : (
                     <div className="select">
                       <select onChange={handleShowSpecs}>
+                        <option>Chọn</option>
                         {listCategory.map((item: any, index: any) => (
                           <option key={index} value={item.name}>
                             {item.name}

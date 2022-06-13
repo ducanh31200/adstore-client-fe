@@ -13,13 +13,12 @@ import { notifyError, notifySuccess } from "../../utils/notify";
 type Actions = { setState: any; getState: () => State; dispatch: any };
 
 export const loginAsync =
-  (payload: IReqSignIn) =>
+  (payload: any) =>
   async ({ setState, getState }: Actions) => {
     const result = await authApi.login(payload);
 
     if (result.status === 200) {
       saveToLocalStorage("accessToken", result.data.accessToken);
-
       setState({ ...getState(), isLoggedIn: true });
       notifySuccess("Đăng nhập thành công");
       return true;
@@ -33,10 +32,11 @@ export const getUserAsync =
   async ({ setState, getState }: Actions) => {
     const result = await authApi.getUser();
     const surface = await authApi.surface();
-
-    result.data.data.bag_items_length = surface.data.data.bag_items_length;
-    result.data.data.notifications_length =
-      surface.data.data.notifications_length;
+    if (surface.status === 200) {
+      result.data.data.bag_items_length = surface.data.data.bag_items_length;
+      result.data.data.notifications_length =
+        surface.data.data.notifications_length;
+    }
     if (result.status === 200) {
       setState({ ...getState(), isLoggedIn: true, data: result.data });
       return true;
