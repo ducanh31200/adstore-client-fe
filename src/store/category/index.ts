@@ -1,5 +1,5 @@
 import { createHook, createStore } from "react-sweet-state";
-import { getCategory } from "./cat.action";
+import { GetListCategory, DeleteCategory } from "./cat.action";
 import { selector } from "./cat.selector";
 
 export type State = {
@@ -25,7 +25,8 @@ const initialState: State = {
 };
 
 const actions = {
-  getCategory,
+  GetListCategory,
+  DeleteCategory,
 };
 
 const Store = createStore({

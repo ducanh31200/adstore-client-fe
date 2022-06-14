@@ -55,7 +55,11 @@ const Nav = () => {
           >
             <div className="navbar-nav w-100 overflow-hidden">
               {listCategory.map((item, index) => (
-                <a key={index} href="" className="nav-item nav-link">
+                <a
+                  href={`/products/${item.name}`}
+                  key={index}
+                  className="nav-item nav-link"
+                >
                   {item.name}
                 </a>
               ))}

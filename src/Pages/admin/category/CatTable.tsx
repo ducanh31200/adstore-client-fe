@@ -1,6 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useCate from "../../../store/category";
 
 const userColumns = [
   { field: "id", headerName: "ID", width: 70 },
@@ -24,11 +25,11 @@ const userColumns = [
   },
 ];
 
-const CatTable = (list: any) => {
-  const [data, setData] = useState(list.list);
-  console.log("list", data);
-  const handleDelete = (id: string) => {
-    setData(data.filter((item: any) => item.id !== id));
+const CatTable = () => {
+  const [category, actionCategory] = useCate();
+
+  const handleDelete = (_id: string) => {
+    actionCategory.DeleteCategory(_id);
   };
 
   const actionColumn = [
@@ -47,7 +48,7 @@ const CatTable = (list: any) => {
             </Link>
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row._id)}
             >
               Delete
             </div>
@@ -66,7 +67,7 @@ const CatTable = (list: any) => {
       </div>
       <DataGrid
         className="datagrid"
-        rows={data}
+        rows={category.data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}

@@ -16,6 +16,7 @@ import NewCategory from "../Pages/admin/new/NewCategory";
 import CatManage from "../Pages/admin/category/CatTable";
 import CategoryManage from "../Pages/admin/category/CategoryManage";
 import ProductManage from "../Pages/admin/product/ProductManage";
+import CategoryDetail from "../Components/pages/admin/category/CategoryDetail";
 
 function Router() {
   return (
@@ -37,9 +38,13 @@ function Router() {
       </PrivateRoute>
       <PrivateRoute path="/dashboard" component={Dashboard} exact />
       <PrivateRoute path="/categoryManage" component={CategoryManage} exact />
+
       <PrivateRoute path="/productManage" component={ProductManage} exact />
       <PrivateRoute path="/product/new" exact>
         <NewProduct inputs={productInputs} title="Add New Product" />
+      </PrivateRoute>
+      <PrivateRoute path="/categoryManage/view" exact>
+        <CategoryDetail _id="62a701e0ad91633459e66d84" />
       </PrivateRoute>
     </Switch>
   );

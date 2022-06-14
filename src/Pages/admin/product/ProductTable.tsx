@@ -1,6 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useProduct from "../../../store/product";
 
 const userColumns = [
   { field: "id", headerName: "ID", width: 70 },
@@ -47,12 +48,12 @@ const userColumns = [
   },
 ];
 
-const ProductTable = (list: any) => {
-  const [data, setData] = useState(list.list);
-  console.log("list", data);
-  const handleDelete = (id: string) => {
-    setData(data.filter((item: any) => item.id !== id));
-  };
+const ProductTable = () => {
+  const [listProduct, actionProduct] = useProduct();
+  console.log("list", listProduct);
+  // const handleDelete = (id: string) => {
+  //   setData(data.filter((item: any) => item.id !== id));
+  // };
   const actionColumn = [
     {
       field: "action",
@@ -69,7 +70,7 @@ const ProductTable = (list: any) => {
             </Link>
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              // onClick={() => handleDelete(params.row.id)}
             >
               Delete
             </div>
@@ -88,7 +89,7 @@ const ProductTable = (list: any) => {
       </div>
       <DataGrid
         className="datagrid"
-        rows={data}
+        rows={listProduct.data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}

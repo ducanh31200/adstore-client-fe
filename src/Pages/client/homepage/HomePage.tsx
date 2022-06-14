@@ -17,9 +17,12 @@ import Nav from "../../../Components/common/Nav/nav";
 import { Carousel } from "../../../Components/common/Carousel/Carousel";
 import categoryApi from "../../../api/category/category";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
+import useCart from "../../../store/cart";
 
 const HomePage = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [stateCart, actionCart] = useCart();
+  const [click, setClick] = useState(0);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   React.useEffect(() => {
     (async () => {
@@ -28,7 +31,11 @@ const HomePage = () => {
       setListCategory(list.data.data);
     })();
   }, []);
-
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, [click]);
   return (
     <div>
       <div className="container-fluid">
@@ -110,11 +117,7 @@ const HomePage = () => {
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
               <span className="badge">
-                {!stateAuth.isLoggedIn
-                  ? 0
-                  : stateAuth.data?.data?.bag_items_length
-                  ? stateAuth.data?.data?.bag_items_length
-                  : 0}
+                {stateAuth.isLoggedIn ? stateCart.count : 0}
               </span>
             </a>
           </div>
@@ -225,7 +228,12 @@ const HomePage = () => {
         {/* aaaaaaaaaaaaaaaaaaaaaaaa */}
         <div className="row px-xl-5 pb-3">
           {FAKE_PRODUCT_DATA.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard
+              key={index}
+              product={product}
+              setClick={setClick}
+              click={click}
+            />
           ))}
         </div>
       </div>
@@ -263,7 +271,12 @@ const HomePage = () => {
         </div>
         <div className="row px-xl-5 pb-3">
           {FAKE_PRODUCT_DATA.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard
+              key={index}
+              product={product}
+              setClick={setClick}
+              click={click}
+            />
           ))}
         </div>
       </div>

@@ -7,11 +7,12 @@ import CatTable from "./CatTable";
 
 import "./cat.scss";
 import categoryApi from "../../../api/category/category";
+import useCate from "../../../store/category";
 
 const CategoryManage = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [category, actionCategory] = useCate();
   const [showInfoModal, setInfoModal] = React.useState(false);
-  const [listCategory, setListCategory] = useState<Array<any>>([]);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
@@ -19,63 +20,15 @@ const CategoryManage = () => {
   };
   React.useEffect(() => {
     (async () => {
-      const listcat = await categoryApi.list();
-
-      setListCategory(listcat.data.data);
+      await actionCategory.GetListCategory();
     })();
   }, []);
 
-  listCategory.map((item: any, index: number) => {
+  category.data.map((item: any, index: number) => {
     item.id = index + 1;
   });
-  console.log("test", listCategory);
-  const rows = [
-    {
-      id: 1143155,
-      product: "Acer Nitro 5",
-      img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
+  console.log("test", category.data);
 
-      amount: 785,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2235235,
-      product: "Playstation 5",
-      img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 900,
-      stock: "0",
-      status: "Pending",
-    },
-    {
-      id: 2342353,
-      product: "Redragon S101",
-      img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 35,
-      stock: "10",
-      status: "Pending",
-    },
-    {
-      id: 2357741,
-      product: "Razer Blade 15",
-      img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 920,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2342355,
-      product: "ASUS ROG Strix",
-      img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 2000,
-      stock: "10",
-      status: "Pending",
-    },
-  ];
   return (
     <div className="home">
       <div className="sidebar">
@@ -277,7 +230,7 @@ const CategoryManage = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <CatTable list={listCategory} />
+              <CatTable />
             </div>
           </div>
         </div>

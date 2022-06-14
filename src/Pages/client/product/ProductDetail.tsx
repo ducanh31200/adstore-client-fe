@@ -3,17 +3,19 @@ import product1 from "../../../img/iphone13.jpg";
 import product2 from "../../../img/samsungs22.jpg";
 import product3 from "../../../img/laptopasus.jpg";
 import product4 from "../../../img/macbook.jpg";
-import product5 from "../../../img/applewatch.jpg";
 import payment from "../../../img/payments.png";
 import user from "../../../img/user.jpg";
+import StarRatingComponent from "react-star-rating-component";
 import { Link, useParams } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
 import productApi from "../../../api/product/productApi";
 import { IProduct } from "../../../model/product.model";
 import { moneyFormater } from "../../../utils/moneyFormater";
+import useCart from "../../../store/cart";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
+  const [stateCart, actionCart] = useCart();
   const { name, id } = params;
   const initProduct: IProduct = {
     quantity: 0,
@@ -46,8 +48,20 @@ const ProductDetail = (props: Props) => {
       })();
     }, []);
   }
-  console.log("product", product);
-  console.log("product", comment);
+  const [click, setClick] = useState(0);
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, [click]);
+  const handleAddtoCart = async () => {
+    const value = (document.getElementById("quantity") as HTMLInputElement)
+      .value;
+
+    await actionCart.PushCart({ _id: id, quantity: value });
+
+    setClick(click + 1);
+  };
   return (
     <div>
       <div className="container-fluid">
@@ -121,7 +135,7 @@ const ProductDetail = (props: Props) => {
             </a>
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">{stateCart.count}</span>
             </a>
           </div>
         </div>
@@ -153,17 +167,45 @@ const ProductDetail = (props: Props) => {
               data-ride="carousel"
             >
               <div className="carousel-inner border">
-                <div className="carousel-item active">
-                  <img className="w-100 h-100" src={product1} alt="Image" />
+                <div
+                  className="carousel-item active"
+                  style={{ width: "550px", height: "400px" }}
+                >
+                  <img
+                    className="w-100 h-100 object-cover"
+                    src={product1}
+                    alt="Image"
+                  />
                 </div>
-                <div className="carousel-item">
-                  <img className="w-100 h-100" src={product2} alt="Image" />
+                <div
+                  className="carousel-item "
+                  style={{ width: "550px", height: "400px" }}
+                >
+                  <img
+                    className="w-100 h-100 object-cover"
+                    src={product2}
+                    alt="Image"
+                  />
                 </div>
-                <div className="carousel-item">
-                  <img className="w-100 h-100" src={product3} alt="Image" />
+                <div
+                  className="carousel-item"
+                  style={{ width: "550px", height: "400px" }}
+                >
+                  <img
+                    className="w-100 h-100 object-cover"
+                    src={product3}
+                    alt="Image"
+                  />
                 </div>
-                <div className="carousel-item">
-                  <img className="w-100 h-100" src={product4} alt="Image" />
+                <div
+                  className="carousel-item"
+                  style={{ width: "550px", height: "400px" }}
+                >
+                  <img
+                    className="w-100 h-100 object-cover"
+                    src={product4}
+                    alt="Image"
+                  />
                 </div>
               </div>
               <a
@@ -184,15 +226,14 @@ const ProductDetail = (props: Props) => {
           </div>
 
           <div className="col-lg-7 pb-5">
-            <h3 className="font-weight-semi-bold">Iphone 13</h3>
+            <h3 className="font-weight-semi-bold">{product.name}</h3>
             <div className="d-flex mb-3">
-              <div className="text-primary mr-2">
-                <small className="fas fa-star"></small>
-                <small className="fas fa-star"></small>
-                <small className="fas fa-star"></small>
-                <small className="fas fa-star-half-alt"></small>
-                <small className="far fa-star"></small>
-              </div>
+              <StarRatingComponent
+                name="rate1"
+                starCount={5}
+                value={product.total_rate + 1}
+                editing={false}
+              />
               <small className="pt-1">(50 Reviews)</small>
             </div>
             <div className="justify-content-center">
@@ -338,23 +379,22 @@ const ProductDetail = (props: Props) => {
                 className="input-group quantity mr-3"
                 style={{ width: "130px" }}
               >
-                <div className="input-group-btn">
-                  <button className="btn btn-primary btn-minus">
-                    <i className="fa fa-minus"></i>
-                  </button>
-                </div>
                 <input
-                  type="text"
+                  type="number"
+                  onKeyDown={(e: any) => {
+                    e.preventDefault();
+                  }}
+                  id="quantity"
+                  min="1"
+                  max={product.quantity}
                   className="form-control bg-secondary text-center"
                   defaultValue="1"
                 />
-                <div className="input-group-btn">
-                  <button className="btn btn-primary btn-plus">
-                    <i className="fa fa-plus"></i>
-                  </button>
-                </div>
               </div>
-              <button className="btn btn-primary px-3">
+              <button
+                className="btn btn-primary px-3"
+                onClick={() => handleAddtoCart()}
+              >
                 <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
               </button>
             </div>
@@ -446,13 +486,12 @@ const ProductDetail = (props: Props) => {
                         style={{ width: "45px" }}
                       />
                       <div className="media-body">
-                        <div className="text-primary mb-2">
-                          <i className="fas fa-star"></i>
-                          <i className="fas fa-star"></i>
-                          <i className="fas fa-star"></i>
-                          <i className="fas fa-star-half-alt"></i>
-                          <i className="far fa-star"></i>
-                        </div>
+                        <StarRatingComponent
+                          name="rate1"
+                          starCount={5}
+                          value={5}
+                          editing={true}
+                        />
                         <p></p>
                       </div>
                     </div>
@@ -465,13 +504,12 @@ const ProductDetail = (props: Props) => {
                     </small>
                     <div className="d-flex my-3">
                       <p className="mb-0 mr-2">Your Rating * :</p>
-                      <div className="text-primary">
-                        <i className="far fa-star"></i>
-                        <i className="far fa-star"></i>
-                        <i className="far fa-star"></i>
-                        <i className="far fa-star"></i>
-                        <i className="far fa-star"></i>
-                      </div>
+                      <StarRatingComponent
+                        name="rate1"
+                        starCount={5}
+                        value={5}
+                        editing={true}
+                      />
                     </div>
                     <form>
                       <div className="form-group">
@@ -515,133 +553,6 @@ const ProductDetail = (props: Props) => {
           <h2 className="section-title px-5">
             <span className="px-2">You May Also Like</span>
           </h2>
-        </div>
-        <div className="row px-xl-5">
-          <div className="col">
-            <div className="owl-carousel related-carousel">
-              <div className="card product-item border-0">
-                <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                  <img className="img-fluid w-100" src={product1} alt="" />
-                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 className="text-truncate mb-3">Iphone 13</h6>
-                    <div className="d-flex justify-content-center">
-                      <h6>$123.00</h6>
-                      <h6 className="text-muted ml-2">
-                        <del>$123.00</del>
-                      </h6>
-                    </div>
-                  </div>
-                  <div className="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-eye text-primary mr-1"></i>View
-                      Detail
-                    </a>
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                      Add To Cart
-                    </a>
-                  </div>
-                </div>
-                <div className="card product-item border-0">
-                  <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img className="img-fluid w-100" src={product2} alt="" />
-                  </div>
-                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 className="text-truncate mb-3">Iphone 13</h6>
-                    <div className="d-flex justify-content-center">
-                      <h6>$123.00</h6>
-                      <h6 className="text-muted ml-2">
-                        <del>$123.00</del>
-                      </h6>
-                    </div>
-                  </div>
-
-                  <div className="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-eye text-primary mr-1"></i>View
-                      Detail
-                    </a>
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                      Add To Cart
-                    </a>
-                  </div>
-                </div>
-                <div className="card product-item border-0">
-                  <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img className="img-fluid w-100" src={product3} alt="" />
-                  </div>
-                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 className="text-truncate mb-3">Iphone 13</h6>
-                    <div className="d-flex justify-content-center">
-                      <h6>$123.00</h6>
-                      <h6 className="text-muted ml-2">
-                        <del>$123.00</del>
-                      </h6>
-                    </div>
-                  </div>
-                  <div className="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-eye text-primary mr-1"></i>View
-                      Detail
-                    </a>
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                      Add To Cart
-                    </a>
-                  </div>
-                </div>
-                <div className="card product-item border-0">
-                  <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img className="img-fluid w-100" src={product4} alt="" />
-                  </div>
-                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 className="text-truncate mb-3">Iphone 13</h6>
-                    <div className="d-flex justify-content-center">
-                      <h6>$123.00</h6>
-                      <h6 className="text-muted ml-2">
-                        <del>$123.00</del>
-                      </h6>
-                    </div>
-                  </div>
-                  <div className="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-eye text-primary mr-1"></i>View
-                      Detail
-                    </a>
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                      Add To Cart
-                    </a>
-                  </div>
-                </div>
-                <div className="card product-item border-0">
-                  <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                    <img className="img-fluid w-100" src={product5} alt="" />
-                  </div>
-                  <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                    <h6 className="text-truncate mb-3">Iphone 13</h6>
-                    <div className="d-flex justify-content-center">
-                      <h6>$123.00</h6>
-                      <h6 className="text-muted ml-2">
-                        <del>$123.00</del>
-                      </h6>
-                    </div>
-                  </div>
-                  <div className="card-footer d-flex justify-content-between bg-light border">
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-eye text-primary mr-1"></i>View
-                      Detail
-                    </a>
-                    <a href="" className="btn btn-sm text-dark p-0">
-                      <i className="fas fa-shopping-cart text-primary mr-1"></i>
-                      Add To Cart
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="container-fluid bg-secondary text-dark mt-5 pt-5">

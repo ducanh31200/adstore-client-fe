@@ -8,6 +8,7 @@ import { ProductCard } from "../../../Components/common/Product/ProductCard";
 import { SpecFilter } from "../../../Components/common/Product/SpecFilter";
 
 import payment from "../../../img/payments.png";
+import useCart from "../../../store/cart";
 type Props = { name: string; id: string };
 const Product = (props: Props) => {
   const params = useParams<any>();
@@ -18,11 +19,20 @@ const Product = (props: Props) => {
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const limit = 1;
   const { nameCategory } = params;
+  const [stateCart, actionCart] = useCart();
+  const [click, setClick] = useState(0);
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, [click]);
+
+  console.log("stateCart", stateCart.count);
   if (Object.keys(params).length !== 0) {
     React.useEffect(() => {
       (async () => {
-        const result = await categoryApi.getProduct({
-          name: params.name,
+        const result = await productApi.list({
+          category: params.name,
           skip: currentPage,
           limit: limit,
         });
@@ -131,7 +141,7 @@ const Product = (props: Props) => {
             </a>
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">{stateCart.count}</span>
             </a>
           </div>
         </div>
@@ -403,7 +413,12 @@ const Product = (props: Props) => {
                 </div>
               </div>
               {listProduct?.map((item: any, index: any) => (
-                <ProductCard key={index} product={item} />
+                <ProductCard
+                  key={index}
+                  product={item}
+                  setClick={setClick}
+                  click={click}
+                />
               ))}
 
               <Pagination

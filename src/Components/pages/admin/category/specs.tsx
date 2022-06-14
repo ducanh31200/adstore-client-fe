@@ -1,4 +1,5 @@
-import "./new.scss";
+import "./style.scss";
+
 import React, { useState } from "react";
 
 type Props = {

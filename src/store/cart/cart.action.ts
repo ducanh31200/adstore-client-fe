@@ -1,30 +1,32 @@
 import { State } from ".";
+import cartApi from "../../api/cart/CartAPI";
 
 import categoryApi from "../../api/category/category";
 
 type Actions = { setState: any; getState: () => State; dispatch: any };
 
-export const GetListCategory =
+export const GetCart =
   () =>
   async ({ setState, getState }: Actions) => {
-    const result = await categoryApi.list();
-
+    const result = await cartApi.read();
     if (result.status === 200) {
-      setState({ ...getState(), data: result.data.data });
+      console.log("cart", result);
+      setState({
+        ...getState(),
+        data: result.data.data,
+        count: result.data.count,
+      });
 
       return true;
     }
     return false;
   };
-export const DeleteCategory =
-  (id: any) =>
+export const PushCart =
+  (data: any) =>
   async ({ setState, getState }: Actions) => {
-    const result = await categoryApi.delete(id);
+    const result = await cartApi.push(data);
 
     if (result.status === 200) {
-      const newList = [...getState().data].filter((item) => item._id !== id);
-      setState({ ...getState(), data: newList });
-
       return true;
     }
     return false;
