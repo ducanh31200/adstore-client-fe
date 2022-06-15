@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import {
+  createSearchParams,
+  Link,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import categoryApi from "../../../api/category/category";
 import productApi from "../../../api/product/productApi";
 import Nav from "../../../Components/common/Nav/nav";
@@ -9,8 +14,8 @@ import { SpecFilter } from "../../../Components/common/Product/SpecFilter";
 
 import payment from "../../../img/payments.png";
 import useCart from "../../../store/cart";
-type Props = { name: string; id: string };
-const Product = (props: Props) => {
+
+const Product = () => {
   const params = useParams<any>();
   const [listProduct, setListProduct] = useState<Array<any>>([]);
   const [cat, setCat] = useState<any>();
@@ -21,13 +26,22 @@ const Product = (props: Props) => {
   const { nameCategory } = params;
   const [stateCart, actionCart] = useCart();
   const [click, setClick] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const color = searchParams.get("colors");
+
   React.useEffect(() => {
     (async () => {
       await actionCart.GetCart();
     })();
   }, [click]);
 
-  console.log("stateCart", stateCart.count);
+  React.useEffect(() => {
+    console.log("change");
+  }, [color]);
+
+  // console.log("stateCart", stateCart.count);
+  // console.log("listproduct", listProduct);
   if (Object.keys(params).length !== 0) {
     React.useEffect(() => {
       (async () => {
@@ -63,11 +77,12 @@ const Product = (props: Props) => {
       })();
     }, [currentPage]);
   }
+
   let totalproductcat = 0;
   listCategory.forEach((item: any) => {
     totalproductcat = totalproductcat + item.products_length;
   });
-  console.log(listProduct);
+  // console.log(listProduct);
   return (
     <div>
       <div className="container-fluid">
@@ -244,78 +259,7 @@ const Product = (props: Props) => {
               </form>
             </div>
 
-            <div className="border-bottom mb-4 pb-4">
-              <h5 className="font-weight-semi-bold mb-4">Filter by color</h5>
-              <form>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    defaultChecked
-                    id="color-all/"
-                  />
-                  <label className="custom-control-label" htmlFor="price-all">
-                    All Color
-                  </label>
-                  <span className="badge border font-weight-normal">1000</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="color-1"
-                  />
-                  <label className="custom-control-label" htmlFor="color-1">
-                    Black
-                  </label>
-                  <span className="badge border font-weight-normal">150</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="color-2"
-                  />
-                  <label className="custom-control-label" htmlFor="color-2">
-                    White
-                  </label>
-                  <span className="badge border font-weight-normal">295</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="color-3"
-                  />
-                  <label className="custom-control-label" htmlFor="color-3">
-                    Red
-                  </label>
-                  <span className="badge border font-weight-normal">246</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="color-4"
-                  />
-                  <label className="custom-control-label" htmlFor="color-4">
-                    Blue
-                  </label>
-                  <span className="badge border font-weight-normal">145</span>
-                </div>
-                <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="color-5"
-                  />
-                  <label className="custom-control-label" htmlFor="color-5">
-                    Green
-                  </label>
-                  <span className="badge border font-weight-normal">168</span>
-                </div>
-              </form>
-            </div>
+            <FilterColor />
             {Object.keys(params).length !== 0 ? (
               cat?.specsModel.map((item: any, index: any) => (
                 <SpecFilter key={index} spec={item} />
@@ -548,6 +492,119 @@ const Product = (props: Props) => {
       <a href="#" className="btn btn-primary back-to-top">
         <i className="fa fa-angle-double-up"></i>
       </a>
+    </div>
+  );
+};
+
+const FilterColor = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const color = searchParams.get("colors");
+
+  const colorFilter = [
+    {
+      label: "All Color",
+      id: "color-all",
+      quantity: 1000,
+      defaultChecked: true,
+      value: "",
+    },
+    {
+      label: "Black",
+      id: "color-1",
+      quantity: 150,
+      defaultChecked: false,
+      value: "black",
+    },
+    {
+      label: "White",
+      id: "color-2",
+      quantity: 295,
+      defaultChecked: false,
+      value: "white",
+    },
+    {
+      label: "Red",
+      id: "color-3",
+      quantity: 246,
+      defaultChecked: false,
+      value: "red",
+    },
+    {
+      label: "Blue",
+      id: "color-4",
+      quantity: 1000,
+      defaultChecked: false,
+      value: "blue",
+    },
+    {
+      label: "Green",
+      id: "color-5",
+      quantity: 1000,
+      defaultChecked: false,
+      value: "green",
+    },
+  ];
+
+  const handleSetURLQueries = (color: string, check: boolean) => {
+    const currentColors = searchParams.get("colors");
+    if (check) {
+      if (currentColors)
+        setSearchParams(
+          createSearchParams({ colors: `${currentColors},${color}` })
+        );
+      else {
+        setSearchParams(createSearchParams({ colors: color }));
+      }
+    } else {
+      const split = currentColors?.split(",");
+      const removedColor = split?.filter((item) => item !== color);
+      setSearchParams(
+        createSearchParams({ colors: removedColor?.join(",") || "" })
+      );
+    }
+  };
+
+  return (
+    <div className="border-bottom mb-4 pb-4">
+      <h5 className="font-weight-semi-bold mb-4">Filter by color</h5>
+      <form>
+        {colorFilter.map((item, index) => (
+          <div
+            key={index}
+            className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
+          >
+            {index === 0 ? (
+              <input
+                type="checkbox"
+                className="custom-control-input"
+                defaultChecked={item.defaultChecked}
+                id={item.id}
+                onChange={(e) =>
+                  handleSetURLQueries(item.value, e.target.checked)
+                }
+                checked={!color}
+              />
+            ) : (
+              <input
+                type="checkbox"
+                className="custom-control-input"
+                defaultChecked={item.defaultChecked}
+                id={item.id}
+                onChange={(e) =>
+                  handleSetURLQueries(item.value, e.target.checked)
+                }
+              />
+            )}
+            <label className="custom-control-label" htmlFor={item.id}>
+              {item.label}
+            </label>
+            <span className="badge border font-weight-normal">
+              {item.quantity}
+            </span>
+          </div>
+        ))}
+      </form>
     </div>
   );
 };

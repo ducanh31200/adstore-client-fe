@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import useCart from "../../../store/cart";
 import { moneyFormater } from "../../../utils/moneyFormater";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 
 export const ProductCard = ({
   product,
@@ -15,9 +16,13 @@ export const ProductCard = ({
   const [stateCart, actionCart] = useCart();
 
   const handleAddtoCart = async (_id: any) => {
-    await actionCart.PushCart({ _id: _id, quantity: 1 });
-    console.log("id", _id);
-    setClick(click + 1);
+    if (product.quantity >= 1) {
+      const res = await actionCart.PushCart({ _id: _id, quantity: 1 });
+      if (res) {
+        setClick(click + 1);
+        notifySuccess("Thêm vào giỏ hàng thành công !");
+      } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+    } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
 
   return (

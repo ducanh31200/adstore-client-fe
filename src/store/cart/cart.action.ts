@@ -10,7 +10,7 @@ export const GetCart =
   async ({ setState, getState }: Actions) => {
     const result = await cartApi.read();
     if (result.status === 200) {
-      console.log("cart", result);
+      // console.log("cart", result);
       setState({
         ...getState(),
         data: result.data.data,

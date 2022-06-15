@@ -1,6 +1,5 @@
-import React from "react";
 import { useForm } from "react-hook-form";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../../../store/auth";
 import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./style.css";
@@ -11,8 +10,8 @@ interface Props {
 }
 
 const ModalSignUp = (props: Props) => {
-  const [authState, actionAuth] = useAuth();
-  const history = useHistory();
+  const [, actionAuth] = useAuth();
+  const navigate = useNavigate();
   const { register, handleSubmit, reset } = useForm();
   const { closeModal, openSignInModal } = props;
 
@@ -52,7 +51,7 @@ const ModalSignUp = (props: Props) => {
         reset();
         notifySuccess("Đăng ký thành công");
         closeModal();
-        history.push("/");
+        navigate("/");
       }
     } else {
       notifyError("Mật khẩu xác nhận không khớp, vui lòng nhập lại !");

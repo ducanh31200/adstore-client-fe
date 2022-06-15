@@ -1,16 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import product1 from "../../../img/iphone13.jpg";
-import product2 from "../../../img/samsungs22.jpg";
-import product3 from "../../../img/laptopasus.jpg";
-import product4 from "../../../img/macbook.jpg";
-import product5 from "../../../img/applewatch.jpg";
+import emptyCart from "../../../img/emptyCart.png";
+
 import payment from "../../../img/payments.png";
 import { Link } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
+import useCart from "../../../store/cart";
+import { moneyFormater } from "../../../utils/moneyFormater";
+import useAuth from "../../../store/auth";
 
 type Props = {};
 
 const Cart = (props: Props) => {
+  const [stateAuth, actionAuth] = useAuth();
+  const [stateCart, actionCart] = useCart();
+  const [diffAddr, setDiffAddr] = useState(false);
+  const [stateChange, setStateChange] = useState(0);
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, [stateChange]);
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, []);
+  // console.log(diffAddr);
+  const handleChange = (_id: any) => {
+    const value = (document.getElementById("quantity") as HTMLInputElement)
+      .value;
+    setStateChange(stateChange + 1);
+    console.log(value);
+    console.log(_id);
+  };
+
+  stateCart.data.map((item) => {
+    console.log("id", item.product._id);
+  });
   return (
     <div>
       <div className="container-fluid">
@@ -84,7 +111,7 @@ const Cart = (props: Props) => {
             </a>
             <a href="" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">{stateCart.count}</span>
             </a>
           </div>
         </div>
@@ -113,194 +140,200 @@ const Cart = (props: Props) => {
       <div className="container-fluid pt-5">
         <div className="row px-xl-5">
           <div className="col-lg-8 table-responsive mb-5">
-            <table className="table table-bordered text-center mb-0">
-              <thead className="bg-secondary text-dark">
-                <tr>
-                  <th>Products</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th>Remove</th>
-                </tr>
-              </thead>
-              <tbody className="align-middle">
-                <tr>
-                  <td className="align-middle">
-                    <img src={product1} alt="" style={{ width: "50px" }} />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <div
-                      className="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
+            {stateCart.count === 0 ? (
+              <img src={emptyCart} style={{ marginLeft: "300px" }}></img>
+            ) : (
+              <table className="table table-bordered text-center mb-0">
+                <thead className="bg-secondary text-dark">
+                  <tr>
+                    <th>STT</th>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Giảm giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng cộng</th>
+                    <th>Remove</th>
+                  </tr>
+                </thead>
+                <tbody className="align-middle">
+                  {stateCart.data.map((item, index) => (
+                    <tr key={index}>
+                      <td className="align-middle">{index + 1}</td>
+                      <td className="align-middle">
+                        <img
+                          src={item.product.colors[0].image_url}
+                          alt=""
+                          style={{ width: "100px" }}
+                        />{" "}
+                        {item.product.name}
+                      </td>
+                      <td className="align-middle">
+                        {moneyFormater(item.product.price)}
+                      </td>
+                      <td className="align-middle">
+                        {moneyFormater(item.product.sale)}
+                      </td>
+                      <td className="align-middle">
+                        <div
+                          className="input-group quantity mx-auto"
+                          style={{ width: "70px" }}
+                        >
+                          <input
+                            type="number"
+                            onKeyDown={(e: any) => {
+                              e.preventDefault();
+                            }}
+                            id={`quantity_${item.product._id}`}
+                            min="1"
+                            max={50}
+                            className="form-control bg-secondary text-center"
+                            defaultValue={item.quantity}
+                            onChange={() => handleChange(item.product._id)}
+                          />
+                        </div>
+                      </td>
+                      <td className="align-middle">
+                        {moneyFormater(item.quantity * item.product.price)}
+                      </td>
+                      <td className="align-middle">
+                        <button className="btn btn-sm btn-primary">
+                          <i className="fa fa-times"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            <div className="mb-4">
+              <h4 className="font-weight-semi-bold mb-4">Địa chỉ giao hàng</h4>
+              <div className="row">
+                <div className="col-md-6 form-group">
+                  <label>Họ và tên</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn ? stateAuth.data?.data?.name : ""
+                    }
+                  />
+                </div>
+
+                <div className="col-md-6 form-group">
+                  <label>E-mail</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn ? stateAuth.data?.data?.email : ""
+                    }
+                  />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Số điện thoại</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn ? stateAuth.data?.data?.phone : ""
+                    }
+                  />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Tỉnh/Thành phố</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn
+                        ? stateAuth.data?.data?.address?.province
+                        : ""
+                    }
+                  />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Huyện/Quận</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn
+                        ? stateAuth.data?.data?.address?.district
+                        : ""
+                    }
+                  />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Địa chỉ</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder=""
+                    defaultValue={
+                      stateAuth.isLoggedIn
+                        ? stateAuth.data?.data?.address?.address
+                        : ""
+                    }
+                  />
+                </div>
+
+                {/*----ship-----*/}
+                <div className="col-md-12 form-group">
+                  <div className="custom-control custom-checkbox">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      onClick={() => setDiffAddr(!diffAddr)}
+                      id="shipto"
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="shipto"
+                      data-toggle="collapse"
+                      data-target="#shipping-address"
                     >
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-minus">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm bg-secondary text-center"
-                        defaultValue="1"
-                      />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-plus">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <button className="btn btn-sm btn-primary">
-                      <i className="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="align-middle">
-                    <img src={product2} alt="" style={{ width: "50px" }} />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <div
-                      className="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-minus">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm bg-secondary text-center"
-                        defaultValue="1"
-                      />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-plus">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <button className="btn btn-sm btn-primary">
-                      <i className="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="align-middle">
-                    <img src={product3} alt="" style={{ width: "50px" }} />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <div
-                      className="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-minus">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm bg-secondary text-center"
-                        defaultValue="1"
-                      />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-plus">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <button className="btn btn-sm btn-primary">
-                      <i className="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="align-middle">
-                    <img src={product4} alt="" style={{ width: "50px" }} />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <div
-                      className="input-group quantity mx-auto"
-                      style={{ width: "100px" }}
-                    >
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-minus">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm bg-secondary text-center"
-                        defaultValue="1"
-                      />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-plus">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <button className="btn btn-sm btn-primary">
-                      <i className="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="align-middle">
-                    <img src={product5} alt="" style={{ width: "50px" }} />{" "}
-                    Colorful Stylish Shirt
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <div
-                      className="input-group quantity mx-auto"
-                      style={{ width: "50px" }}
-                    >
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-minus">
-                          <i className="fa fa-minus"></i>
-                        </button>
-                      </div>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm bg-secondary text-center"
-                        defaultValue="1"
-                      />
-                      <div className="input-group-btn">
-                        <button className="btn btn-sm btn-primary btn-plus">
-                          <i className="fa fa-plus"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="align-middle">$150</td>
-                  <td className="align-middle">
-                    <button className="btn btn-sm btn-primary">
-                      <i className="fa fa-times"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                      Giao hàng ở địa chỉ khác
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="collapse mb-4" id="shipping-address">
+              <h4 className="font-weight-semi-bold mb-4">Địa chỉ giao hàng</h4>
+              <div className="row">
+                <div className="col-md-6 form-group">
+                  <label>Họ và tên</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>E-mail</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Số điện thoại</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Tỉnh/Thành phố</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Huyện/Quận</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+                <div className="col-md-6 form-group">
+                  <label>Địa chỉ</label>
+                  <input className="form-control" type="text" placeholder="" />
+                </div>
+
+                {/*----ship-----*/}
+              </div>
+            </div>
           </div>
           <div className="col-lg-4">
             <form className="mb-5" action="">

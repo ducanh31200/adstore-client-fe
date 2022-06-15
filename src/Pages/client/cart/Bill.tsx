@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
 
 import payment from "../../../img/payments.png";
+import useAuth from "../../../store/auth";
 type Props = {};
 const Bill = (props: Props) => {
+  const [stateAuth, actionAuth] = useAuth();
+
   return (
     <div>
       <div className="container-fluid">
@@ -103,7 +106,7 @@ const Bill = (props: Props) => {
           </div>
         </div>
       </div>
-
+      {/* {stateAuth.isLoggedIn ? () : ()} */}
       <div className="container-fluid pt-5">
         <div className="row px-xl-5">
           <div className="col-lg-8">
@@ -191,21 +194,8 @@ const Bill = (props: Props) => {
                     placeholder="123"
                   />
                 </div>
-                <div className="col-md-12 form-group">
-                  <div className="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="newaccount"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="newaccount"
-                    >
-                      Create an account
-                    </label>
-                  </div>
-                </div>
+
+                {/*----ship-----*/}
                 <div className="col-md-12 form-group">
                   <div className="custom-control custom-checkbox">
                     <input
@@ -311,6 +301,7 @@ const Bill = (props: Props) => {
                 </div>
               </div>
             </div>
+            {/*----ship-----*/}
           </div>
           <div className="col-lg-4">
             <div className="card border-secondary mb-5">

@@ -12,6 +12,7 @@ import productApi from "../../../api/product/productApi";
 import { IProduct } from "../../../model/product.model";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useCart from "../../../store/cart";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
@@ -57,10 +58,13 @@ const ProductDetail = (props: Props) => {
   const handleAddtoCart = async () => {
     const value = (document.getElementById("quantity") as HTMLInputElement)
       .value;
-
-    await actionCart.PushCart({ _id: id, quantity: value });
-
-    setClick(click + 1);
+    if (product.quantity >= Number(value)) {
+      const res = await actionCart.PushCart({ _id: id, quantity: value });
+      if (res) {
+        setClick(click + 1);
+        notifySuccess("Thêm vào giỏ hàng thành công !");
+      } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+    } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
   return (
     <div>

@@ -1,6 +1,7 @@
 interface ResponseInstant {
   message: string;
   status: number;
+  response?: any;
   headers?: any;
 }
 

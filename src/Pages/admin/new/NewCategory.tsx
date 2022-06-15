@@ -1,15 +1,13 @@
+import React from "react";
 import "./new.scss";
 import style from "./style.module.css";
-import React, { useState } from "react";
 
 import { useForm } from "react-hook-form";
-import _ from "lodash";
+import categoryApi from "../../../api/category/category";
 import addimg from "../../../img/addimg.png";
 import removeimg from "../../../img/removeimg.png";
-import Specs from "./specs";
-import categoryApi from "../../../api/category/category";
 import { notifyError, notifySuccess } from "../../../utils/notify";
-import { useHistory, useLocation } from "react-router-dom";
+import Specs from "./specs";
 
 type Props = {
   inputs: any;
@@ -22,8 +20,6 @@ const NewCategory = (props: Props) => {
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-  const history = useHistory();
-  const location = useLocation();
   const { register, handleSubmit, reset } = useForm();
 
   const getBase64 = (file: any, cb: any) => {
