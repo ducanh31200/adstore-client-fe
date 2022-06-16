@@ -13,7 +13,7 @@ function App() {
       <Toaster
         reverseOrder={false}
         position="top-right"
-        containerStyle={{ top: 50 }}
+        containerStyle={{ top: 145 }}
       />
     </div>
   );

@@ -135,7 +135,7 @@ const ModalSignIn = (props: Props) => {
                   id="type_pass"
                   name="type"
                   value="password"
-                  defaultChecked
+                  defaultChecked={loginType === "password"}
                   onChange={handleGetValue}
                 />{" "}
                 Password
@@ -148,6 +148,7 @@ const ModalSignIn = (props: Props) => {
                   name="type"
                   value="otp"
                   onChange={handleGetValue}
+                  defaultChecked={loginType !== "password"}
                 />{" "}
                 OTP
               </label>

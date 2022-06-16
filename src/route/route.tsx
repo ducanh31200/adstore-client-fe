@@ -117,10 +117,18 @@ function Router() {
         }
       />
       <Route
-        path="/product/new"
+        path="/discount/new"
         element={
           <PrivateRoute>
             <NewDiscount inputs={discountInputs} title="Add New Discount" />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/product/new"
+        element={
+          <PrivateRoute>
+            <NewProduct inputs={productInputs} title="Add New Product" />
           </PrivateRoute>
         }
       />

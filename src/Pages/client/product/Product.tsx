@@ -1,3 +1,4 @@
+import { Box, Slider } from "@mui/material";
 import React, { useState } from "react";
 import {
   createSearchParams,
@@ -9,8 +10,11 @@ import categoryApi from "../../../api/category/category";
 import productApi from "../../../api/product/productApi";
 import Nav from "../../../Components/common/Nav/nav";
 import Pagination from "../../../Components/common/Pagination/Pagination";
+import PriceFilter from "../../../Components/common/Product/PriceFilter";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
 import { SpecFilter } from "../../../Components/common/Product/SpecFilter";
+
+import { FilterColor } from "../../../Components/pages/client/homepage/CategoryCard/product/FilterColor";
 
 import payment from "../../../img/payments.png";
 import useCart from "../../../store/cart";
@@ -23,22 +27,9 @@ const Product = () => {
   const [currentPage, setCurrentPage] = useState<any>(0);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const limit = 1;
-  const { nameCategory } = params;
   const [stateCart, actionCart] = useCart();
   const [click, setClick] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const color = searchParams.get("colors");
-
-  React.useEffect(() => {
-    (async () => {
-      await actionCart.GetCart();
-    })();
-  }, [click]);
-
-  React.useEffect(() => {
-    console.log("change");
-  }, [color]);
 
   // console.log("stateCart", stateCart.count);
   // console.log("listproduct", listProduct);
@@ -77,11 +68,39 @@ const Product = () => {
       })();
     }, [currentPage]);
   }
-
+  if (Object.keys(params).length !== 0) {
+    React.useEffect(() => {
+      const filter: any = {};
+      const filterSpecs: any = [];
+      for (const entry of searchParams.entries()) {
+        if (entry[0] === "colors") filter.colors = entry[1];
+        else if (entry[0] === "price") {
+          const p = entry[1].split(",");
+          filter.max_price = Number(p[1]);
+          filter.min_price = Number(p[0]);
+        } else filterSpecs.push({ name: entry[0], values: entry[1] });
+      }
+      if (filterSpecs?.length !== 0) {
+        filter.specs = filterSpecs;
+      }
+      filter.skip = currentPage;
+      filter.category = params.name;
+      filter.limit = limit;
+      console.log("filter", filter);
+      (async () => {
+        const result = await productApi.list(filter);
+        if (currentPage === 0) {
+          setTotalProduct(result.data.count);
+        }
+        setListProduct(result.data.data);
+      })();
+    }, [searchParams]);
+  }
   let totalproductcat = 0;
   listCategory.forEach((item: any) => {
     totalproductcat = totalproductcat + item.products_length;
   });
+
   // console.log(listProduct);
   return (
     <div>
@@ -188,7 +207,8 @@ const Product = () => {
           <div className="col-lg-3 col-md-12">
             <div className="border-bottom mb-4 pb-4">
               <h5 className="font-weight-semi-bold mb-4">Filter by price</h5>
-              <form>
+              <PriceFilter />
+              {/* <form>
                 <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                   <input
                     type="checkbox"
@@ -256,7 +276,7 @@ const Product = () => {
                   </label>
                   <span className="badge border font-weight-normal">168</span>
                 </div>
-              </form>
+              </form> */}
             </div>
 
             <FilterColor />
@@ -265,48 +285,7 @@ const Product = () => {
                 <SpecFilter key={index} spec={item} />
               ))
             ) : (
-              <div className="mb-5">
-                <h5 className="font-weight-semi-bold mb-4">
-                  Filter by Category
-                </h5>
-                <form>
-                  <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      defaultChecked
-                      id="all"
-                    />
-                    <label className="custom-control-label" htmlFor="all">
-                      All
-                    </label>
-                    <span className="badge border font-weight-normal">
-                      {totalproductcat}
-                    </span>
-                  </div>
-                  {listCategory.map((item: any, index: any) => (
-                    <div
-                      key={index}
-                      className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-                    >
-                      <input
-                        type="checkbox"
-                        className="custom-control-input"
-                        id={item._id}
-                      />
-                      <label
-                        className="custom-control-label"
-                        htmlFor={item._id}
-                      >
-                        {item.name}
-                      </label>
-                      <span className="badge border font-weight-normal">
-                        {item.products_length}
-                      </span>
-                    </div>
-                  ))}
-                </form>
-              </div>
+              <div></div>
             )}
           </div>
 
@@ -492,119 +471,6 @@ const Product = () => {
       <a href="#" className="btn btn-primary back-to-top">
         <i className="fa fa-angle-double-up"></i>
       </a>
-    </div>
-  );
-};
-
-const FilterColor = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const color = searchParams.get("colors");
-
-  const colorFilter = [
-    {
-      label: "All Color",
-      id: "color-all",
-      quantity: 1000,
-      defaultChecked: true,
-      value: "",
-    },
-    {
-      label: "Black",
-      id: "color-1",
-      quantity: 150,
-      defaultChecked: false,
-      value: "black",
-    },
-    {
-      label: "White",
-      id: "color-2",
-      quantity: 295,
-      defaultChecked: false,
-      value: "white",
-    },
-    {
-      label: "Red",
-      id: "color-3",
-      quantity: 246,
-      defaultChecked: false,
-      value: "red",
-    },
-    {
-      label: "Blue",
-      id: "color-4",
-      quantity: 1000,
-      defaultChecked: false,
-      value: "blue",
-    },
-    {
-      label: "Green",
-      id: "color-5",
-      quantity: 1000,
-      defaultChecked: false,
-      value: "green",
-    },
-  ];
-
-  const handleSetURLQueries = (color: string, check: boolean) => {
-    const currentColors = searchParams.get("colors");
-    if (check) {
-      if (currentColors)
-        setSearchParams(
-          createSearchParams({ colors: `${currentColors},${color}` })
-        );
-      else {
-        setSearchParams(createSearchParams({ colors: color }));
-      }
-    } else {
-      const split = currentColors?.split(",");
-      const removedColor = split?.filter((item) => item !== color);
-      setSearchParams(
-        createSearchParams({ colors: removedColor?.join(",") || "" })
-      );
-    }
-  };
-
-  return (
-    <div className="border-bottom mb-4 pb-4">
-      <h5 className="font-weight-semi-bold mb-4">Filter by color</h5>
-      <form>
-        {colorFilter.map((item, index) => (
-          <div
-            key={index}
-            className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
-          >
-            {index === 0 ? (
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                defaultChecked={item.defaultChecked}
-                id={item.id}
-                onChange={(e) =>
-                  handleSetURLQueries(item.value, e.target.checked)
-                }
-                checked={!color}
-              />
-            ) : (
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                defaultChecked={item.defaultChecked}
-                id={item.id}
-                onChange={(e) =>
-                  handleSetURLQueries(item.value, e.target.checked)
-                }
-              />
-            )}
-            <label className="custom-control-label" htmlFor={item.id}>
-              {item.label}
-            </label>
-            <span className="badge border font-weight-normal">
-              {item.quantity}
-            </span>
-          </div>
-        ))}
-      </form>
     </div>
   );
 };
