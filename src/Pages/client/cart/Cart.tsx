@@ -8,6 +8,7 @@ import Nav from "../../../Components/common/Nav/nav";
 import useCart from "../../../store/cart";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useAuth from "../../../store/auth";
+import BillApi from "../../../api/cart/BillApi";
 
 type Props = {};
 
@@ -22,22 +23,60 @@ const Cart = (props: Props) => {
     })();
   }, [stateChange]);
   React.useEffect(() => {
+    const cart: any = [];
+    const discountCode = (
+      document.getElementById("couponcode") as HTMLInputElement
+    ).value;
+    const province = (document.getElementById("province") as HTMLInputElement)
+      .value;
+    const district = (document.getElementById("district") as HTMLInputElement)
+      .value;
+    const address = (document.getElementById("address") as HTMLInputElement)
+      .value;
+    const address_ship: any = {};
+    address_ship.province = province;
+    address_ship.district = district;
+    address_ship.address = address;
+    stateCart.data.map((item: any) => {
+      cart.push({
+        product: item.product._id,
+        quantity: item.quantity,
+        color: item.color,
+      });
+    });
+    console.log("bag", cart);
     (async () => {
-      await actionCart.GetCart();
+      const res = await BillApi.calc({
+        bag: cart,
+        discountCode: discountCode,
+        address: address_ship,
+      });
+
+      console.log("res", res);
     })();
-  }, []);
+  }, [stateChange]);
   // console.log(diffAddr);
   const handleChange = (_id: any) => {
-    const value = (document.getElementById("quantity") as HTMLInputElement)
-      .value;
-    setStateChange(stateChange + 1);
-    console.log(value);
-    console.log(_id);
+    const value = (
+      document.getElementById(`quantity_${_id}`) as HTMLInputElement
+    ).value;
+    const check = false;
+
+    // actionCart.UpdateCart({_id:});
+    // setStateChange(stateChange + 1);
+
+    // console.log(_id);
+  };
+  const handleRemove = (_id: any) => {
+    const check = false;
+
+    // actionCart.UpdateCart({_id:});
+    // setStateChange(stateChange + 1);
+
+    // console.log(_id);
   };
 
-  stateCart.data.map((item) => {
-    console.log("id", item.product._id);
-  });
+  console.log("diffAddr", diffAddr);
   return (
     <div>
       <div className="container-fluid">
@@ -196,7 +235,10 @@ const Cart = (props: Props) => {
                         {moneyFormater(item.quantity * item.product.price)}
                       </td>
                       <td className="align-middle">
-                        <button className="btn btn-sm btn-primary">
+                        <button
+                          className="btn btn-sm btn-primary"
+                          onClick={() => handleRemove(item.product._id)}
+                        >
                           <i className="fa fa-times"></i>
                         </button>
                       </td>
@@ -245,6 +287,7 @@ const Cart = (props: Props) => {
                 <div className="col-md-6 form-group">
                   <label>Tỉnh/Thành phố</label>
                   <input
+                    id="province"
                     className="form-control"
                     type="text"
                     placeholder=""
@@ -258,6 +301,7 @@ const Cart = (props: Props) => {
                 <div className="col-md-6 form-group">
                   <label>Huyện/Quận</label>
                   <input
+                    id="district"
                     className="form-control"
                     type="text"
                     placeholder=""
@@ -271,6 +315,7 @@ const Cart = (props: Props) => {
                 <div className="col-md-6 form-group">
                   <label>Địa chỉ</label>
                   <input
+                    id="address"
                     className="form-control"
                     type="text"
                     placeholder=""
@@ -283,55 +328,6 @@ const Cart = (props: Props) => {
                 </div>
 
                 {/*----ship-----*/}
-                <div className="col-md-12 form-group">
-                  <div className="custom-control custom-checkbox">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      onClick={() => setDiffAddr(!diffAddr)}
-                      id="shipto"
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="shipto"
-                      data-toggle="collapse"
-                      data-target="#shipping-address"
-                    >
-                      Giao hàng ở địa chỉ khác
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="collapse mb-4" id="shipping-address">
-              <h4 className="font-weight-semi-bold mb-4">Địa chỉ giao hàng</h4>
-              <div className="row">
-                <div className="col-md-6 form-group">
-                  <label>Họ và tên</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>E-mail</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Số điện thoại</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Tỉnh/Thành phố</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Huyện/Quận</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Địa chỉ</label>
-                  <input className="form-control" type="text" placeholder="" />
-                </div>
-
-                {/*----ship-----*/}
               </div>
             </div>
           </div>
@@ -339,6 +335,7 @@ const Cart = (props: Props) => {
             <form className="mb-5" action="">
               <div className="input-group">
                 <input
+                  id="couponcode"
                   type="text"
                   className="form-control p-4"
                   placeholder="Coupon Code"

@@ -1,3 +1,4 @@
+import { AnySchema } from "yup";
 import { State } from ".";
 import cartApi from "../../api/cart/CartAPI";
 
@@ -11,6 +12,22 @@ export const GetCart =
     const result = await cartApi.read();
     if (result.status === 200) {
       // console.log("cart", result);
+      setState({
+        ...getState(),
+        data: result.data.data,
+        count: result.data.count,
+      });
+
+      return true;
+    }
+    return false;
+  };
+export const UpdateCart =
+  (data: AnySchema) =>
+  async ({ setState, getState }: Actions) => {
+    const result = await cartApi.update(data);
+    if (result.status === 200) {
+      console.log("UpdateCart", result);
       setState({
         ...getState(),
         data: result.data.data,

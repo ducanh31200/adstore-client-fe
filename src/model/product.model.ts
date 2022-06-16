@@ -7,8 +7,9 @@ export interface ISpecs {
   value: string;
 }
 export interface IColors {
-  name: string;
-  value: string;
+  color: string;
+  image_url: string;
+  quantity: number;
 }
 
 export interface IProduct {

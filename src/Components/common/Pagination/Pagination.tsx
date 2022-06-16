@@ -11,7 +11,7 @@ const Pagination = (props: Props) => {
   // state currentPage bat dau tu 0
   const { currentPage, total, limit, setCurrentPage } = props;
 
-  const totalPage = Math.ceil(total / limit);
+  let totalPage = Math.ceil(total / limit);
 
   // console.log(totalPage);
 
@@ -27,15 +27,21 @@ const Pagination = (props: Props) => {
         <i className="fa-solid fa-angle-left"></i>
       </button>
       {/* hien thi so page va cap nhat state cua page */}
-      {[...Array(totalPage)].map((_, index) => (
-        <button
-          key={index}
-          className={`pagination-item ${currentPage === index ? "active" : ""}`}
-          onClick={() => setCurrentPage(index)}
-        >
-          {index + 1}
-        </button>
-      ))}
+      {totalPage > 0 ? (
+        [...Array(totalPage)].map((_, index) => (
+          <button
+            key={index}
+            className={`pagination-item ${
+              currentPage === index ? "active" : ""
+            }`}
+            onClick={() => setCurrentPage(index)}
+          >
+            {index + 1}
+          </button>
+        ))
+      ) : (
+        <></>
+      )}
       {/* cap nhat state cua page + 1 */}
       <button
         className="pagBtn"

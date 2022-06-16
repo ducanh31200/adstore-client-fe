@@ -17,10 +17,17 @@ type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
   const [stateCart, actionCart] = useCart();
+
   const { name, id } = params;
   const initProduct: IProduct = {
     quantity: 0,
-    colors: [],
+    colors: [
+      {
+        color: "",
+        image_url: "",
+        quantity: 0,
+      },
+    ],
     enable: true,
     _id: "",
     name: "",
@@ -35,6 +42,9 @@ const ProductDetail = (props: Props) => {
   };
   const [product, setProduct] = useState(initProduct);
   const [comment, setComment] = useState(initProduct);
+  const [colorState, setColorState] = useState(product.colors[0].color);
+  const [colorIndexState, setColorIndexState] = useState(0);
+  console.log("stateCart", stateCart);
   if (id) {
     React.useEffect(() => {
       (async () => {
@@ -56,16 +66,39 @@ const ProductDetail = (props: Props) => {
     })();
   }, [click]);
   const handleAddtoCart = async () => {
+    const item_quantity = stateCart.data.filter((item, index) => {
+      if (item.product._id === id) return item.quantity;
+    });
     const value = (document.getElementById("quantity") as HTMLInputElement)
       .value;
-    if (product.quantity >= Number(value)) {
-      const res = await actionCart.PushCart({ _id: id, quantity: value });
+    if (
+      product.colors[colorIndexState].quantity >=
+      Number(value) + item_quantity[0].quantity
+    ) {
+      const res = await actionCart.PushCart({
+        _id: id,
+        quantity: Number(value),
+        color: colorState,
+      });
       if (res) {
         setClick(click + 1);
         notifySuccess("Thêm vào giỏ hàng thành công !");
       } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
     } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
+  const list_specs: any = [];
+  for (const [key, value] of Object.entries(product.specs)) {
+    list_specs.push({ name: key, value: value });
+  }
+
+  const handleGetValue = (e: any) => {
+    const value = e.target.value;
+    const idcolor = e.target.id;
+    setColorIndexState(Number(idcolor.split("color_")[0]));
+    setColorState(value);
+  };
+
+  console.log(colorState);
   return (
     <div>
       <div className="container-fluid">
@@ -137,10 +170,10 @@ const ProductDetail = (props: Props) => {
               <i className="fas fa-heart text-primary"></i>
               <span className="badge">0</span>
             </a>
-            <a href="" className="btn border">
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
               <span className="badge">{stateCart.count}</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -253,129 +286,29 @@ const ProductDetail = (props: Props) => {
               )}
             </div>
             <p className="mb-4"></p>
-            <div className="d-flex mb-3">
-              <p className="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
-              <form>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="size-1"
-                    name="size"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="size-1"
-                  ></label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="size-2"
-                    name="size"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="size-2"
-                  ></label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="size-3"
-                    name="size"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="size-3"
-                  ></label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="size-4"
-                    name="size"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="size-4"
-                  ></label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="size-5"
-                    name="size"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="size-5"
-                  ></label>
-                </div>
-              </form>
-            </div>
+
             <div className="d-flex mb-4">
               <p className="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
               <form>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="color-1"
-                    name="color"
-                  />
-                  <label className="custom-control-label" htmlFor="color-1">
-                    Black
-                  </label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="color-2"
-                    name="color"
-                  />
-                  <label className="custom-control-label" htmlFor="color-2">
-                    White
-                  </label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="color-3"
-                    name="color"
-                  />
-                  <label className="custom-control-label" htmlFor="color-3">
-                    Red
-                  </label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="color-4"
-                    name="color"
-                  />
-                  <label className="custom-control-label" htmlFor="color-4">
-                    Blue
-                  </label>
-                </div>
-                <div className="custom-control custom-radio custom-control-inline">
-                  <input
-                    type="radio"
-                    className="custom-control-input"
-                    id="color-5"
-                    name="color"
-                  />
-                  <label className="custom-control-label" htmlFor="color-5">
-                    Green
-                  </label>
-                </div>
+                {product.colors.map((item, index) => (
+                  <div className="custom-control custom-radio custom-control-inline">
+                    <input
+                      type="radio"
+                      className="custom-control-input"
+                      id={`color_${index}`}
+                      value={item.color}
+                      defaultChecked={index === 0}
+                      name="color"
+                      onClick={handleGetValue}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor={`color_${index}`}
+                    >
+                      {item.color}
+                    </label>
+                  </div>
+                ))}
               </form>
             </div>
             <div className="d-flex align-items-center mb-4 pt-2">
@@ -390,7 +323,7 @@ const ProductDetail = (props: Props) => {
                   }}
                   id="quantity"
                   min="1"
-                  max={product.quantity}
+                  max={product.colors[colorIndexState].quantity}
                   className="form-control bg-secondary text-center"
                   defaultValue="1"
                 />
@@ -464,14 +397,14 @@ const ProductDetail = (props: Props) => {
                 >
                   <thead>
                     <tr>
-                      <th key="1"></th>
+                      <th key="1">Thông số kỹ thuật</th>
                       <th key="2"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {product.specs.map((item, index) => (
-                      <tr>
-                        <td>{product.specs[index].name}</td>
+                    {list_specs.map((item: any, index: any) => (
+                      <tr key={index}>
+                        <td>{item.name}</td>
                         <td>{item.value}</td>
                       </tr>
                     ))}

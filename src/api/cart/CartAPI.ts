@@ -10,6 +10,10 @@ const cartApi = {
     const url = "account/readBag";
     return axiosClient.get(url);
   },
+  update(data: any): Promise<ReturnReponse<any>> {
+    const url = "account/update";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default cartApi;

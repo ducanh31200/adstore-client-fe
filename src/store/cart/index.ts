@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { string } from "yup";
-import { GetCart, PushCart } from "./cart.action";
+import { GetCart, PushCart, UpdateCart } from "./cart.action";
 import { selector } from "./cart.selector";
 
 export interface Color {
@@ -54,7 +54,7 @@ const initialState: State = {
 
   count: 0,
 };
-const actions = { PushCart, GetCart };
+const actions = { PushCart, GetCart, UpdateCart };
 
 const Store = createStore({
   initialState,

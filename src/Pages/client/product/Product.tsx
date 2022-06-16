@@ -26,7 +26,7 @@ const Product = () => {
   const [totalProduct, setTotalProduct] = useState<any>(1);
   const [currentPage, setCurrentPage] = useState<any>(0);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
-  const limit = 1;
+  const limit = 2;
   const [stateCart, actionCart] = useCart();
   const [click, setClick] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -38,7 +38,7 @@ const Product = () => {
       (async () => {
         const result = await productApi.list({
           category: params.name,
-          skip: currentPage,
+          skip: currentPage * limit,
           limit: limit,
         });
         if (currentPage === 0) {
@@ -54,7 +54,7 @@ const Product = () => {
     React.useEffect(() => {
       (async () => {
         const result = await productApi.list({
-          skip: currentPage,
+          skip: currentPage * limit,
           limit: limit,
         });
 
@@ -67,6 +67,27 @@ const Product = () => {
         setListProduct(result.data.data);
       })();
     }, [currentPage]);
+    React.useEffect(() => {
+      const filter: any = {};
+      for (const entry of searchParams.entries()) {
+        if (entry[0] === "colors") filter.colors = entry[1];
+        else if (entry[0] === "price") {
+          const p = entry[1].split(",");
+          filter.max_price = Number(p[1]);
+          filter.min_price = Number(p[0]);
+        }
+      }
+      filter.skip = currentPage * limit;
+      filter.limit = limit;
+      console.log("filter", filter);
+      (async () => {
+        const result = await productApi.list(filter);
+        if (currentPage === 0) {
+          setTotalProduct(result.data.count);
+        }
+        setListProduct(result.data.data);
+      })();
+    }, [searchParams]);
   }
   if (Object.keys(params).length !== 0) {
     React.useEffect(() => {
@@ -83,12 +104,13 @@ const Product = () => {
       if (filterSpecs?.length !== 0) {
         filter.specs = filterSpecs;
       }
-      filter.skip = currentPage;
+      filter.skip = currentPage * limit;
       filter.category = params.name;
       filter.limit = limit;
       console.log("filter", filter);
       (async () => {
         const result = await productApi.list(filter);
+        console.log("result", result);
         if (currentPage === 0) {
           setTotalProduct(result.data.count);
         }
