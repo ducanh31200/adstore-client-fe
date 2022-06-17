@@ -169,7 +169,7 @@ const Nav = () => {
                           to={location.pathname}
                           className="menuProfile menuLinkHover"
                         >
-                          Tin nhắn
+                          Đơn hàng
                         </Link>
                         <div className="lineMenu"></div>
                         <Link

@@ -15,7 +15,6 @@ type Props = {};
 const Cart = (props: Props) => {
   const [stateAuth, actionAuth] = useAuth();
   const [stateCart, actionCart] = useCart();
-  const [diffAddr, setDiffAddr] = useState(false);
   const [stateChange, setStateChange] = useState(0);
   React.useEffect(() => {
     (async () => {
@@ -51,32 +50,32 @@ const Cart = (props: Props) => {
         discountCode: discountCode,
         address: address_ship,
       });
-
       console.log("res", res);
     })();
   }, [stateChange]);
   // console.log(diffAddr);
-  const handleChange = (_id: any) => {
+  const handleChange = (_id: string) => {
     const value = (
       document.getElementById(`quantity_${_id}`) as HTMLInputElement
     ).value;
     const check = false;
 
-    // actionCart.UpdateCart({_id:});
-    // setStateChange(stateChange + 1);
+    actionCart.UpdateCart({ _id: _id, quantity: value });
+    setStateChange(stateChange + 1);
 
     // console.log(_id);
   };
   const handleRemove = (_id: any) => {
     const check = false;
 
-    // actionCart.UpdateCart({_id:});
-    // setStateChange(stateChange + 1);
+    actionCart.UpdateCart({ _id: _id, quantity: 0 });
+    setStateChange(stateChange + 1);
 
     // console.log(_id);
   };
-
-  console.log("diffAddr", diffAddr);
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+  };
   return (
     <div>
       <div className="container-fluid">
@@ -249,99 +248,120 @@ const Cart = (props: Props) => {
             )}
             <div className="mb-4">
               <h4 className="font-weight-semi-bold mb-4">Địa chỉ giao hàng</h4>
-              <div className="row">
-                <div className="col-md-6 form-group">
-                  <label>Họ và tên</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn ? stateAuth.data?.data?.name : ""
-                    }
-                  />
-                </div>
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-md-4 form-group">
+                    <label>Họ và tên</label>
+                    <input
+                      required
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn ? stateAuth.data?.data?.name : ""
+                      }
+                    />
+                  </div>
 
-                <div className="col-md-6 form-group">
-                  <label>E-mail</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn ? stateAuth.data?.data?.email : ""
-                    }
-                  />
+                  <div className="col-md-4 form-group">
+                    <label>E-mail</label>
+                    <input
+                      required
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn ? stateAuth.data?.data?.email : ""
+                      }
+                    />
+                  </div>
+                  <div className="col-md-4 form-group">
+                    <label>Số điện thoại</label>
+                    <input
+                      required
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn ? stateAuth.data?.data?.phone : ""
+                      }
+                    />
+                  </div>
+                  <div className="col-md-4 form-group">
+                    <label>Tỉnh/Thành phố</label>
+                    <input
+                      required
+                      id="province"
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn
+                          ? stateAuth.data?.data?.address?.province
+                          : ""
+                      }
+                    />
+                  </div>
+                  <div className="col-md-4 form-group">
+                    <label>Huyện/Quận</label>
+                    <input
+                      required
+                      id="district"
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn
+                          ? stateAuth.data?.data?.address?.district
+                          : ""
+                      }
+                    />
+                  </div>
+                  <div className="col-md-4 form-group">
+                    <label>Địa chỉ</label>
+                    <input
+                      required
+                      id="address"
+                      className="form-control"
+                      type="text"
+                      placeholder=""
+                      defaultValue={
+                        stateAuth.isLoggedIn
+                          ? stateAuth.data?.data?.address?.address
+                          : ""
+                      }
+                    />
+                  </div>
+                  <button
+                    className="btn btn-primary"
+                    style={{ marginLeft: "auto" }}
+                    onClick={() => setStateChange(stateChange + 1)}
+                  >
+                    Cập nhật thông tin
+                  </button>
+                  {/*----ship-----*/}
                 </div>
-                <div className="col-md-6 form-group">
-                  <label>Số điện thoại</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn ? stateAuth.data?.data?.phone : ""
-                    }
-                  />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Tỉnh/Thành phố</label>
-                  <input
-                    id="province"
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn
-                        ? stateAuth.data?.data?.address?.province
-                        : ""
-                    }
-                  />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Huyện/Quận</label>
-                  <input
-                    id="district"
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn
-                        ? stateAuth.data?.data?.address?.district
-                        : ""
-                    }
-                  />
-                </div>
-                <div className="col-md-6 form-group">
-                  <label>Địa chỉ</label>
-                  <input
-                    id="address"
-                    className="form-control"
-                    type="text"
-                    placeholder=""
-                    defaultValue={
-                      stateAuth.isLoggedIn
-                        ? stateAuth.data?.data?.address?.address
-                        : ""
-                    }
-                  />
-                </div>
-
-                {/*----ship-----*/}
-              </div>
+              </form>
             </div>
           </div>
           <div className="col-lg-4">
-            <form className="mb-5" action="">
+            <form onSubmit={handleSubmit} className="mb-5">
               <div className="input-group">
                 <input
                   id="couponcode"
                   type="text"
+                  onClick={() => setStateChange(stateChange + 1)}
                   className="form-control p-4"
                   placeholder="Coupon Code"
+                  required
                 />
                 <div className="input-group-append">
-                  <button className="btn btn-primary">Apply Coupon</button>
+                  <button
+                    onClick={() => setStateChange(stateChange + 1)}
+                    className="btn btn-primary"
+                  >
+                    Apply Coupon
+                  </button>
                 </div>
               </div>
             </form>
@@ -448,7 +468,7 @@ const Cart = (props: Props) => {
               </div>
               <div className="col-md-4 mb-5">
                 <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
-                <form action="">
+                <form>
                   <div className="form-group">
                     <input
                       type="text"

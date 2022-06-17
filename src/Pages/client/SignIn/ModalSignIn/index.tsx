@@ -32,8 +32,18 @@ const ModalSignIn = (props: Props) => {
         data.email_or_phone = head.concat(number);
       }
     }
-    console.log(data);
-    const result = await actionAuth.loginAsync(data);
+    let result = undefined;
+    if (loginType === "password") {
+      result = await actionAuth.loginAsync({
+        email_or_phone: data.email_or_phone,
+        password: data.password,
+      });
+    } else {
+      result = await actionAuth.loginAsync({
+        email_or_phone: data.email_or_phone,
+        code: data.code,
+      });
+    }
 
     if (result) {
       const info = await actionAuth.getUserAsync();

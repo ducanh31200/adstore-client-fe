@@ -33,7 +33,7 @@ const initialState: State = {
         address: "",
       },
       _id: "",
-      email: "a",
+      email: "",
       name: " ",
       birth: "",
       gender: "",
@@ -56,6 +56,6 @@ const Store = createStore({
   actions,
 });
 
-const useDiscount = createHook(Store, { selector: selector });
+const useUser = createHook(Store, { selector: selector });
 
-export default useDiscount;
+export default useUser;

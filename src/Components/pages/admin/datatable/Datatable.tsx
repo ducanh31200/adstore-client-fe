@@ -2,12 +2,69 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { userColumns, userRows } from "../../datatablesource";
+import useUser from "../../../../store/user";
 
+export const userColumns = [
+  { field: "id", headerName: "ID", width: 50 },
+  {
+    field: "name",
+    headerName: "Họ và tên",
+    width: 150,
+  },
+  {
+    field: "birth",
+    headerName: "Ngày sinh",
+    width: 150,
+  },
+
+  {
+    field: "gender",
+    headerName: "Giới tính",
+    width: 60,
+  },
+  {
+    field: "addressformat",
+    headerName: "Địa chỉ",
+    width: 250,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    width: 150,
+  },
+  {
+    field: "phone",
+    headerName: "Số điện thoại",
+    width: 150,
+  },
+  {
+    field: "role",
+    headerName: "Quyền truy cập",
+    width: 140,
+  },
+  {
+    field: "self_cancel",
+    headerName: "Số lần hủy đơn",
+    width: 140,
+    editable: true,
+  },
+  {
+    field: "enable",
+    headerName: "Trạng thái",
+    width: 125,
+    renderCell: (params: any) => {
+      return (
+        <div className={`status ${params.row.enable}`}>
+          {params.row.enable ? "Khả dụng" : "Không khả dụng"}
+        </div>
+      );
+    },
+  },
+];
 const Datatable = () => {
-  const [data, setData] = useState(userRows);
-  const handleDelete = (id: any) => {
-    setData(data.filter((item) => item.id !== id));
+  const [listUser, actionUser] = useUser();
+  const handleChange = (_id: string, enable: boolean) => {
+    actionUser.ChangeStatusUser(_id, enable);
   };
   const actionColumn = [
     {
@@ -17,14 +74,11 @@ const Datatable = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="viewButton">View</div>
-            </Link>
             <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
+              className={params.row.enable ? "deleteButton" : "enableButton"}
+              onClick={() => handleChange(params.row._id, params.row.enable)}
             >
-              Delete
+              {params.row.enable ? "Disable" : "Enable"}
             </div>
           </div>
         );
@@ -40,11 +94,11 @@ const Datatable = () => {
         </Link>
       </div>
       <DataGrid
-        rows={data}
+        rows={listUser.data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        checkboxSelection
+        // onCellEditCommit={handleOnchange}
       />
     </div>
   );

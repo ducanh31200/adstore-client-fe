@@ -213,7 +213,7 @@ const ModalInfo = (props: Props) => {
                     ? ""
                     : authState.data?.data?.phone === ""
                     ? "Chưa có"
-                    : formatPhone.concat(authState.data?.data?.phone.slice(3))
+                    : formatPhone.concat(authState.data?.data?.phone?.slice(3))
                 }
                 aria-describedby="basic-addon1"
                 {...register("phone")}

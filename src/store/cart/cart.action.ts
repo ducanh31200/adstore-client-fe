@@ -23,7 +23,7 @@ export const GetCart =
     return false;
   };
 export const UpdateCart =
-  (data: AnySchema) =>
+  (data: any) =>
   async ({ setState, getState }: Actions) => {
     const result = await cartApi.update(data);
     if (result.status === 200) {

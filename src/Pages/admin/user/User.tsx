@@ -8,8 +8,10 @@ import Chart from "../../../Components/pages/admin/chart/Chart";
 import Datatable from "../../../Components/pages/admin/datatable/Datatable";
 import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
+import useUser from "../../../store/user";
 
 const List = () => {
+  const [listUser, actionUser] = useUser();
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
@@ -17,7 +19,24 @@ const List = () => {
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
+  React.useEffect(() => {
+    (async () => {
+      await actionUser.GetListUser({});
 
+      //   setCurrentCate(list.data.data[0].name);
+    })();
+  }, []);
+
+  listUser.data.map((item: any, index: number) => {
+    const addr = [
+      item.address.address,
+      item.address.district,
+      item.address.province,
+    ];
+    item.id = index + 1;
+    item.addressformat = addr.join(",");
+  });
+  console.log("listUser.data", listUser.data);
   return (
     <div className="home">
       <div className="sidebar">

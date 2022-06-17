@@ -24,7 +24,7 @@ export const ProductCard = ({
       } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
     } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
-  console.log("product", product);
+
   return (
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="card product-item border-0 mb-4">
