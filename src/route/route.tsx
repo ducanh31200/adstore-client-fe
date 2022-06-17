@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import CategoryDetail from "../Components/pages/admin/category/CategoryDetail";
 import CategoryManage from "../Pages/admin/category/CategoryManage";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
+import DiscountManage from "../Pages/admin/discount/Discount";
 import NewCategory from "../Pages/admin/new/NewCategory";
 import NewDiscount from "../Pages/admin/new/NewDiscount";
 import NewProduct from "../Pages/admin/new/NewProduct";
@@ -113,6 +114,14 @@ function Router() {
         element={
           <PrivateRoute>
             <ProductManage />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/discountManage"
+        element={
+          <PrivateRoute>
+            <DiscountManage />
           </PrivateRoute>
         }
       />

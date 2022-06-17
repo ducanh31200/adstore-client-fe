@@ -75,7 +75,7 @@ const ProductManage = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/dashboard" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -154,10 +154,10 @@ const ProductManage = () => {
           <div className="mb-5">
             <div className="row border-top pr">
               <div className="d-none d-lg-block" style={{ width: "175px" }}>
-                <a
+                <Link
+                  to="/listuser"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
-                  href="#navbar-vertical"
                   style={{
                     height: "65px",
                     marginTop: "-1px",
@@ -165,11 +165,7 @@ const ProductManage = () => {
                 >
                   <i className="fa-solid fa-user i"></i>
                   <h6 className="m-0">Người dùng</h6>
-                </a>
-                <nav
-                  className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
-                  id="navbar-vertical"
-                ></nav>
+                </Link>
                 <a
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
@@ -188,15 +184,15 @@ const ProductManage = () => {
                   id="navbar-vertical2"
                 >
                   <div className="navbar-nav w-100 overflow-hidden">
-                    <a href="" className="nav-item nav-link">
+                    <Link to="/categoryManage" className="nav-item nav-link">
                       Loại hàng
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/productManage" className="nav-item nav-link">
                       Sản phẩm
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/discountManage" className="nav-item nav-link">
                       Khuyến mãi
-                    </a>
+                    </Link>
                   </div>
                 </nav>
                 <a
@@ -216,10 +212,7 @@ const ProductManage = () => {
                   className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
                   id="navbar-vertical3"
                 >
-                  <div
-                    className="navbar-nav w-100 overflow-hidden"
-                    // style={{ height: "410px" }}
-                  >
+                  <div className="navbar-nav w-100 overflow-hidden">
                     <a href="" className="nav-item nav-link">
                       Doanh thu
                     </a>

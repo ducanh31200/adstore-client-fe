@@ -49,8 +49,8 @@ const userColumns = [
 ];
 
 const ProductTable = () => {
-  const [listProduct, actionProduct] = useProduct();
-  console.log("list", listProduct);
+  const [listProduct] = useProduct();
+  // console.log("list", listProduct);
   // const handleDelete = (id: string) => {
   //   setData(data.filter((item: any) => item.id !== id));
   // };
@@ -82,8 +82,8 @@ const ProductTable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Category
-        <Link to="/category/new" className="link">
+        Product
+        <Link to="/product/new" className="link">
           Add New
         </Link>
       </div>

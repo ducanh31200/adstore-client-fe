@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import _ from "lodash";
 
 import { notifyError, notifySuccess } from "../../../utils/notify";
-import productApi from "../../../api/product/productApi";
+
 import discountApi from "../../../api/discount/discountApi";
 type Props = {
   inputs: any;

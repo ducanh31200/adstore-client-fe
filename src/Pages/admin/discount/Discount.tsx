@@ -1,23 +1,40 @@
-// import "./list.scss"
-
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
-import Chart from "../../../Components/pages/admin/chart/Chart";
-import Datatable from "../../../Components/pages/admin/datatable/Datatable";
-import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
 
-const List = () => {
+import "./discount.scss";
+import DiscountTable from "./DiscountTable";
+import discountApi from "../../../api/discount/discountApi";
+import useDiscount from "../../../store/discount";
+import { moneyFormater } from "../../../utils/moneyFormater";
+
+const DiscountManage = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [listDiscount, actionDiscount] = useDiscount();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
+  React.useEffect(() => {
+    (async () => {
+      await actionDiscount.GetListDiscount({});
 
+      //   setCurrentCate(list.data.data[0].name);
+    })();
+  }, []);
+
+  listDiscount.data.map((item: any, index: number) => {
+    item.id = index + 1;
+    item.maxPriceformat = moneyFormater(item.maxPrice);
+    item.minPriceformat = moneyFormater(item.minPrice);
+    !item.is_percent
+      ? (item.valueformat = moneyFormater(item.value))
+      : (item.valueformat = `${item.value}%`);
+  });
   return (
     <div className="home">
       <div className="sidebar">
@@ -61,7 +78,7 @@ const List = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/dashboard" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -215,10 +232,12 @@ const List = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <Datatable />;
+              <DiscountTable />
             </div>
           </div>
         </div>
+
+        <div className="bottom"></div>
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
@@ -226,4 +245,5 @@ const List = () => {
     </div>
   );
 };
-export default List;
+
+export default DiscountManage;

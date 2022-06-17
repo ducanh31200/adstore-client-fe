@@ -6,7 +6,6 @@ import { userColumns, userRows } from "../../datatablesource";
 
 const Datatable = () => {
   const [data, setData] = useState(userRows);
-
   const handleDelete = (id: any) => {
     setData(data.filter((item) => item.id !== id));
   };
