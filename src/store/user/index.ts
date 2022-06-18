@@ -6,6 +6,7 @@ import { selector } from "./user.selector";
 export type State = {
   data: [
     {
+      id: number;
       address: {
         province: string;
         district: string;
@@ -27,6 +28,7 @@ export type State = {
 const initialState: State = {
   data: [
     {
+      id: 0,
       address: {
         province: "",
         district: "",

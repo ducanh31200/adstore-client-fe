@@ -98,15 +98,10 @@ const userColumns = [
 
 const DiscountTable = () => {
   const [listDiscount, actionDiscount] = useDiscount();
-  const handleEnable = (_id: string) => {
-    actionDiscount.UpdateDiscount({ _id: _id, enable: true });
-    listDiscount.data.map((item, index) => {
-      if (item._id === _id) item.enable = false;
-    });
-  };
+
   const handleChange = (_id: string, enable: boolean) => {
     actionDiscount.ChangeStatusDiscount(_id, enable);
-    console.log("_id", _id);
+
     listDiscount.data.map((item, index) => {
       if (item._id === _id) item.enable = false;
     });
@@ -133,9 +128,9 @@ const DiscountTable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Discount
+        Mã khuyến mãi
         <Link to="/discount/new" className="link">
-          Add New
+          Thêm mã khuyến mãi
         </Link>
       </div>
       <Box sx={{ height: 520, width: "100%" }}>

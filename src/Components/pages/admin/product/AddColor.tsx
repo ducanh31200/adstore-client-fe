@@ -1,27 +1,36 @@
-import React from "react";
-import "./new.scss";
-import style from "./style.module.css";
-
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import categoryApi from "../../../api/category/category";
-import addimg from "../../../img/addimg.png";
-import removeimg from "../../../img/removeimg.png";
-import { notifyError, notifySuccess } from "../../../utils/notify";
-import Specs from "./specs";
+import { Link } from "react-router-dom";
+import { notifyError, notifySuccess } from "../../../../utils/notify";
+import "./style.scss";
 
-type Props = {
-  inputs: any;
-  title: any;
-};
+import style from "./style.module.css";
+import addimg from "../../../../img/addimg.png";
 
-const NewCategory = (props: Props) => {
-  const inputs = props.inputs;
-  const title = props.title;
+import removeimg from "../../../../img/removeimg.png";
+import productApi from "../../../../api/product/productApi";
+import useProduct from "../../../../store/product";
+interface Props {
+  closeModal: () => void;
+  _id: string;
+}
+
+const ModalAddColor = (props: Props) => {
+  const { closeModal, _id } = props;
+  const [, actionProduct] = useProduct();
+  const { register, handleSubmit, reset } = useForm();
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-  const { register, handleSubmit, reset } = useForm();
+  const submit = async (data: any, e: any) => {
+    e.preventDefault();
 
+    // if (result) {
+    //   const info = await actionAuth.getUserAsync();
+    //   reset();
+    //   closeModal();
+    // }
+  };
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -59,53 +68,29 @@ const NewCategory = (props: Props) => {
   };
 
   const onSubmit = async (data: any) => {
-    const nameCategory = data.name;
-    delete data.name;
-    var arr1 = Object.keys(data);
-    var arr2 = Object.values(data);
-    let values: any[] = [];
-    let name: any[] = [];
-    let temp: any[] = [];
-    let specs_model: any[] = [];
-
-    let newArray: any[] = [];
-    arr1.forEach((item, index) => {
-      item.includes("name") ? name.push(arr2[index]) : temp.push(arr2[index]);
-    });
-    temp.forEach((item) => {
-      const a = item.split(";");
-      a.map((item: any) => newArray.push({ value: item }));
-      values.push(newArray);
-      newArray = [];
-    });
-    name.forEach((item, index) => {
-      if (item) {
-        let obj = { name: item, values: values[index] };
-        specs_model.push(obj);
-      }
-    });
     const payload = {
-      name: nameCategory,
-      specsModel: specs_model,
+      _id: _id,
+      color: data.color,
       image_base64: imagesBase64,
     };
+    console.log("_id", _id);
     console.log("payload", payload);
     if (imagesBase64) {
-      const res = await categoryApi.create(payload);
-      if (res.status === 200) {
+      const res = await actionProduct.AddColor(payload);
+      console.log("res", res);
+      if (res) {
         reset();
         handleRemoveImage(0);
-        notifySuccess(res.data.msg);
-        window.location.reload();
+        closeModal();
+        notifySuccess(res.msg);
       } else notifyError(res.message);
     } else notifyError("Vui lòng thêm hình ảnh !");
   };
-
   return (
     <div className="new">
-      <div className="newContainer">
+      <div className="newContainer" style={{ backgroundColor: "white" }}>
         <div className="top">
-          <h1>{title}</h1>
+          <h1>Add Color</h1>
         </div>
         <div className="bottom">
           {}
@@ -122,12 +107,18 @@ const NewCategory = (props: Props) => {
                       className="col-span-1 h-[200px] w-full rounded-[10px] border relative"
                       key={index}
                     >
-                      <img className="left-imageShow" src={item} alt="images" />
+                      <img
+                        className="left-imageShow"
+                        src={item}
+                        alt="images"
+                        // className="rounded-[10px] h-full w-full object-cover"
+                      />
                       <div className="absolute rounded-[50%] top-[-10px] right-[-10px] h-[30px] w-[30px] bg-red-600 cursor-pointer">
                         <img
                           className="left-imageAdd"
                           src={removeimg}
                           alt="remove"
+                          // className="rounded-[50%] h-full w-full object-cover"
                           onClick={function () {
                             handleRemoveImage(index);
                           }}
@@ -158,18 +149,7 @@ const NewCategory = (props: Props) => {
                   onChange={handlePickImages}
                 />
               </div>
-              {inputs.map((input: any, idex: number) => (
-                <div className="formInput" key={idex}>
-                  <label>{input.label}</label>
-                  <input
-                    type={input.type}
-                    required
-                    placeholder={input.label}
-                    {...register(`${input.key}`)}
-                  />
-                </div>
-              ))}
-              <ExtendableInputs register={register} />
+              <input {...register("color")} type="text" placeholder="Color" />
 
               <button style={{ height: "50px" }}>Send</button>
             </form>
@@ -180,24 +160,4 @@ const NewCategory = (props: Props) => {
   );
 };
 
-const ExtendableInputs = ({ register }: { register: any }) => {
-  const [inputCount, setInputCount] = React.useState(1);
-
-  const handleAddInput = () => setInputCount(inputCount + 1);
-  // const handleAddInput = () => setInputCount(inputCount + 1);
-
-  return (
-    <div className="">
-      <label>Specs</label>
-      {[...Array(inputCount)].map((_, index) => (
-        <Specs register={register} id={index + 1} key={index} />
-      ))}
-      {/* <Specs /> */}
-      <button type="button" onClick={handleAddInput}>
-        Thêm
-      </button>
-    </div>
-  );
-};
-
-export default NewCategory;
+export default ModalAddColor;

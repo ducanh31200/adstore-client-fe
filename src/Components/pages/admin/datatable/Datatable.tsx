@@ -1,8 +1,10 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import useUser from "../../../../store/user";
+import { ContainerModal } from "../../../common/ContainerModal";
+import ModalApplyDiscountUser from "./ApplyDiscountUser";
 
 export const userColumns = [
   { field: "id", headerName: "ID", width: 50 },
@@ -14,7 +16,7 @@ export const userColumns = [
   {
     field: "birth",
     headerName: "Ngày sinh",
-    width: 150,
+    width: 110,
   },
 
   {
@@ -25,12 +27,12 @@ export const userColumns = [
   {
     field: "addressformat",
     headerName: "Địa chỉ",
-    width: 250,
+    width: 300,
   },
   {
     field: "email",
     headerName: "Email",
-    width: 150,
+    width: 230,
   },
   {
     field: "phone",
@@ -63,6 +65,10 @@ export const userColumns = [
 ];
 const Datatable = () => {
   const [listUser, actionUser] = useUser();
+  const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
+  const openApplyDiscountModal = () => setApplyDiscountModal(true);
+  const closeApplyDiscountModal = () => setApplyDiscountModal(false);
+  const [selected, setSelected] = React.useState<any>([]);
   const handleChange = (_id: string, enable: boolean) => {
     actionUser.ChangeStatusUser(_id, enable);
   };
@@ -70,7 +76,7 @@ const Datatable = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 100,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
@@ -89,6 +95,14 @@ const Datatable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Add New User
+        <Link
+          to={location.pathname}
+          className="link"
+          style={{ marginLeft: "auto" }}
+          onClick={openApplyDiscountModal}
+        >
+          Áp dụng khuyến mãi
+        </Link>
         <Link to="/users/new" className="link">
           Add New
         </Link>
@@ -98,8 +112,25 @@ const Datatable = () => {
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        // onCellEditCommit={handleOnchange}
+        checkboxSelection
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRows: any = [];
+          listUser.data.map((row) => {
+            if (selectedIDs.has(row.id)) selectedRows.push(row._id);
+          });
+          setSelected(selectedRows);
+        }}
       />
+      <ContainerModal
+        isVisible={showApplyDiscountModal}
+        closeModal={closeApplyDiscountModal}
+      >
+        <ModalApplyDiscountUser
+          closeModal={closeApplyDiscountModal}
+          users={selected}
+        />
+      </ContainerModal>
     </div>
   );
 };

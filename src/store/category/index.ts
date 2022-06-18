@@ -5,6 +5,7 @@ import { selector } from "./cat.selector";
 export type State = {
   data: [
     {
+      id: number;
       _id: string;
       name: string;
       image_url: string;
@@ -16,6 +17,7 @@ export type State = {
 const initialState: State = {
   data: [
     {
+      id: 0,
       _id: "",
       name: "",
       image_url: "",

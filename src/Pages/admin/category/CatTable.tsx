@@ -1,6 +1,8 @@
 import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalApplyDiscountCat from "../../../Components/pages/admin/category/ApplyDiscountCat";
 import useCate from "../../../store/category";
 
 const userColumns = [
@@ -27,7 +29,10 @@ const userColumns = [
 
 const CatTable = () => {
   const [category, actionCategory] = useCate();
-
+  const [selected, setSelected] = React.useState<any>([]);
+  const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
+  const openApplyDiscountModal = () => setApplyDiscountModal(true);
+  const closeApplyDiscountModal = () => setApplyDiscountModal(false);
   const handleDelete = (_id: string) => {
     actionCategory.DeleteCategory(_id);
   };
@@ -61,8 +66,16 @@ const CatTable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Category
+        <Link
+          to={location.pathname}
+          className="link"
+          onClick={openApplyDiscountModal}
+          style={{ marginLeft: "auto" }}
+        >
+          Áp dụng khuyến mãi
+        </Link>
         <Link to="/category/new" className="link">
-          Add New
+          Thêm loại hàng
         </Link>
       </div>
       <DataGrid
@@ -72,7 +85,24 @@ const CatTable = () => {
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRows: any = [];
+          category.data.map((row) => {
+            if (selectedIDs.has(row.id)) selectedRows.push(row._id);
+          });
+          setSelected(selectedRows);
+        }}
       />
+      <ContainerModal
+        isVisible={showApplyDiscountModal}
+        closeModal={closeApplyDiscountModal}
+      >
+        <ModalApplyDiscountCat
+          closeModal={closeApplyDiscountModal}
+          categories={selected}
+        />
+      </ContainerModal>
     </div>
   );
 };

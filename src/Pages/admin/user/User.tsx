@@ -29,9 +29,9 @@ const List = () => {
 
   listUser.data.map((item: any, index: number) => {
     const addr = [
-      item.address.address,
-      item.address.district,
-      item.address.province,
+      item.address?.address,
+      item.address?.district,
+      item.address?.province,
     ];
     item.id = index + 1;
     item.addressformat = addr.join(",");

@@ -1,6 +1,10 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, selectedIdsLookupSelector } from "@mui/x-data-grid";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalAddColor from "../../../Components/pages/admin/product/AddColor";
+import ModalApplyDiscountPro from "../../../Components/pages/admin/product/ApplyDiscountPro";
+import ModalApplyDiscount from "../../../Components/pages/admin/product/ApplyDiscountPro";
 import useProduct from "../../../store/product";
 
 const userColumns = [
@@ -9,7 +13,7 @@ const userColumns = [
   {
     field: "name",
     headerName: "Name",
-    width: 300,
+    width: 250,
     renderCell: (params: any) => {
       return (
         <div className="cellWithImg">
@@ -18,6 +22,11 @@ const userColumns = [
         </div>
       );
     },
+  },
+  {
+    field: "color",
+    headerName: "Màu",
+    width: 250,
   },
   {
     field: "priceformat",
@@ -35,9 +44,19 @@ const userColumns = [
     width: 80,
   },
   {
+    field: "sold",
+    headerName: "Đã bán",
+    width: 80,
+  },
+  {
+    field: "total_rate",
+    headerName: "Đánh giá",
+    width: 80,
+  },
+  {
     field: "enable",
     headerName: "Trạng thái",
-    width: 120,
+    width: 140,
     renderCell: (params: any) => {
       return (
         <div className={`status ${params.row.enable ? "Approved" : "Soldout"}`}>
@@ -49,30 +68,52 @@ const userColumns = [
 ];
 
 const ProductTable = () => {
-  const [listProduct] = useProduct();
-  // console.log("list", listProduct);
-  // const handleDelete = (id: string) => {
-  //   setData(data.filter((item: any) => item.id !== id));
-  // };
+  const [listProduct, actionProduct] = useProduct();
+  const [id_product, setId_product] = React.useState("");
+  const [selected, setSelected] = React.useState<any>([]);
+  const [showAddColorModal, setAddColorModal] = React.useState(false);
+  const openAddColorModal = () => setAddColorModal(true);
+  const closeAddColorModal = () => setAddColorModal(false);
+  const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
+  const openApplyDiscountModal = () => setApplyDiscountModal(true);
+  const closeApplyDiscountModal = () => setApplyDiscountModal(false);
+
+  const handleChangeStatus = (id: string, enable: boolean) => {
+    actionProduct.ChangeStatusProduct(id, enable);
+  };
+  const handleAddcolor = (id: string) => {
+    setId_product(id);
+    openAddColorModal();
+  };
+
+  // const handleAddcolor = () => {};
+
+  const location = useLocation();
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 220,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="viewButton">View</div>
+            <Link
+              to={location.pathname}
+              style={{ textDecoration: "none" }}
+              onClick={() => handleAddcolor(params.row._id)}
+            >
+              <div className="viewButton">Add color</div>
             </Link>
             <Link to="/users/test" style={{ textDecoration: "none" }}>
               <div className="updateButton">Update</div>
             </Link>
             <div
-              className="deleteButton"
-              // onClick={() => handleDelete(params.row.id)}
+              className={params.row.enable ? "deleteButton" : "enableButton"}
+              onClick={() =>
+                handleChangeStatus(params.row._id, params.row.enable)
+              }
             >
-              Delete
+              {params.row.enable ? "Disable" : "Enable"}
             </div>
           </div>
         );
@@ -83,8 +124,16 @@ const ProductTable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Product
+        <Link
+          to={location.pathname}
+          className="link"
+          style={{ marginLeft: "auto" }}
+          onClick={openApplyDiscountModal}
+        >
+          Áp dụng khuyến mãi
+        </Link>
         <Link to="/product/new" className="link">
-          Add New
+          Thêm sản phẩm
         </Link>
       </div>
       <DataGrid
@@ -94,7 +143,30 @@ const ProductTable = () => {
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRows: any = [];
+          listProduct.data.map((row) => {
+            if (selectedIDs.has(row.id)) selectedRows.push(row._id);
+          });
+          setSelected(selectedRows);
+        }}
       />
+      <ContainerModal
+        isVisible={showAddColorModal}
+        closeModal={closeAddColorModal}
+      >
+        <ModalAddColor closeModal={closeAddColorModal} _id={id_product} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showApplyDiscountModal}
+        closeModal={closeApplyDiscountModal}
+      >
+        <ModalApplyDiscountPro
+          closeModal={closeApplyDiscountModal}
+          products={selected}
+        />
+      </ContainerModal>
     </div>
   );
 };

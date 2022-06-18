@@ -6,7 +6,6 @@ import useAuth from "../../../store/auth";
 
 import "./product.scss";
 import ProductTable from "./ProductTable";
-import productApi from "../../../api/product/productApi";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useProduct from "../../../store/product";
 
@@ -24,14 +23,20 @@ const ProductManage = () => {
       await actionProduct.GetListProduct();
     })();
   }, []);
-
   listProduct.data.map((item: any, index: number) => {
     item.id = index + 1;
     item.priceformat = moneyFormater(item.price);
     item.saleformat = moneyFormater(item.sale);
+    let quantity = 0;
+    let colors: any = [];
+    item.colors.map((item: any) => {
+      quantity = quantity + item.quantity;
+      colors.push(item.color);
+    });
+    item.color = colors.join(",");
+    item.quantity = quantity;
   });
 
-  console.log("product", listProduct.data);
   return (
     <div className="home">
       <div className="sidebar">

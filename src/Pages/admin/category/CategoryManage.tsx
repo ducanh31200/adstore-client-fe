@@ -27,7 +27,6 @@ const CategoryManage = () => {
   category.data.map((item: any, index: number) => {
     item.id = index + 1;
   });
-  console.log("test", category.data);
 
   return (
     <div className="home">

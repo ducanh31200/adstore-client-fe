@@ -12,12 +12,20 @@ const productApi = {
     const url = "product/list";
     return axiosClient.post(url, data);
   },
+  update(data: any): Promise<ReturnReponse<any>> {
+    const url = "product/update";
+    return axiosClient.post(url, data);
+  },
   read(data: any): Promise<ReturnReponse<any>> {
     const url = "product/read";
     return axiosClient.post(url, data);
   },
   comment(data: any): Promise<ReturnReponse<any>> {
     const url = "product/readComments";
+    return axiosClient.post(url, data);
+  },
+  addColor(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/addColor";
     return axiosClient.post(url, data);
   },
 };
