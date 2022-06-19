@@ -10,7 +10,7 @@ import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
 import useUser from "../../../store/user";
 
-const List = () => {
+const UserManagement = () => {
   const [listUser, actionUser] = useUser();
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
@@ -245,4 +245,4 @@ const List = () => {
     </div>
   );
 };
-export default List;
+export default UserManagement;

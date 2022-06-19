@@ -1,15 +1,16 @@
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
+import RouterRender from "./Components";
 import Router from "./route/route";
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      {/* <BrowserRouter>
         <Router />
-      </BrowserRouter>
-
+      </BrowserRouter> */}
+      <RouterRender />
       <Toaster
         reverseOrder={false}
         position="top-right"

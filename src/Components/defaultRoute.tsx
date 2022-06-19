@@ -1,0 +1,18 @@
+export const defaultRoute = {
+  homepage: "/",
+  product: "/products",
+  productCategory: "/products/:name",
+  productDetail: "/products/:category/:id",
+  cart: "/cart",
+  bill: "/bill",
+  contact: "/contact",
+  dashboard: "/admin",
+  productManage: "/admin/product",
+  newProduct: "/admin/product/new",
+  categoryManage: "/admin/category",
+  viewCategory: "/admin/category/view",
+  newCategory: "/admin/category/new",
+  userManage: "/admin/user",
+  discountManage: "/admin/discount",
+  newDiscount: "/admin/discount/new",
+};

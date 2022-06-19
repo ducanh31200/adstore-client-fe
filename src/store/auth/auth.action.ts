@@ -39,7 +39,7 @@ export const getUserAsync =
     }
     if (result.status === 200) {
       setState({ ...getState(), isLoggedIn: true, data: result.data });
-      return true;
+      return result.data;
     }
     return false;
   };
