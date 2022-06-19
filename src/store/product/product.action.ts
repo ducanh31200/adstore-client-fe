@@ -1,3 +1,4 @@
+import { AnySchema } from "yup";
 import { State } from ".";
 import {
   IReqGetOTP,
@@ -17,6 +18,15 @@ export const GetListProduct =
     if (result.status === 200) {
       setState({ ...getState(), data: result.data.data });
 
+      return true;
+    }
+    return false;
+  };
+export const ImportProduct =
+  (data: any) =>
+  async ({ setState, getState }: Actions) => {
+    const result = await productApi.import(data);
+    if (result.status === 200) {
       return true;
     }
     return false;

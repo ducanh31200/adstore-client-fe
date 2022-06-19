@@ -15,9 +15,26 @@ export const ProductCard = ({
 }) => {
   const [stateCart, actionCart] = useCart();
 
+  React.useEffect(() => {
+    (async () => {
+      await actionCart.GetCart();
+    })();
+  }, [click]);
   const handleAddtoCart = async (_id: any) => {
-    if (product.quantity >= 1) {
-      const res = await actionCart.PushCart({ _id: _id, quantity: 1 });
+    let added: number = 0;
+    console.log("product", product);
+    let item_quantity = stateCart.data.filter((item, index) => {
+      if (item.product._id === _id) added = item.quantity;
+    });
+    if (item_quantity) {
+      added = 0;
+    }
+    if (product.colors[0].quantity > added) {
+      const res = await actionCart.PushCart({
+        _id: _id,
+        quantity: 1,
+        color: product.colors[0].color,
+      });
       if (res) {
         setClick(click + 1);
         notifySuccess("Thêm vào giỏ hàng thành công !");
@@ -29,17 +46,19 @@ export const ProductCard = ({
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="card product-item border-0 mb-4">
         <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-          <p className="text-right">{product.quantity} Products</p>
+          <p className="text-right">{product.colors[0].quantity} Products</p>
           <Link to={`/products/${product.category}/${product._id}`}>
             <img
               className="img-fluid h-full w-full object-contain"
-              src={product.colors?.image_url}
+              src={product.colors[0].image_url}
               alt=""
             />
           </Link>
         </div>
         <div className="card-body border-left border-right text-center p-0 pt-4 pb-3">
-          <h6 className="text-truncate mb-3">{product.name}</h6>
+          <h6 className="text-truncate mb-3">
+            {product.name + " " + product.colors[0].color}
+          </h6>
           <h6>{moneyFormater(product.price - product.sale)}</h6>
           {product.sale ? (
             <h6 className="text-muted ml-2">

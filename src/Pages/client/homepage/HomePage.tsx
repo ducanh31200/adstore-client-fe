@@ -227,14 +227,14 @@ const HomePage = () => {
         </div>
         {/* aaaaaaaaaaaaaaaaaaaaaaaa */}
         <div className="row px-xl-5 pb-3">
-          {FAKE_PRODUCT_DATA.map((product, index) => (
+          {/* {FAKE_PRODUCT_DATA.map((product, index) => (
             <ProductCard
               key={index}
               product={product}
               setClick={setClick}
               click={click}
             />
-          ))}
+          ))} */}
         </div>
       </div>
 
@@ -270,14 +270,14 @@ const HomePage = () => {
           </h2>
         </div>
         <div className="row px-xl-5 pb-3">
-          {FAKE_PRODUCT_DATA.map((product, index) => (
+          {/* {FAKE_PRODUCT_DATA.map((product, index) => (
             <ProductCard
               key={index}
               product={product}
               setClick={setClick}
               click={click}
             />
-          ))}
+          ))} */}
         </div>
       </div>
 

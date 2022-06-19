@@ -1,5 +1,5 @@
 import React from "react";
-import { createSearchParams, Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 export const SpecFilter = ({ spec }: { spec: any }) => {
   let total = 0;

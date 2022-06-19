@@ -149,8 +149,10 @@ const ModalAddColor = (props: Props) => {
                   onChange={handlePickImages}
                 />
               </div>
-              <input {...register("color")} type="text" placeholder="Color" />
-
+              <label>
+                Màu : &nbsp;
+                <input {...register("color")} type="text" placeholder="Color" />
+              </label>
               <button style={{ height: "50px" }}>Send</button>
             </form>
           </div>

@@ -28,6 +28,10 @@ const productApi = {
     const url = "/product/addColor";
     return axiosClient.post(url, data);
   },
+  import(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/imports";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default productApi;

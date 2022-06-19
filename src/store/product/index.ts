@@ -4,6 +4,7 @@ import {
   GetListProduct,
   AddColor,
   ChangeStatusProduct,
+  ImportProduct,
 } from "./product.action";
 import { selector } from "./product.selector";
 
@@ -55,6 +56,7 @@ const actions = {
   GetListProduct,
   AddColor,
   ChangeStatusProduct,
+  ImportProduct,
 };
 
 const Store = createStore({

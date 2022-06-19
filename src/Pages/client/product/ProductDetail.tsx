@@ -66,15 +66,17 @@ const ProductDetail = (props: Props) => {
     })();
   }, [click]);
   const handleAddtoCart = async () => {
-    const item_quantity = stateCart.data.filter((item, index) => {
-      if (item.product._id === id) return item.quantity;
+    let added: number = 0;
+    let item_quantity = stateCart.data.filter((item, index) => {
+      if (item.product._id === id) added = item.quantity;
     });
+    if (item_quantity) {
+      added = 0;
+    }
     const value = (document.getElementById("quantity") as HTMLInputElement)
       .value;
-    if (
-      product.colors[colorIndexState].quantity >=
-      Number(value) + item_quantity[0].quantity
-    ) {
+    console.log("item_quantity", item_quantity[0]?.quantity);
+    if (product.colors[colorIndexState].quantity >= Number(value) + added) {
       const res = await actionCart.PushCart({
         _id: id,
         quantity: Number(value),
@@ -94,7 +96,7 @@ const ProductDetail = (props: Props) => {
   const handleGetValue = (e: any) => {
     const value = e.target.value;
     const idcolor = e.target.id;
-    setColorIndexState(Number(idcolor.split("color_")[0]));
+    setColorIndexState(Number(idcolor.split("color_")[1]));
     setColorState(value);
   };
 
@@ -291,22 +293,26 @@ const ProductDetail = (props: Props) => {
               <p className="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
               <form>
                 {product.colors.map((item, index) => (
-                  <div className="custom-control custom-radio custom-control-inline">
-                    <input
-                      type="radio"
-                      className="custom-control-input"
-                      id={`color_${index}`}
-                      value={item.color}
-                      defaultChecked={index === 0}
-                      name="color"
-                      onClick={handleGetValue}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor={`color_${index}`}
-                    >
-                      {item.color}
-                    </label>
+                  <div>
+                    <div className="custom-control custom-radio custom-control-inline">
+                      <input
+                        type="radio"
+                        className="custom-control-input"
+                        id={`color_${index}`}
+                        value={item.color}
+                        defaultChecked={index === 0}
+                        name="color"
+                        onClick={handleGetValue}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor={`color_${index}`}
+                      >
+                        {item.color.charAt(0).toUpperCase() +
+                          item.color.slice(1).toLowerCase()}
+                      </label>
+                    </div>
+                    <p>{product.colors[index].quantity} Products</p>
                   </div>
                 ))}
               </form>

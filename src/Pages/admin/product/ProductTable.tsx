@@ -5,6 +5,7 @@ import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalAddColor from "../../../Components/pages/admin/product/AddColor";
 import ModalApplyDiscountPro from "../../../Components/pages/admin/product/ApplyDiscountPro";
 import ModalApplyDiscount from "../../../Components/pages/admin/product/ApplyDiscountPro";
+import ModalImportProduct from "../../../Components/pages/admin/product/ImportProduct";
 import useProduct from "../../../store/product";
 
 const userColumns = [
@@ -71,41 +72,54 @@ const ProductTable = () => {
   const [listProduct, actionProduct] = useProduct();
   const [id_product, setId_product] = React.useState("");
   const [selected, setSelected] = React.useState<any>([]);
+  const [code, setCode] = React.useState("");
   const [showAddColorModal, setAddColorModal] = React.useState(false);
   const openAddColorModal = () => setAddColorModal(true);
   const closeAddColorModal = () => setAddColorModal(false);
   const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
   const openApplyDiscountModal = () => setApplyDiscountModal(true);
   const closeApplyDiscountModal = () => setApplyDiscountModal(false);
+  const [showImportProductModal, setImportProductModal] = React.useState(false);
+  const openImportProductModal = () => setImportProductModal(true);
+  const closeImportProductModal = () => setImportProductModal(false);
 
   const handleChangeStatus = (id: string, enable: boolean) => {
     actionProduct.ChangeStatusProduct(id, enable);
+  };
+  const handleImport = (code: string) => {
+    setCode(code);
+    openImportProductModal();
   };
   const handleAddcolor = (id: string) => {
     setId_product(id);
     openAddColorModal();
   };
 
-  // const handleAddcolor = () => {};
-
   const location = useLocation();
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 220,
+      width: 350,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
             <Link
               to={location.pathname}
               style={{ textDecoration: "none" }}
+              onClick={() => handleImport(params.row.code)}
+            >
+              <div className="viewButton">Nhập hàng</div>
+            </Link>
+            <Link
+              to={location.pathname}
+              style={{ textDecoration: "none" }}
               onClick={() => handleAddcolor(params.row._id)}
             >
-              <div className="viewButton">Add color</div>
+              <div className="viewButton">Thêm màu</div>
             </Link>
             <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="updateButton">Update</div>
+              <div className="updateButton">Sửa</div>
             </Link>
             <div
               className={params.row.enable ? "deleteButton" : "enableButton"}
@@ -166,6 +180,12 @@ const ProductTable = () => {
           closeModal={closeApplyDiscountModal}
           products={selected}
         />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showImportProductModal}
+        closeModal={closeImportProductModal}
+      >
+        <ModalImportProduct closeModal={closeImportProductModal} code={code} />
       </ContainerModal>
     </div>
   );
