@@ -21,7 +21,6 @@ import useCart from "../../../store/cart";
 
 const HomePage = () => {
   const [stateAuth, actionAuth] = useAuth();
-  const [stateCart, actionCart] = useCart();
   const [click, setClick] = useState(0);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   React.useEffect(() => {
@@ -33,7 +32,7 @@ const HomePage = () => {
   }, []);
   React.useEffect(() => {
     (async () => {
-      await actionCart.GetCart();
+      await actionAuth.getUserAsync();
     })();
   }, [click]);
   return (
@@ -114,12 +113,14 @@ const HomePage = () => {
                   : 0}
               </span>
             </a>
-            <a href="" className="btn border">
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
               <span className="badge">
-                {stateAuth.isLoggedIn ? stateCart.count : 0}
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data.data.bag_items_length
+                  : 0}
               </span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

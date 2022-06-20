@@ -16,6 +16,11 @@ export type State = {
     msg: string;
     data: any;
     accessToken: string;
+    chats: any;
+    notifications_length: number;
+    bag_items_length: number;
+    bills_length: number;
+    rate_waits_length: number;
   };
 };
 
@@ -25,6 +30,11 @@ const initialState: State = {
     msg: "",
     data: {},
     accessToken: "",
+    chats: [],
+    notifications_length: 0,
+    bag_items_length: 10,
+    bills_length: 0,
+    rate_waits_length: 0,
   },
 };
 

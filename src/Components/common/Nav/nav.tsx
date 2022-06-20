@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import categoryApi from "../../../api/category/category";
+import { getFromLocalStorage } from "../../../helper/base.helpers";
 import ModalSignIn from "../../../Pages/client/SignIn/ModalSignIn";
 import ModalSignUp from "../../../Pages/client/SignUp/ModalSignUp/SignUp";
 import useAuth from "../../../store/auth";
@@ -19,6 +20,16 @@ const Nav = () => {
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
+  const token = getFromLocalStorage("accessToken");
+
+  React.useEffect(() => {
+    if (token) {
+      (async () => {
+        await actionAuth.getUserAsync();
+      })();
+    }
+  }, []);
+
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();

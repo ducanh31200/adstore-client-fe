@@ -11,7 +11,7 @@ export const SpecFilter = ({ spec }: { spec: any }) => {
     const currentSpecs = searchParams.get(`${spec.name}`);
     if (check) {
       if (currentSpecs) {
-        searchParams.set(`${spec.name}`, `${currentSpecs},${color}`);
+        searchParams.set(`${spec.name}`, `${currentSpecs};${color}`);
         setSearchParams(searchParams);
       } else {
         {
@@ -20,12 +20,12 @@ export const SpecFilter = ({ spec }: { spec: any }) => {
         }
       }
     } else {
-      const split = currentSpecs?.split(",");
+      const split = currentSpecs?.split(";");
       const removedColor = split?.filter((item) => item !== color);
       if (removedColor?.length === 0) {
         searchParams.delete(`${spec.name}`);
       } else {
-        searchParams.set(`${spec.name}`, removedColor?.join(",") || "");
+        searchParams.set(`${spec.name}`, removedColor?.join(";") || "");
       }
       setSearchParams(searchParams);
     }
@@ -42,7 +42,7 @@ export const SpecFilter = ({ spec }: { spec: any }) => {
           <input
             type="checkbox"
             className="custom-control-input"
-            readOnly
+            defaultChecked
             id="all"
             checked={!spec_name}
           />

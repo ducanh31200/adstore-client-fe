@@ -17,23 +17,31 @@ import { SpecFilter } from "../../../Components/common/Product/SpecFilter";
 import { FilterColor } from "../../../Components/pages/client/homepage/CategoryCard/product/FilterColor";
 
 import payment from "../../../img/payments.png";
+import useAuth from "../../../store/auth";
 import useCart from "../../../store/cart";
 
 const Product = () => {
   const params = useParams<any>();
   const [listProduct, setListProduct] = useState<Array<any>>([]);
+  const [listAllProduct, setListAllProduct] = useState<Array<any>>([]);
   const [cat, setCat] = useState<any>();
   const [totalProduct, setTotalProduct] = useState<any>(1);
   const [currentPage, setCurrentPage] = useState<any>(0);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
-  const limit = 2;
-  const [stateCart, actionCart] = useCart();
+  const limit = 7;
+  const [stateAuth, actionAuth] = useAuth();
   const [click, setClick] = useState(0);
 
   const [searchParams] = useSearchParams();
-
+  React.useEffect(() => {
+    (async () => {
+      const result = await productApi.list({
+        limit: 10000,
+      });
+      setListAllProduct(result.data.data);
+    })();
+  }, []);
   // console.log("stateCart", stateCart.count);
-  // console.log("listproduct", listProduct);
   if (Object.keys(params).length !== 0) {
     React.useEffect(() => {
       (async () => {
@@ -46,7 +54,7 @@ const Product = () => {
           setTotalProduct(result.data.count);
         }
         const getCat = await categoryApi.read(params);
-        // const { data } = result.data;
+        console.log("result.data.data", result.data.data);
         setListProduct(result.data.data);
         setCat(getCat.data.data);
       })();
@@ -63,7 +71,6 @@ const Product = () => {
           setTotalProduct(result.data.count);
         }
         const listcat = await categoryApi.list();
-
         setListCategory(listcat.data.data);
         setListProduct(result.data.data);
       })();
@@ -194,12 +201,22 @@ const Product = () => {
           <div className="col-lg-3 col-6 text-right">
             <a href="" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
             </a>
-            <a href="" className="btn border">
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">{stateCart.count}</span>
-            </a>
+              <span className="badge">
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data?.data?.bag_items_length
+                  : 0}
+              </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -233,7 +250,7 @@ const Product = () => {
               <PriceFilter />
             </div>
 
-            <FilterColor listProduct={listProduct} />
+            <FilterColor listProduct={listAllProduct} />
             {Object.keys(params).length !== 0 ? (
               cat?.specsModel.map((item: any, index: any) => (
                 <SpecFilter key={index} spec={item} />

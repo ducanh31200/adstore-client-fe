@@ -9,18 +9,23 @@ import useCart from "../../../store/cart";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useAuth from "../../../store/auth";
 import BillApi from "../../../api/cart/BillApi";
+import useBill from "../../../store/bill";
+import { changePhoneAsync } from "../../../store/auth/auth.action";
+import { notifyError } from "../../../utils/notify";
 
 type Props = {};
 
 const Cart = (props: Props) => {
   const [stateAuth, actionAuth] = useAuth();
-  const [stateCart, actionCart] = useCart();
+  const [stateBill, actionBill] = useBill();
   const [stateChange, setStateChange] = useState(0);
+
   React.useEffect(() => {
     (async () => {
-      await actionCart.GetCart();
+      await actionAuth.getUserAsync();
     })();
   }, [stateChange]);
+
   React.useEffect(() => {
     const cart: any = [];
     const discountCode = (
@@ -36,42 +41,83 @@ const Cart = (props: Props) => {
     address_ship.province = province;
     address_ship.district = district;
     address_ship.address = address;
-    stateCart.data.map((item: any) => {
+    stateBill.data?.bag_details.map((item: any) => {
       cart.push({
-        product: item.product._id,
+        product: item.product,
         quantity: item.quantity,
         color: item.color,
       });
     });
-    console.log("bag", cart);
+    console.log("cart", cart);
+    console.log("discountCode", discountCode);
+    console.log("address_ship", address_ship);
     (async () => {
-      const res = await BillApi.calc({
-        bag: cart,
+      await actionBill.Calc({
+        bag: cart[0].product === "" ? undefined : cart,
         discountCode: discountCode,
         address: address_ship,
       });
-      console.log("res", res);
     })();
   }, [stateChange]);
-  // console.log(diffAddr);
-  const handleChange = (_id: string) => {
-    const value = (
-      document.getElementById(`quantity_${_id}`) as HTMLInputElement
+  const handleOrder = async () => {
+    console.log("first");
+    const cart: any = [];
+    const discountCode = (
+      document.getElementById("couponcode") as HTMLInputElement
     ).value;
-    const check = false;
+    const province = (document.getElementById("province") as HTMLInputElement)
+      .value;
+    const district = (document.getElementById("district") as HTMLInputElement)
+      .value;
+    const address = (document.getElementById("address") as HTMLInputElement)
+      .value;
+    const name = (document.getElementById("nameUser") as HTMLInputElement)
+      .value;
 
-    actionCart.UpdateCart({ _id: _id, quantity: value });
+    const phone = (document.getElementById("phoneUser") as HTMLInputElement)
+      .value;
+
+    const address_ship: any = {};
+    address_ship.province = province;
+    address_ship.district = district;
+    address_ship.address = address;
+    stateBill.data?.bag_details.map((item: any) => {
+      cart.push({
+        product: item.product,
+        quantity: item.quantity,
+        color: item.color,
+      });
+    });
+    if (phone === "") notifyError("Vui lòng nhập số điện thoại !");
+    else {
+      await actionBill.Create({
+        bag: cart,
+        phone: phone,
+        name: name,
+        discountCode: discountCode,
+        address: address_ship,
+        cod: true,
+      });
+    }
+  };
+  const handleQuantity = (_id: string, color: any, change: number) => {
+    stateBill.data?.bag_details.map((item: any) => {
+      if (item.product === _id && item.color === color) {
+        item.quantity = item.quantity + change;
+      }
+    });
     setStateChange(stateChange + 1);
 
     // console.log(_id);
   };
-  const handleRemove = (_id: any) => {
+  const handleRemove = (_id: any, color: any) => {
     const check = false;
-
-    actionCart.UpdateCart({ _id: _id, quantity: 0 });
+    stateBill.data?.bag_details.map((item: any) => {
+      if (item.product === _id && item.color === color) {
+        item.quantity = 0;
+      }
+    });
     setStateChange(stateChange + 1);
-
-    // console.log(_id);
   };
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -145,12 +191,22 @@ const Cart = (props: Props) => {
           <div className="col-lg-3 col-6 text-right">
             <a href="" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
             </a>
-            <a href="" className="btn border">
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">{stateCart.count}</span>
-            </a>
+              <span className="badge">
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data.data.bag_items_length
+                  : 0}
+              </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -178,7 +234,9 @@ const Cart = (props: Props) => {
       <div className="container-fluid pt-5">
         <div className="row px-xl-5">
           <div className="col-lg-8 table-responsive mb-5">
-            {stateCart.count === 0 ? (
+            {(stateBill.data.bag_details.length === 1 &&
+              stateBill.data.bag_details[0].quantity === 0) ||
+            stateBill.data.bag_details.length === 0 ? (
               <img src={emptyCart} style={{ marginLeft: "300px" }}></img>
             ) : (
               <table className="table table-bordered text-center mb-0">
@@ -190,53 +248,67 @@ const Cart = (props: Props) => {
                     <th>Giảm giá</th>
                     <th>Số lượng</th>
                     <th>Tổng cộng</th>
-                    <th>Remove</th>
+                    <th>Xóa</th>
                   </tr>
                 </thead>
                 <tbody className="align-middle">
-                  {stateCart.data.map((item, index) => (
+                  {stateBill.data.bag_details.map((item: any, index: any) => (
                     <tr key={index}>
                       <td className="align-middle">{index + 1}</td>
                       <td className="align-middle">
                         <img
-                          src={item.product.colors[0].image_url}
+                          src={item.image_url}
                           alt=""
                           style={{ width: "100px" }}
                         />{" "}
-                        {item.product.name}
+                        {item.name}
                       </td>
                       <td className="align-middle">
-                        {moneyFormater(item.product.price)}
+                        {moneyFormater(item.price)}
                       </td>
                       <td className="align-middle">
-                        {moneyFormater(item.product.sale)}
+                        {moneyFormater(item.sale)}
                       </td>
                       <td className="align-middle">
                         <div
                           className="input-group quantity mx-auto"
-                          style={{ width: "70px" }}
+                          style={{ width: "100px" }}
                         >
+                          <div className="input-group-btn">
+                            <button
+                              className="btn btn-sm btn-primary btn-minus"
+                              onClick={() =>
+                                handleQuantity(item.product, item.color, -1)
+                              }
+                            >
+                              <i className="fa fa-minus"></i>
+                            </button>
+                          </div>
                           <input
-                            type="number"
-                            onKeyDown={(e: any) => {
-                              e.preventDefault();
-                            }}
-                            id={`quantity_${item.product._id}`}
-                            min="1"
-                            max={50}
-                            className="form-control bg-secondary text-center"
-                            defaultValue={item.quantity}
-                            onChange={() => handleChange(item.product._id)}
+                            value={item.quantity}
+                            type="text"
+                            // disabled
+                            className="form-control form-control-sm bg-secondary text-center"
                           />
+                          <div className="input-group-btn">
+                            <button
+                              className="btn btn-sm btn-primary btn-plus"
+                              onClick={() =>
+                                handleQuantity(item.product, item.color, 1)
+                              }
+                            >
+                              <i className="fa fa-plus"></i>
+                            </button>
+                          </div>
                         </div>
                       </td>
                       <td className="align-middle">
-                        {moneyFormater(item.quantity * item.product.price)}
+                        {moneyFormater(item.quantity * item.price)}
                       </td>
                       <td className="align-middle">
                         <button
                           className="btn btn-sm btn-primary"
-                          onClick={() => handleRemove(item.product._id)}
+                          onClick={() => handleRemove(item.product, item.color)}
                         >
                           <i className="fa fa-times"></i>
                         </button>
@@ -248,11 +320,15 @@ const Cart = (props: Props) => {
             )}
             <div className="mb-4">
               <h4 className="font-weight-semi-bold mb-4">Địa chỉ giao hàng</h4>
-              <form onSubmit={handleSubmit}>
+              <form
+                onSubmit={handleSubmit}
+                onBlur={() => setStateChange(stateChange + 1)}
+              >
                 <div className="row">
                   <div className="col-md-4 form-group">
                     <label>Họ và tên</label>
                     <input
+                      id="nameUser"
                       required
                       className="form-control"
                       type="text"
@@ -278,6 +354,7 @@ const Cart = (props: Props) => {
                   <div className="col-md-4 form-group">
                     <label>Số điện thoại</label>
                     <input
+                      id="phoneUser"
                       required
                       className="form-control"
                       type="text"
@@ -332,14 +409,13 @@ const Cart = (props: Props) => {
                       }
                     />
                   </div>
-                  <button
+                  {/* <button
                     className="btn btn-primary"
                     style={{ marginLeft: "auto" }}
                     onClick={() => setStateChange(stateChange + 1)}
                   >
                     Cập nhật thông tin
-                  </button>
-                  {/*----ship-----*/}
+                  </button> */}
                 </div>
               </form>
             </div>
@@ -350,7 +426,6 @@ const Cart = (props: Props) => {
                 <input
                   id="couponcode"
                   type="text"
-                  onClick={() => setStateChange(stateChange + 1)}
                   className="form-control p-4"
                   placeholder="Coupon Code"
                   required
@@ -360,32 +435,81 @@ const Cart = (props: Props) => {
                     onClick={() => setStateChange(stateChange + 1)}
                     className="btn btn-primary"
                   >
-                    Apply Coupon
+                    Áp dụng mã khuyến mãi
                   </button>
                 </div>
               </div>
             </form>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <input
+                id="radioCod"
+                type="radio"
+                name="checkedPayment"
+                value={"true"}
+              />
+              <label htmlFor="radioCod">
+                <img
+                  style={{ height: "60px", width: "212px" }}
+                  src="https://pic.onlinewebfonts.com/svg/img_462168.png"
+                />
+              </label>
+            </div>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <input
+                id="radioVnpay"
+                type="radio"
+                name="checkedPayment"
+                value={"false"}
+              />
+              <label htmlFor="radioVnpay">
+                <img
+                  className="w-50 h-50"
+                  src="https://www.dso.vn/uploads/55/cong-ty/vnpay/logo-vnpay.png"
+                />
+              </label>
+            </div>
+
             <div className="card border-secondary mb-5">
               <div className="card-header bg-secondary border-0">
-                <h4 className="font-weight-semi-bold m-0">Cart Summary</h4>
+                <h4 className="font-weight-semi-bold m-0">Hóa đơn</h4>
               </div>
               <div className="card-body">
                 <div className="d-flex justify-content-between mb-3 pt-1">
-                  <h6 className="font-weight-medium">Subtotal</h6>
-                  <h6 className="font-weight-medium">$150</h6>
+                  <h6 className="font-weight-medium">Tạm tính</h6>
+                  <h6 className="font-weight-medium">
+                    {moneyFormater(stateBill.data.total)}
+                  </h6>
                 </div>
                 <div className="d-flex justify-content-between">
-                  <h6 className="font-weight-medium">Shipping</h6>
-                  <h6 className="font-weight-medium">$10</h6>
+                  <h6 className="font-weight-medium">Phí giao hàng</h6>
+                  <h6 className="font-weight-medium">
+                    {moneyFormater(stateBill.data.ship)}
+                  </h6>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <h6 className="font-weight-medium">Khuyến mãi</h6>
+                  <h6 className="font-weight-medium">
+                    {moneyFormater(stateBill.data.discount)}
+                  </h6>
                 </div>
               </div>
               <div className="card-footer border-secondary bg-transparent">
                 <div className="d-flex justify-content-between mt-2">
-                  <h5 className="font-weight-bold">Total</h5>
-                  <h5 className="font-weight-bold">$160</h5>
+                  <h5 className="font-weight-bold">Tổng cộng</h5>
+                  <h5 className="font-weight-bold">
+                    {moneyFormater(
+                      stateBill.data.total +
+                        stateBill.data.ship -
+                        stateBill.data.discount
+                    )}
+                  </h5>
                 </div>
-                <button className="btn btn-block btn-primary my-3 py-3">
-                  Proceed To Checkout
+                <button
+                  className="btn btn-block btn-primary my-3 py-3"
+                  onClick={() => handleOrder()}
+                >
+                  Thanh toán
                 </button>
               </div>
             </div>

@@ -13,11 +13,12 @@ import { IProduct } from "../../../model/product.model";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useCart from "../../../store/cart";
 import { notifyError, notifySuccess } from "../../../utils/notify";
+import useAuth from "../../../store/auth";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
   const [stateCart, actionCart] = useCart();
-
+  const [stateAuth, actionAuth] = useAuth();
   const { name, id } = params;
   const initProduct: IProduct = {
     quantity: 0,
@@ -44,7 +45,7 @@ const ProductDetail = (props: Props) => {
   const [comment, setComment] = useState(initProduct);
   const [colorState, setColorState] = useState(product.colors[0].color);
   const [colorIndexState, setColorIndexState] = useState(0);
-  console.log("stateCart", stateCart);
+
   if (id) {
     React.useEffect(() => {
       (async () => {
@@ -62,7 +63,7 @@ const ProductDetail = (props: Props) => {
   const [click, setClick] = useState(0);
   React.useEffect(() => {
     (async () => {
-      await actionCart.GetCart();
+      await actionAuth.getUserAsync();
     })();
   }, [click]);
   const handleAddtoCart = async () => {
@@ -170,11 +171,21 @@ const ProductDetail = (props: Props) => {
           <div className="col-lg-3 col-6 text-right">
             <a href="" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
             </a>
             <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">{stateCart.count}</span>
+              <span className="badge">
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data.data.bag_items_length
+                  : 0}
+              </span>
             </Link>
           </div>
         </div>

@@ -35,7 +35,7 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
     const currentColors = searchParams.get("colors");
     if (check) {
       if (currentColors) {
-        searchParams.set("colors", `${currentColors},${color}`);
+        searchParams.set("colors", `${currentColors};${color}`);
         setSearchParams(searchParams);
       } else {
         {
@@ -44,13 +44,13 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
         }
       }
     } else {
-      const split = currentColors?.split(",");
+      const split = currentColors?.split(";");
       const removedColor = split?.filter((item) => item !== color);
 
       if (removedColor?.length === 0) {
         searchParams.delete("colors");
       } else {
-        searchParams.set("colors", removedColor?.join(",") || "");
+        searchParams.set("colors", removedColor?.join(";") || "");
       }
       setSearchParams(searchParams);
     }
@@ -66,15 +66,11 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
             className="custom-control-input"
             id="color-all"
             readOnly
-            defaultChecked
             checked={!color}
           />
           <label className="custom-control-label" htmlFor="color-all">
             All
           </label>
-          <span className="badge border font-weight-normal">
-            {total_quantity}
-          </span>
         </div>
         {listColorFilter.map((item: any, index: any) => (
           <div
@@ -82,6 +78,7 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
             className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3"
           >
             <input
+              defaultChecked={false}
               type="checkbox"
               className="custom-control-input"
               id={item.id}
@@ -92,9 +89,6 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
             <label className="custom-control-label" htmlFor={item.id}>
               {item.label}
             </label>
-            <span className="badge border font-weight-normal">
-              {item.quantity}
-            </span>
           </div>
         ))}
       </form>
