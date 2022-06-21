@@ -13,8 +13,7 @@ import Pagination from "../../../Components/common/Pagination/Pagination";
 import PriceFilter from "../../../Components/common/Product/PriceFilter";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
 import { SpecFilter } from "../../../Components/common/Product/SpecFilter";
-
-import { FilterColor } from "../../../Components/pages/client/homepage/CategoryCard/product/FilterColor";
+import { FilterColor } from "../../../Components/pages/client/product/FilterColor";
 
 import payment from "../../../img/payments.png";
 import useAuth from "../../../store/auth";

@@ -10,9 +10,9 @@ const BillApi = {
     const url = "/bill/billCalc";
     return axiosClient.post(url, data);
   },
-  read(): Promise<ReturnReponse<any>> {
+  read(data: any): Promise<ReturnReponse<any>> {
     const url = "bill/read";
-    return axiosClient.get(url);
+    return axiosClient.post(url, data);
   },
   update(data: any): Promise<ReturnReponse<any>> {
     const url = "bill/update";

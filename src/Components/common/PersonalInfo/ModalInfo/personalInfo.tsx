@@ -18,6 +18,14 @@ const ModalInfo = (props: Props) => {
   let formatPhone = "0";
   const submit = async (data: any, e: any) => {
     e.preventDefault();
+    if (data.name === "") data.name = authState.data.data.name;
+    if (data.birth === "") data.birth = authState.data.data.birth;
+    if (data.gender === "") data.gender = authState.data.data.gender;
+    if (data.province === "")
+      data.province = authState.data.data.address.province;
+    if (data.district === "")
+      data.district = authState.data.data.address.district;
+    if (data.address === "") data.address = authState.data.data.address.address;
     const address = {
       province: data.province,
       district: data.district,
@@ -211,7 +219,8 @@ const ModalInfo = (props: Props) => {
                 defaultValue={
                   !authState.isLoggedIn
                     ? ""
-                    : authState.data?.data?.phone === ""
+                    : authState.data?.data?.phone === "" ||
+                      authState.data?.data?.phone === undefined
                     ? "Chưa có"
                     : formatPhone.concat(authState.data?.data?.phone?.slice(3))
                 }

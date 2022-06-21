@@ -16,6 +16,7 @@ axiosClient.interceptors.request.use(
     const token = getFromLocalStorage("accessToken");
     const headers: AxiosRequestHeaders = {
       Authorization: `Bearer ${token}`,
+      // "Access-Control-Allow-Origin": "*",
     };
     if (token) config.headers = { ...config.headers, ...headers };
 

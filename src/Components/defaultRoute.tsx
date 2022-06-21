@@ -5,6 +5,7 @@ export const defaultRoute = {
   productDetail: "/products/:category/:id",
   cart: "/cart",
   bill: "/bill",
+  notification: "/notification",
   contact: "/contact",
   dashboard: "/admin",
   productManage: "/admin/product",

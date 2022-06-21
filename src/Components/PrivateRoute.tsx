@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Route, RouteProps, useNavigate } from "react-router-dom";
 import { getFromLocalStorage } from "../helper/base.helpers";
 import useAuth from "../store/auth";
+import { notifyError } from "../utils/notify";
 import { LoadingLMS } from "./common/Loading/loading";
 
 interface IPrivateRoute extends RouteProps {
@@ -28,17 +29,23 @@ export const PrivateRoute = (props: IPrivateRoute) => {
         //đã đăng nhập
         if (roleRoute && !roleRoute.includes(res.data.role)) {
           //Kiểm tra khong phai admin
+
+          notifyError("Không có quyền truy cập !");
           navigate("/");
         } else {
           if (option === false) {
+            notifyError("Không có quyền truy cập !");
             navigate("/");
           }
         }
       }
+    } else {
+      notifyError("Không có quyền truy cập !");
+      navigate("/");
     }
-
     setAcceptRoute(true);
   };
+
   React.useEffect(() => {
     fetchAuth();
     //To know my current status, send Auth request

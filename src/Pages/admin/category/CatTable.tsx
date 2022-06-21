@@ -65,7 +65,7 @@ const CatTable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Category
+        Danh sách loại hàng
         <Link
           to={location.pathname}
           className="link"

@@ -1,15 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 
 import CategoryDetail from "../Components/pages/admin/category/CategoryDetail";
-import CategoryManage from "../Pages/admin/category/CategoryManage";
+import CategoryManage from "../Pages/admin/category/CategoryManagement";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
-import DiscountManage from "../Pages/admin/discount/Discount";
+import DiscountManage from "../Pages/admin/discount/DiscountManagement";
 import NewCategory from "../Pages/admin/new/NewCategory";
 import NewDiscount from "../Pages/admin/new/NewDiscount";
 import NewProduct from "../Pages/admin/new/NewProduct";
-import ProductManage from "../Pages/admin/product/ProductManage";
-import List from "../Pages/admin/user/User";
-import Bill from "../Pages/client/cart/Bill";
+import ProductManage from "../Pages/admin/product/ProductManagement";
+import List from "../Pages/admin/user/UserManagement";
+import Bill from "../Pages/client/bill/Bill";
+
 import Cart from "../Pages/client/cart/Cart";
 import Contact from "../Pages/client/contact/Contact";
 import HomePage from "../Pages/client/homepage/HomePage";

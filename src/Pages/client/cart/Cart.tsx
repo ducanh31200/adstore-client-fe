@@ -19,7 +19,25 @@ const Cart = (props: Props) => {
   const [stateAuth, actionAuth] = useAuth();
   const [stateBill, actionBill] = useBill();
   const [stateChange, setStateChange] = useState(0);
-
+  const [statePayment, setStatePayment] = useState(true);
+  let formatPhone = "0";
+  React.useEffect(() => {
+    const province = (document.getElementById("province") as HTMLInputElement)
+      .value;
+    const district = (document.getElementById("district") as HTMLInputElement)
+      .value;
+    const address = (document.getElementById("address") as HTMLInputElement)
+      .value;
+    const address_ship: any = {};
+    address_ship.province = province;
+    address_ship.district = district;
+    address_ship.address = address;
+    (async () => {
+      await actionBill.Calc({
+        address: address_ship.province === "" ? undefined : address_ship,
+      });
+    })();
+  }, []);
   React.useEffect(() => {
     (async () => {
       await actionAuth.getUserAsync();
@@ -53,9 +71,9 @@ const Cart = (props: Props) => {
     console.log("address_ship", address_ship);
     (async () => {
       await actionBill.Calc({
-        bag: cart[0].product === "" ? undefined : cart,
+        bag: cart[0].product === "" || cart.length == 0 ? undefined : cart,
         discountCode: discountCode,
-        address: address_ship,
+        address: address_ship.province === "" ? undefined : address_ship,
       });
     })();
   }, [stateChange]);
@@ -74,7 +92,7 @@ const Cart = (props: Props) => {
     const name = (document.getElementById("nameUser") as HTMLInputElement)
       .value;
 
-    const phone = (document.getElementById("phoneUser") as HTMLInputElement)
+    let phone = (document.getElementById("phoneUser") as HTMLInputElement)
       .value;
 
     const address_ship: any = {};
@@ -88,16 +106,39 @@ const Cart = (props: Props) => {
         color: item.color,
       });
     });
+
+    const payload = {
+      bag: cart,
+      phone: phone,
+      name: name,
+      discountCode: discountCode,
+      address: address_ship,
+      cod: statePayment,
+    };
+    console.log("payload", payload);
     if (phone === "") notifyError("Vui lòng nhập số điện thoại !");
     else {
-      await actionBill.Create({
+      const phoneRegex =
+        /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+      const res = phoneRegex.test(phone);
+      if (res) {
+        if (phone[0] === "0") {
+          const head = "+84";
+          const number = phone.slice(1);
+          phone = head.concat(number);
+        }
+      } else {
+        notifyError("Số điện thoại chưa đúng, vui lòng nhập lại !");
+      }
+      const url: any = await actionBill.Create({
         bag: cart,
         phone: phone,
         name: name,
         discountCode: discountCode,
         address: address_ship,
-        cod: true,
+        cod: statePayment,
       });
+      window.location.href = url;
     }
   };
   const handleQuantity = (_id: string, color: any, change: number) => {
@@ -286,6 +327,7 @@ const Cart = (props: Props) => {
                           </div>
                           <input
                             value={item.quantity}
+                            readOnly
                             type="text"
                             // disabled
                             className="form-control form-control-sm bg-secondary text-center"
@@ -360,7 +402,14 @@ const Cart = (props: Props) => {
                       type="text"
                       placeholder=""
                       defaultValue={
-                        stateAuth.isLoggedIn ? stateAuth.data?.data?.phone : ""
+                        !stateAuth.isLoggedIn
+                          ? ""
+                          : stateAuth.data?.data?.phone === "" ||
+                            stateAuth.data?.data?.phone === undefined
+                          ? "Chưa có"
+                          : formatPhone.concat(
+                              stateAuth.data?.data?.phone?.slice(3)
+                            )
                       }
                     />
                   </div>
@@ -446,7 +495,8 @@ const Cart = (props: Props) => {
                 id="radioCod"
                 type="radio"
                 name="checkedPayment"
-                value={"true"}
+                defaultChecked
+                onChange={() => setStatePayment(true)}
               />
               <label htmlFor="radioCod">
                 <img
@@ -460,7 +510,7 @@ const Cart = (props: Props) => {
                 id="radioVnpay"
                 type="radio"
                 name="checkedPayment"
-                value={"false"}
+                onChange={() => setStatePayment(false)}
               />
               <label htmlFor="radioVnpay">
                 <img
@@ -505,12 +555,12 @@ const Cart = (props: Props) => {
                     )}
                   </h5>
                 </div>
-                <button
+                <a
                   className="btn btn-block btn-primary my-3 py-3"
                   onClick={() => handleOrder()}
                 >
                   Thanh toán
-                </button>
+                </a>
               </div>
             </div>
           </div>

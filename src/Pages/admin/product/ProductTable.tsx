@@ -137,7 +137,7 @@ const ProductTable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Product
+        Danh sách sản phẩm
         <Link
           to={location.pathname}
           className="link"

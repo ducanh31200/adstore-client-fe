@@ -1,19 +1,18 @@
-// import "./list.scss"
-
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
-import Chart from "../../../Components/pages/admin/chart/Chart";
-import Datatable from "../../../Components/pages/admin/datatable/Datatable";
-import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
-import useUser from "../../../store/user";
 
-const UserManagement = () => {
-  const [listUser, actionUser] = useUser();
+import "./product.scss";
+import ProductTable from "./ProductTable";
+import { moneyFormater } from "../../../utils/moneyFormater";
+import useProduct from "../../../store/product";
+
+const ProductManage = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
+  const [listProduct, actionProduct] = useProduct();
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
@@ -21,22 +20,23 @@ const UserManagement = () => {
   };
   React.useEffect(() => {
     (async () => {
-      await actionUser.GetListUser({});
-
-      //   setCurrentCate(list.data.data[0].name);
+      await actionProduct.GetListProduct();
     })();
   }, []);
-
-  listUser.data.map((item: any, index: number) => {
-    const addr = [
-      item.address?.address,
-      item.address?.district,
-      item.address?.province,
-    ];
+  listProduct.data.map((item: any, index: number) => {
     item.id = index + 1;
-    item.addressformat = addr.join(",");
+    item.priceformat = moneyFormater(item.price);
+    item.saleformat = moneyFormater(item.sale);
+    let quantity = 0;
+    let colors: any = [];
+    item.colors.map((item: any) => {
+      quantity = quantity + item.quantity;
+      colors.push(item.color);
+    });
+    item.color = colors.join(",");
+    item.quantity = quantity;
   });
-  console.log("listUser.data", listUser.data);
+
   return (
     <div className="home">
       <div className="sidebar">
@@ -80,7 +80,7 @@ const UserManagement = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/admin" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -160,7 +160,7 @@ const UserManagement = () => {
             <div className="row border-top pr">
               <div className="d-none d-lg-block" style={{ width: "175px" }}>
                 <Link
-                  to="/listuser"
+                  to="/admin/user"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -189,13 +189,13 @@ const UserManagement = () => {
                   id="navbar-vertical2"
                 >
                   <div className="navbar-nav w-100 overflow-hidden">
-                    <Link to="/categoryManage" className="nav-item nav-link">
+                    <Link to="/admin/category" className="nav-item nav-link">
                       Loại hàng
                     </Link>
-                    <Link to="/productManage" className="nav-item nav-link">
+                    <Link to="/admin/product" className="nav-item nav-link">
                       Sản phẩm
                     </Link>
-                    <Link to="/discountManage" className="nav-item nav-link">
+                    <Link to="/admin/discount" className="nav-item nav-link">
                       Khuyến mãi
                     </Link>
                   </div>
@@ -217,10 +217,7 @@ const UserManagement = () => {
                   className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
                   id="navbar-vertical3"
                 >
-                  <div
-                    className="navbar-nav w-100 overflow-hidden"
-                    // style={{ height: "410px" }}
-                  >
+                  <div className="navbar-nav w-100 overflow-hidden">
                     <a href="" className="nav-item nav-link">
                       Doanh thu
                     </a>
@@ -234,10 +231,12 @@ const UserManagement = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <Datatable />;
+              <ProductTable />
             </div>
           </div>
         </div>
+
+        <div className="bottom"></div>
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
@@ -245,4 +244,5 @@ const UserManagement = () => {
     </div>
   );
 };
-export default UserManagement;
+
+export default ProductManage;

@@ -1,69 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
-import Chart from "../../../Components/pages/admin/chart/Chart";
-import Sidebar from "../../../Components/pages/admin/sidabar/Sidebar";
-import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
 
-import "./home.scss";
+import "./discount.scss";
+import DiscountTable from "./DiscountTable";
+import discountApi from "../../../api/discount/discountApi";
+import useDiscount from "../../../store/discount";
+import { moneyFormater } from "../../../utils/moneyFormater";
 
-const Dashboard = () => {
+const DiscountManage = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [listDiscount, actionDiscount] = useDiscount();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-  const rows = [
-    {
-      id: 1143155,
-      product: "Acer Nitro 5",
-      img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
+  React.useEffect(() => {
+    (async () => {
+      await actionDiscount.GetListDiscount({});
 
-      amount: 785,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2235235,
-      product: "Playstation 5",
-      img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
+      //   setCurrentCate(list.data.data[0].name);
+    })();
+  }, []);
 
-      amount: 900,
-      stock: "0",
-      status: "Pending",
-    },
-    {
-      id: 2342353,
-      product: "Redragon S101",
-      img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 35,
-      stock: "10",
-      status: "Pending",
-    },
-    {
-      id: 2357741,
-      product: "Razer Blade 15",
-      img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 920,
-      stock: "10",
-      status: "Approved",
-    },
-    {
-      id: 2342355,
-      product: "ASUS ROG Strix",
-      img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
-
-      amount: 2000,
-      stock: "10",
-      status: "Pending",
-    },
-  ];
+  listDiscount.data.map((item: any, index: number) => {
+    item.id = index + 1;
+    item.maxPriceformat = moneyFormater(item.maxPrice);
+    item.minPriceformat = moneyFormater(item.minPrice);
+    !item.is_percent
+      ? (item.valueformat = moneyFormater(item.value))
+      : (item.valueformat = `${item.value}%`);
+  });
   return (
     <div className="home">
       <div className="sidebar">
@@ -107,7 +78,7 @@ const Dashboard = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/admin" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -248,12 +219,12 @@ const Dashboard = () => {
                     className="navbar-nav w-100 overflow-hidden"
                     // style={{ height: "410px" }}
                   >
-                    <Link to="/revenue" className="nav-item nav-link">
+                    <a href="" className="nav-item nav-link">
                       Doanh thu
-                    </Link>
-                    <Link to="/billManage" className="nav-item nav-link">
+                    </a>
+                    <a href="" className="nav-item nav-link">
                       Đơn hàng
-                    </Link>
+                    </a>
                   </div>
                 </nav>
               </div>
@@ -261,42 +232,7 @@ const Dashboard = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <div className="widgets">
-                <Widget type="user" />
-                <Widget type="order" />
-                <Widget type="earning" />
-                <Widget type="balance" />
-              </div>
-            </div>
-            <Chart title="Doanh thu 6 tháng qua" aspect={2 / 1} />
-            <div className="chart">
-              {" "}
-              <div className="title">Sản phẩm bán chạy</div>
-              <table className="content-table" style={{ width: "100%" }}>
-                <thead>
-                  <tr>
-                    <th>Mã sản phẩm</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng đã bán</th>
-                    <th>Số lượng trong kho</th>
-                    <th>Trạng thái</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.id}</td>
-                      <td className="cellWrapper">
-                        <img className="image" src={item.img}></img>
-                        {item.product}
-                      </td>
-                      <td>{item.amount}</td>
-                      <td>{item.stock}</td>
-                      <td className={`status ${item.status}`}>{item.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DiscountTable />
             </div>
           </div>
         </div>
@@ -310,4 +246,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DiscountManage;

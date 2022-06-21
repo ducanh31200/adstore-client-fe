@@ -2,9 +2,10 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import useUser from "../../../../store/user";
-import { ContainerModal } from "../../../common/ContainerModal";
-import ModalApplyDiscountUser from "./ApplyDiscountUser";
+
+import useBillManagement from "../../../store/billManagement";
+import ModalApplyDiscountUser from "../../../Components/pages/admin/datatable/ApplyDiscountUser";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
 
 export const userColumns = [
   { field: "id", headerName: "ID", width: 50 },
@@ -63,15 +64,15 @@ export const userColumns = [
     },
   },
 ];
-const Datatable = () => {
-  const [listUser, actionUser] = useUser();
+const BillTable = () => {
+  const [listBill, actionBill] = useBillManagement();
   const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
   const openApplyDiscountModal = () => setApplyDiscountModal(true);
   const closeApplyDiscountModal = () => setApplyDiscountModal(false);
   const [selected, setSelected] = React.useState<any>([]);
-  const handleChange = (_id: string, enable: boolean) => {
-    actionUser.ChangeStatusUser(_id, enable);
-  };
+  // const handleChange = (_id: string, enable: boolean) => {
+  //   actionUser.ChangeStatusUser(_id, enable);
+  // };
   const actionColumn = [
     {
       field: "action",
@@ -82,7 +83,7 @@ const Datatable = () => {
           <div className="cellAction">
             <div
               className={params.row.enable ? "deleteButton" : "enableButton"}
-              onClick={() => handleChange(params.row._id, params.row.enable)}
+              // onClick={() => handleChange(params.row._id, params.row.enable)}
             >
               {params.row.enable ? "Disable" : "Enable"}
             </div>
@@ -105,7 +106,7 @@ const Datatable = () => {
         </Link>
       </div>
       <DataGrid
-        rows={listUser.data}
+        rows={listBill.data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
@@ -113,8 +114,8 @@ const Datatable = () => {
         onSelectionModelChange={(ids) => {
           const selectedIDs = new Set(ids);
           const selectedRows: any = [];
-          listUser.data.map((row) => {
-            if (selectedIDs.has(row.id)) selectedRows.push(row._id);
+          listBill.data.map((row) => {
+            // if (selectedIDs.has(row.id)) selectedRows.push(row._id);
           });
           setSelected(selectedRows);
         }}
@@ -132,4 +133,4 @@ const Datatable = () => {
   );
 };
 
-export default Datatable;
+export default BillTable;

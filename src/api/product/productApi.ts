@@ -32,6 +32,14 @@ const productApi = {
     const url = "/product/imports";
     return axiosClient.post(url, data);
   },
+  rate(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/rate";
+    return axiosClient.post(url, data);
+  },
+  hint(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/hint";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default productApi;

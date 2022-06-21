@@ -71,7 +71,7 @@ const CategoryManage = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/dashboard" className="text-decoration-none">
+              <Link to="/admin" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -151,7 +151,7 @@ const CategoryManage = () => {
             <div className="row border-top pr">
               <div className="d-none d-lg-block" style={{ width: "175px" }}>
                 <Link
-                  to="/listuser"
+                  to="/admin/user"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -180,13 +180,13 @@ const CategoryManage = () => {
                   id="navbar-vertical2"
                 >
                   <div className="navbar-nav w-100 overflow-hidden">
-                    <Link to="/categoryManage" className="nav-item nav-link">
+                    <Link to="/admin/category" className="nav-item nav-link">
                       Loại hàng
                     </Link>
-                    <Link to="/productManage" className="nav-item nav-link">
+                    <Link to="/admin/product" className="nav-item nav-link">
                       Sản phẩm
                     </Link>
-                    <Link to="/discountManage" className="nav-item nav-link">
+                    <Link to="/admin/discount" className="nav-item nav-link">
                       Khuyến mãi
                     </Link>
                   </div>

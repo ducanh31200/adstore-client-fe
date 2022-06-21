@@ -2,18 +2,19 @@ import { List } from "@mui/material";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DFRole } from "../Constant/DFRole";
-import CategoryManage from "../Pages/admin/category/CategoryManage";
+import CategoryManage from "../Pages/admin/category/CategoryManagement";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
-import DiscountManage from "../Pages/admin/discount/Discount";
+import DiscountManage from "../Pages/admin/discount/DiscountManagement";
 import NewCategory from "../Pages/admin/new/NewCategory";
 import NewDiscount from "../Pages/admin/new/NewDiscount";
 import NewProduct from "../Pages/admin/new/NewProduct";
-import ProductManage from "../Pages/admin/product/ProductManage";
-import UserManagement from "../Pages/admin/user/User";
-import Bill from "../Pages/client/cart/Bill";
+import ProductManage from "../Pages/admin/product/ProductManagement";
+import UserManagement from "../Pages/admin/user/UserManagement";
+import Bill from "../Pages/client/bill/Bill";
 import Cart from "../Pages/client/cart/Cart";
 import Contact from "../Pages/client/contact/Contact";
 import HomePage from "../Pages/client/homepage/HomePage";
+import Notifications from "../Pages/client/notification/Notification";
 import Product from "../Pages/client/product/Product";
 import ProductDetail from "../Pages/client/product/ProductDetail";
 import {
@@ -89,15 +90,6 @@ const routes: Array<IRoute> = [
   {
     child: (
       <>
-        <Bill />
-      </>
-    ),
-    path: defaultRoute.bill,
-    exact: true,
-  },
-  {
-    child: (
-      <>
         <Contact />
       </>
     ),
@@ -120,6 +112,20 @@ const routesPrivate: Array<IPrivateRoute> = [
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
+  },
+  {
+    child: <Bill />,
+    path: defaultRoute.bill,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Customer],
+  },
+  {
+    child: <Notifications />,
+    option: true,
+    roleRoute: [DFRole.Customer],
+    path: defaultRoute.notification,
+    exact: true,
   },
   {
     child: <NewProduct inputs={productInputs} title="Add New Product" />,

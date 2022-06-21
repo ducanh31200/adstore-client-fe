@@ -1,31 +1,28 @@
 import { AnySchema } from "yup";
 import { State } from ".";
 import BillApi from "../../api/cart/BillApi";
+import cartApi from "../../api/cart/CartAPI";
+
+import categoryApi from "../../api/category/category";
 
 type Actions = { setState: any; getState: () => State; dispatch: any };
 
-export const Calc =
+export const GetListBill =
   (data: any) =>
   async ({ setState, getState }: Actions) => {
-    const result = await BillApi.calc(data);
+    const result = await BillApi.list(data);
     if (result.status === 200) {
+      // console.log("cart", result);
       setState({
         ...getState(),
         data: result.data.data,
+        count: result.data.count,
       });
+
       return true;
     }
     return false;
   };
-export const Create = (data: any) => async () => {
-  console.log("data-up", data);
-  const result = await BillApi.create(data);
-  if (result.status === 200) {
-    console.log("res", result.data.data);
-    return result.data.data;
-  }
-  return false;
-};
 // export const UpdateCart =
 //   (data: any) =>
 //   async ({ setState, getState }: Actions) => {

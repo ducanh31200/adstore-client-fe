@@ -1,6 +1,5 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import useProduct from "../../../../../../store/product";
 
 export const FilterColor = ({ listProduct }: { listProduct: any }) => {
   const [searchParams, setSearchParams] = useSearchParams();
