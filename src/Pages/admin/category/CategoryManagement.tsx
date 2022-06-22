@@ -9,7 +9,7 @@ import "./cat.scss";
 import categoryApi from "../../../api/category/category";
 import useCate from "../../../store/category";
 
-const CategoryManage = () => {
+const CategoryManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [category, actionCategory] = useCate();
   const [showInfoModal, setInfoModal] = React.useState(false);
@@ -135,6 +135,7 @@ const CategoryManage = () => {
                   <a className="menuProfile menuLinkHover">Tin nhắn</a>
                   <div className="lineMenu"></div>
                   <a
+                    href="/"
                     className="menuProfile menuLinkHover text-red-500 font-bold"
                     onClick={handleLogout}
                   >
@@ -212,12 +213,12 @@ const CategoryManage = () => {
                     className="navbar-nav w-100 overflow-hidden"
                     // style={{ height: "410px" }}
                   >
-                    <a href="" className="nav-item nav-link">
+                    <Link to="/admin/revenue" className="nav-item nav-link">
                       Doanh thu
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/admin/bill" className="nav-item nav-link">
                       Đơn hàng
-                    </a>
+                    </Link>
                   </div>
                 </nav>
               </div>
@@ -239,4 +240,4 @@ const CategoryManage = () => {
   );
 };
 
-export default CategoryManage;
+export default CategoryManagement;

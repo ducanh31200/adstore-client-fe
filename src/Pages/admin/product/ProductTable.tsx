@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { DataGrid, selectedIdsLookupSelector } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -104,13 +105,17 @@ const ProductTable = () => {
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
-            <Link
-              to={location.pathname}
+            <div
               style={{ textDecoration: "none" }}
               onClick={() => handleImport(params.row.code)}
             >
-              <div className="viewButton">Nhập hàng</div>
-            </Link>
+              <div
+                className={params.row.enable ? "viewButton" : "disableButton"}
+              >
+                Nhập hàng
+              </div>
+            </div>
+
             <Link
               to={location.pathname}
               style={{ textDecoration: "none" }}
@@ -118,7 +123,10 @@ const ProductTable = () => {
             >
               <div className="viewButton">Thêm màu</div>
             </Link>
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/admin/product/${params.row._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="updateButton">Sửa</div>
             </Link>
             <div
@@ -146,7 +154,7 @@ const ProductTable = () => {
         >
           Áp dụng khuyến mãi
         </Link>
-        <Link to="/product/new" className="link">
+        <Link to="/admin/product/new" className="link">
           Thêm sản phẩm
         </Link>
       </div>

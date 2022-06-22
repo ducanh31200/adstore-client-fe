@@ -53,7 +53,7 @@ const Bill = () => {
     setIDBill(_id);
     openBillDetailModal();
   };
-  const handleShowSpecs = (e: any) => {
+  const handleShowStatus = (e: any) => {
     if (e.target.index !== 0) {
       const value = e.target.value;
       setCurrentList(value);
@@ -209,7 +209,7 @@ const Bill = () => {
               marginBottom: "20px",
             }}
           >
-            <select onChange={handleShowSpecs}>
+            <select onChange={handleShowStatus}>
               <option>Chọn</option>
 
               <option key="1" value="Preparing">

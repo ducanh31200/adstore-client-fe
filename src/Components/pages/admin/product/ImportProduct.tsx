@@ -37,7 +37,7 @@ const ModalImportProduct = (props: Props) => {
     <div className="new">
       <div className="newContainer" style={{ backgroundColor: "white" }}>
         <div className="top">
-          <h1>Apply Discount</h1>
+          <h1>Nhập hàng</h1>
         </div>
         <div className="bottom">
           <div className="right">

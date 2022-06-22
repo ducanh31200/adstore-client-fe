@@ -23,6 +23,7 @@ export type State = {
       phone: string;
     }
   ];
+  count: number;
 };
 
 const initialState: State = {
@@ -46,6 +47,7 @@ const initialState: State = {
       phone: "",
     },
   ],
+  count: 0,
 };
 
 const actions = {

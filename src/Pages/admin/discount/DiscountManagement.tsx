@@ -10,7 +10,7 @@ import discountApi from "../../../api/discount/discountApi";
 import useDiscount from "../../../store/discount";
 import { moneyFormater } from "../../../utils/moneyFormater";
 
-const DiscountManage = () => {
+const DiscountManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [listDiscount, actionDiscount] = useDiscount();
   const [showInfoModal, setInfoModal] = React.useState(false);
@@ -142,6 +142,7 @@ const DiscountManage = () => {
                   <a className="menuProfile menuLinkHover">Tin nhắn</a>
                   <div className="lineMenu"></div>
                   <a
+                    href="/"
                     className="menuProfile menuLinkHover text-red-500 font-bold"
                     onClick={handleLogout}
                   >
@@ -219,12 +220,12 @@ const DiscountManage = () => {
                     className="navbar-nav w-100 overflow-hidden"
                     // style={{ height: "410px" }}
                   >
-                    <a href="" className="nav-item nav-link">
+                    <Link to="/admin/revenue" className="nav-item nav-link">
                       Doanh thu
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/admin/bill" className="nav-item nav-link">
                       Đơn hàng
-                    </a>
+                    </Link>
                   </div>
                 </nav>
               </div>
@@ -246,4 +247,4 @@ const DiscountManage = () => {
   );
 };
 
-export default DiscountManage;
+export default DiscountManagement;

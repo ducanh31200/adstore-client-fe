@@ -14,6 +14,7 @@ import { moneyFormater } from "../../../utils/moneyFormater";
 import useCart from "../../../store/cart";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import useAuth from "../../../store/auth";
+import { ProductCard } from "../../../Components/common/Product/ProductCard";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
@@ -58,7 +59,7 @@ const ProductDetail = (props: Props) => {
         setComment(comment.data.data);
         setProduct(result.data.data);
       })();
-    }, []);
+    }, [id]);
   }
   const [click, setClick] = useState(0);
   React.useEffect(() => {
@@ -66,6 +67,21 @@ const ProductDetail = (props: Props) => {
       await actionAuth.getUserAsync();
     })();
   }, [click]);
+  const [listHint, setListHint] = useState<Array<any>>([]);
+  React.useEffect(() => {
+    (async () => {
+      const list = stateAuth.data.data.bag_products;
+      list.push(id);
+      console.log("list", list);
+      const listHint = await productApi.hint({
+        products: list,
+        quantity: 5,
+      });
+
+      setListHint(listHint.data?.data);
+    })();
+  }, [click, id]);
+  // console.log("listHint", listHint);
   const handleAddtoCart = async () => {
     let added: number = 0;
     let item_quantity = stateCart.data.filter((item, index) => {
@@ -101,7 +117,7 @@ const ProductDetail = (props: Props) => {
     setColorState(value);
   };
 
-  console.log(colorState);
+  // console.log(colorState);
   return (
     <div>
       <div className="container-fluid">
@@ -304,7 +320,7 @@ const ProductDetail = (props: Props) => {
               <p className="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
               <form>
                 {product.colors.map((item, index) => (
-                  <div>
+                  <div key={index}>
                     <div className="custom-control custom-radio custom-control-inline">
                       <input
                         type="radio"
@@ -351,25 +367,6 @@ const ProductDetail = (props: Props) => {
               >
                 <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
               </button>
-            </div>
-            <div className="d-flex pt-2">
-              <p className="text-dark font-weight-medium mb-0 mr-2">
-                Share on:
-              </p>
-              <div className="d-inline-flex">
-                <a className="text-dark px-2" href="">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a className="text-dark px-2" href="">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a className="text-dark px-2" href="">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-                <a className="text-dark px-2" href="">
-                  <i className="fab fa-pinterest"></i>
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -450,52 +447,6 @@ const ProductDetail = (props: Props) => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-6">
-                    <h4 className="mb-4">Leave a review</h4>
-                    <small>
-                      Your email address will not be published. Required fields
-                      are marked *
-                    </small>
-                    <div className="d-flex my-3">
-                      <p className="mb-0 mr-2">Your Rating * :</p>
-                      <StarRatingComponent
-                        name="rate1"
-                        starCount={5}
-                        value={5}
-                        editing={true}
-                      />
-                    </div>
-                    <form>
-                      <div className="form-group">
-                        <label htmlFor="message">Your Review *</label>
-                        <textarea
-                          id="message"
-                          cols={30}
-                          rows={5}
-                          className="form-control"
-                        ></textarea>
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="name">Your Name *</label>
-                        <input type="text" className="form-control" id="name" />
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="email">Your Email *</label>
-                        <input
-                          type="email"
-                          className="form-control"
-                          id="email"
-                        />
-                      </div>
-                      <div className="form-group mb-0">
-                        <input
-                          type="submit"
-                          value="Leave Your Review"
-                          className="btn btn-primary px-3"
-                        />
-                      </div>
-                    </form>
-                  </div>
                 </div>
               </div>
             </div>
@@ -509,17 +460,27 @@ const ProductDetail = (props: Props) => {
           </h2>
         </div>
 
+        <div className="row px-xl-5 pb-3">
+          {listHint?.map((product, index) => (
+            <ProductCard
+              key={index}
+              product={product}
+              setClick={setClick}
+              click={click}
+            />
+          ))}
+        </div>
         <div className="container-fluid bg-secondary text-dark mt-5 pt-5">
           <div className="row px-xl-5 pt-5">
             <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-              <a href="" className="text-decoration-none">
+              <Link to="/" className="text-decoration-none">
                 <h1 className="mb-4 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border border-white px-3 mr-1">
                     AD
                   </span>
                   Store
                 </h1>
-              </a>
+              </Link>
               <p></p>
               <p className="mb-2">
                 <i className="fa fa-map-marker-alt text-primary mr-3"></i>TP.HCM
@@ -527,7 +488,7 @@ const ProductDetail = (props: Props) => {
               </p>
               <p className="mb-2">
                 <i className="fa fa-envelope text-primary mr-3"></i>
-                info@example.com
+                adstore@gmail.com
               </p>
               <p className="mb-0">
                 <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
@@ -578,9 +539,9 @@ const ProductDetail = (props: Props) => {
           </div>
         </div>
 
-        <a href="#" className="btn btn-primary back-to-top">
+        <Link to="/" className="btn btn-primary back-to-top">
           <i className="fa fa-angle-double-up"></i>
-        </a>
+        </Link>
       </div>
     </div>
   );

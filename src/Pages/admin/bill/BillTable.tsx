@@ -6,24 +6,29 @@ import React, { useState } from "react";
 import useBillManagement from "../../../store/billManagement";
 import ModalApplyDiscountUser from "../../../Components/pages/admin/datatable/ApplyDiscountUser";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
+import BillDetailModal from "../../../Components/pages/client/Bill/BillDetailModal";
+import CancelModal from "../../../Components/pages/client/Bill/CancelModal";
+import UpdateBill from "../../../Components/pages/admin/bill/UpdateBill";
 
 export const userColumns = [
   { field: "id", headerName: "ID", width: 50 },
+  { field: "_id", headerName: "Mã đơn hàng", width: 210 },
   {
     field: "name",
     headerName: "Họ và tên",
     width: 150,
   },
+
   {
-    field: "birth",
-    headerName: "Ngày sinh",
-    width: 110,
+    field: "phoneformat",
+    headerName: "Số điện thoại",
+    width: 130,
   },
 
   {
-    field: "gender",
-    headerName: "Giới tính",
-    width: 60,
+    field: "email",
+    headerName: "Email",
+    width: 180,
   },
   {
     field: "addressformat",
@@ -31,34 +36,45 @@ export const userColumns = [
     width: 300,
   },
   {
-    field: "email",
-    headerName: "Email",
-    width: 230,
+    field: "discountformat",
+    headerName: "Giảm giá",
+    width: 130,
   },
   {
-    field: "phone",
-    headerName: "Số điện thoại",
-    width: 150,
+    field: "shipformat",
+    headerName: "Phí ship",
+    width: 130,
   },
   {
-    field: "role",
-    headerName: "Quyền truy cập",
-    width: 140,
+    field: "totalformat",
+    headerName: "Tổng tiền",
+    width: 130,
   },
   {
-    field: "self_cancel",
-    headerName: "Số lần hủy đơn",
-    width: 140,
-    editable: true,
-  },
-  {
-    field: "enable",
+    field: "status",
     headerName: "Trạng thái",
+    width: 140,
+  },
+  {
+    field: "paid",
+    headerName: "Thanh toán",
+    width: 140,
+    renderCell: (params: any) => {
+      return (
+        <div className={`status ${params.row.paid}`}>
+          {params.row.paid ? "Đã thanh toán" : "Chưa thanh toán"}
+        </div>
+      );
+    },
+  },
+  {
+    field: "verify",
+    headerName: "Xác thực",
     width: 125,
     renderCell: (params: any) => {
       return (
-        <div className={`status ${params.row.enable}`}>
-          {params.row.enable ? "Khả dụng" : "Không khả dụng"}
+        <div className={`status ${params.row.verify}`}>
+          {params.row.verify ? "Đã xác thực" : "Chưa xác thực"}
         </div>
       );
     },
@@ -66,26 +82,44 @@ export const userColumns = [
 ];
 const BillTable = () => {
   const [listBill, actionBill] = useBillManagement();
+  const [showUpdateBillModal, setUpdateBillModal] = React.useState(false);
+  const openUpdateBillModal = () => setUpdateBillModal(true);
+  const closeUpdateBillModal = () => setUpdateBillModal(false);
   const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
   const openApplyDiscountModal = () => setApplyDiscountModal(true);
   const closeApplyDiscountModal = () => setApplyDiscountModal(false);
-  const [selected, setSelected] = React.useState<any>([]);
-  // const handleChange = (_id: string, enable: boolean) => {
-  //   actionUser.ChangeStatusUser(_id, enable);
-  // };
+  const [showBillDetailModal, setBillDetailModal] = React.useState(false);
+  const openBillDetailModal = () => setBillDetailModal(true);
+  const closeBillDetailModal = () => setBillDetailModal(false);
+  const [IDBill, setIDBill] = React.useState("");
+
+  const handleReadBill = (_id: any) => {
+    setIDBill(_id);
+    openBillDetailModal();
+  };
+  const handleUpdateBill = (_id: any) => {
+    setIDBill(_id);
+    openUpdateBillModal();
+  };
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      width: 220,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
             <div
-              className={params.row.enable ? "deleteButton" : "enableButton"}
-              // onClick={() => handleChange(params.row._id, params.row.enable)}
+              className="viewButton"
+              onClick={() => handleReadBill(params.row._id)}
             >
-              {params.row.enable ? "Disable" : "Enable"}
+              Xem đơn hàng
+            </div>
+            <div
+              className="enableButton"
+              onClick={() => handleUpdateBill(params.row._id)}
+            >
+              Cập nhật
             </div>
           </div>
         );
@@ -110,24 +144,18 @@ const BillTable = () => {
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
-        checkboxSelection
-        onSelectionModelChange={(ids) => {
-          const selectedIDs = new Set(ids);
-          const selectedRows: any = [];
-          listBill.data.map((row) => {
-            // if (selectedIDs.has(row.id)) selectedRows.push(row._id);
-          });
-          setSelected(selectedRows);
-        }}
       />
       <ContainerModal
-        isVisible={showApplyDiscountModal}
-        closeModal={closeApplyDiscountModal}
+        isVisible={showBillDetailModal}
+        closeModal={closeBillDetailModal}
       >
-        <ModalApplyDiscountUser
-          closeModal={closeApplyDiscountModal}
-          users={selected}
-        />
+        <BillDetailModal closeModal={closeBillDetailModal} _id={IDBill} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showUpdateBillModal}
+        closeModal={closeUpdateBillModal}
+      >
+        <UpdateBill closeModal={closeUpdateBillModal} _id={IDBill} />
       </ContainerModal>
     </div>
   );

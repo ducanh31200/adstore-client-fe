@@ -8,6 +8,8 @@ import addimg from "../../../img/addimg.png";
 import removeimg from "../../../img/removeimg.png";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import Specs from "./specs";
+import { Link } from "react-router-dom";
+import useAuth from "../../../store/auth";
 
 type Props = {
   inputs: any;
@@ -21,7 +23,13 @@ const NewCategory = (props: Props) => {
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
   const { register, handleSubmit, reset } = useForm();
-
+  const [stateAuth, actionAuth] = useAuth();
+  const [showInfoModal, setInfoModal] = React.useState(false);
+  const openInfoModal = () => setInfoModal(true);
+  const closeInfoModal = () => setInfoModal(false);
+  const handleLogout = () => {
+    actionAuth.logoutAsync();
+  };
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -102,77 +110,199 @@ const NewCategory = (props: Props) => {
   };
 
   return (
-    <div className="new">
-      <div className="newContainer">
-        <div className="top">
-          <h1>{title}</h1>
+    <div className="container-fluid">
+      <div className="row bg-secondary py-2 px-xl-5">
+        <div className="col-lg-6 d-none d-lg-block">
+          <div className="d-inline-flex align-items-center">
+            <a className="text-dark" href="">
+              FAQs
+            </a>
+            <span className="text-muted px-2">|</span>
+            <a className="text-dark" href="">
+              Help
+            </a>
+            <span className="text-muted px-2">|</span>
+            <a className="text-dark" href="">
+              Support
+            </a>
+          </div>
         </div>
-        <div className="bottom">
-          {}
-          <div className="left">
-            Image:
-            <div className={`${style.listImage}`}>
-              {pickedImages.length > 0 ? (
-                <div
-                  id="images_preview"
-                  className={`grid grid-cols-5 gap-3 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2`}
-                >
-                  {pickedImages.map((item, index) => (
-                    <div
-                      className="col-span-1 h-[200px] w-full rounded-[10px] border relative"
-                      key={index}
-                    >
-                      <img className="left-imageShow" src={item} alt="images" />
-                      <div className="absolute rounded-[50%] top-[-10px] right-[-10px] h-[30px] w-[30px] bg-red-600 cursor-pointer">
-                        <img
-                          className="left-imageAdd"
-                          src={removeimg}
-                          alt="remove"
-                          onClick={function () {
-                            handleRemoveImage(index);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <label
-                  className="h-[150px] w-[150px] opacity-30 cursor-pointer"
-                  htmlFor="product_images"
-                >
-                  <img src={addimg} alt="add_image" className="w-full h-full" />
-                </label>
-              )}
+
+        <div className="col-lg-6 text-center text-lg-right">
+          <div className="d-inline-flex align-items-center">
+            <a className="text-dark px-2" href="">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a className="text-dark px-2" href="">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a className="text-dark px-2" href="">
+              <i className="fab fa-linkedin-in"></i>
+            </a>
+            <a className="text-dark px-2" href="">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a className="text-dark pl-2" href="">
+              <i className="fab fa-youtube"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="row align-items-center px-xl-5">
+        <div className="col-lg-3 d-none d-lg-block">
+          <Link to="/admin" className="text-decoration-none">
+            <h1 className="m-0 display-5 font-weight-semi-bold">
+              <span className="text-primary font-weight-bold border px-3 mr-1">
+                AD
+              </span>
+              Store
+            </h1>
+          </Link>
+        </div>
+        <div className="col-lg-6 col-6 text-left">
+          <form action="">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search for products"
+              />
+              <div className="input-group-append">
+                <span className="input-group-text bg-transparent text-primary">
+                  <i className="fa fa-search"></i>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div className="col-lg-3 col-6 text-right">
+          <div>
+            <a href="" className="btn border">
+              <i className="fas fa-heart text-primary"></i>
+              <span className="badge">0</span>
+            </a>
+            <a href="" className="btn border">
+              <i className="fas fa-shopping-cart text-primary"></i>
+              <span className="badge">0</span>
+            </a>
+          </div>
+        </div>
+        <div
+          className="wrap_menuAvatar"
+          style={{ marginTop: "10px", marginLeft: "auto" }}
+        >
+          <i className="fa-solid fa-user " />
+          &emsp;
+          <span>
+            {stateAuth.data.data?.name
+              ? stateAuth.data.data.name
+              : stateAuth.data.data?.email
+              ? stateAuth.data.data.email.substring(
+                  0,
+                  stateAuth.data.data.email.lastIndexOf("@")
+                )
+              : stateAuth.data.data?.phone}
+          </span>
+          <div className="wrap_contentHover">
+            <div className="contentHover py-[16px]">
+              <a onClick={openInfoModal} className="menuProfile menuLinkHover">
+                Thông tin cá nhân
+              </a>
+              <a className="menuProfile menuLinkHover">Tin nhắn</a>
+              <div className="lineMenu"></div>
+              <a
+                href="/"
+                className="menuProfile menuLinkHover text-red-500 font-bold"
+                onClick={handleLogout}
+              >
+                Đăng xuất
+              </a>
             </div>
           </div>
-          <div className="right">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <div className="formInput">
-                <input
-                  type="file"
-                  // name={name}
-                  id="product_images"
-                  hidden
-                  accept="image/*"
-                  onChange={handlePickImages}
-                />
+        </div>
+      </div>
+
+      <hr />
+      <div className="new">
+        <div className="newContainer">
+          <div className="top">
+            <h1>{title}</h1>
+          </div>
+          <div className="bottom">
+            {}
+            <div className="left">
+              Image:
+              <div className={`${style.listImage}`}>
+                {pickedImages.length > 0 ? (
+                  <div
+                    id="images_preview"
+                    className={`grid grid-cols-5 gap-3 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2`}
+                  >
+                    {pickedImages.map((item, index) => (
+                      <div
+                        className="col-span-1 h-[200px] w-full rounded-[10px] border relative"
+                        key={index}
+                      >
+                        <img
+                          className="left-imageShow"
+                          src={item}
+                          alt="images"
+                        />
+                        <div className="absolute rounded-[50%] top-[-10px] right-[-10px] h-[30px] w-[30px] bg-red-600 cursor-pointer">
+                          <img
+                            className="left-imageAdd"
+                            src={removeimg}
+                            alt="remove"
+                            onClick={function () {
+                              handleRemoveImage(index);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <label
+                    className="h-[150px] w-[150px] opacity-30 cursor-pointer"
+                    htmlFor="product_images"
+                  >
+                    <img
+                      src={addimg}
+                      alt="add_image"
+                      className="w-full h-full"
+                    />
+                  </label>
+                )}
               </div>
-              {inputs.map((input: any, idex: number) => (
-                <div className="formInput" key={idex}>
-                  <label>{input.label}</label>
+            </div>
+            <div className="right">
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="formInput">
                   <input
-                    type={input.type}
-                    required
-                    placeholder={input.label}
-                    {...register(`${input.key}`)}
+                    type="file"
+                    // name={name}
+                    id="product_images"
+                    hidden
+                    accept="image/*"
+                    onChange={handlePickImages}
                   />
                 </div>
-              ))}
-              <ExtendableInputs register={register} />
+                {inputs.map((input: any, idex: number) => (
+                  <div className="formInput" key={idex}>
+                    <label>{input.label}</label>
+                    <input
+                      type={input.type}
+                      required
+                      placeholder={input.label}
+                      {...register(`${input.key}`)}
+                    />
+                  </div>
+                ))}
+                <ExtendableInputs register={register} />
 
-              <button style={{ height: "50px" }}>Send</button>
-            </form>
+                <button style={{ height: "50px" }}>Send</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>

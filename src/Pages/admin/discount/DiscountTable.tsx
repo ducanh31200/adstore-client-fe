@@ -129,7 +129,7 @@ const DiscountTable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Danh sách mã khuyến mãi
-        <Link to="/discount/new" className="link">
+        <Link to="/admin/discount/new" className="link">
           Thêm mã khuyến mãi
         </Link>
       </div>

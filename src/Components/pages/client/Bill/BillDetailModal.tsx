@@ -25,7 +25,7 @@ const BillDetailModal = (props: Props) => {
     })();
   }, [_id]);
   listBillDetail?.products?.map((item: any, index: number) => {
-    item.product.colors.map((i: any, j: number) => {
+    item?.product?.colors?.map((i: any, j: number) => {
       if (item.color === i.color) item.img_color = i.image_url;
     });
   });

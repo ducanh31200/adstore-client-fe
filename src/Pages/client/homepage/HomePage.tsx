@@ -19,24 +19,37 @@ import categoryApi from "../../../api/category/category";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
 import useCart from "../../../store/cart";
 import productApi from "../../../api/product/productApi";
+import { useForm } from "react-hook-form";
+import socialApi from "../../../api/social/socialApi";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 
 const HomePage = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [click, setClick] = useState(0);
+  const { register, handleSubmit, reset } = useForm();
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const [listTopProduct, setListTopProduct] = useState<Array<any>>([]);
+  const [listComingSoon, setListComingSoon] = useState<Array<any>>([]);
+
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();
-      // console.log(list);
+
       setListCategory(list.data.data);
     })();
   }, []);
   React.useEffect(() => {
     (async () => {
-      const listTop = await productApi.hint({});
-      console.log("listTop", listTop);
-      // setListCategory(list.data.data);
+      const listTop = await productApi.top({ quantity: 5 });
+
+      setListTopProduct(listTop.data.data);
+    })();
+  }, []);
+  React.useEffect(() => {
+    (async () => {
+      const listComing = await productApi.comingSoon({ quantity: 5 });
+
+      setListComingSoon(listComing.data.data);
     })();
   }, []);
   React.useEffect(() => {
@@ -44,6 +57,17 @@ const HomePage = () => {
       await actionAuth.getUserAsync();
     })();
   }, [click]);
+
+  const subcribe = async (data: any, e: any) => {
+    e.preventDefault();
+    const res = await socialApi.add(data.email);
+    if (res) {
+      notifySuccess("Đăng ký thành công !");
+      reset();
+    } else notifyError("Xảy ra lỗi vui lòng thử lại !");
+  };
+  console.log("listTopProduct", listTopProduct);
+  console.log("listComingSoon", listComingSoon);
   return (
     <div>
       <div className="container-fluid">
@@ -197,98 +221,40 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="container-fluid offer pt-5">
-        <div className="row px-xl-5">
-          <div className="col-md-6 pb-4">
-            <div className="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
-              <img src={offer1} alt="" />
-              <div className="position-relative" style={{ zIndex: "1" }}>
-                <h5 className="text-uppercase text-primary mb-3">
-                  20% off the all order
-                </h5>
-                <h1 className="mb-4 font-weight-semi-bold"></h1>
-                <a href="" className="btn btn-outline-primary py-md-2 px-md-3">
-                  Shop Now
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 pb-4">
-            <div className="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
-              <img src={offer2} alt="" />
-              <div className="position-relative" style={{ zIndex: "1" }}>
-                <h5 className="text-uppercase text-primary mb-3">
-                  20% off the all order
-                </h5>
-                <h1 className="mb-4 font-weight-semi-bold"></h1>
-                <a href="" className="btn btn-outline-primary py-md-2 px-md-3">
-                  Shop Now
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="container-fluid pt-5">
         <div className="text-center mb-4">
           <h2 className="section-title px-5">
-            <span className="px-2">Trandy Products</span>
+            <span className="px-2">Sản phẩm bán chạy</span>
           </h2>
         </div>
         {/* aaaaaaaaaaaaaaaaaaaaaaaa */}
         <div className="row px-xl-5 pb-3">
-          {/* {FAKE_PRODUCT_DATA.map((product, index) => (
+          {listTopProduct.map((product, index) => (
             <ProductCard
               key={index}
               product={product}
               setClick={setClick}
               click={click}
             />
-          ))} */}
-        </div>
-      </div>
-
-      <div className="container-fluid bg-secondary my-5">
-        <div className="row justify-content-md-center py-5 px-xl-5">
-          <div className="col-md-6 col-12 py-5">
-            <div className="text-center mb-2 pb-2">
-              <h2 className="section-title px-5 mb-3">
-                <span className="bg-secondary px-2">Stay Updated</span>
-              </h2>
-              <p></p>
-            </div>
-            <form action="">
-              <div className="input-group">
-                <input
-                  type="text"
-                  className="form-control border-white p-4"
-                  placeholder="Email Goes Here"
-                />
-                <div className="input-group-append">
-                  <button className="btn btn-primary px-4">Subscribe</button>
-                </div>
-              </div>
-            </form>
-          </div>
+          ))}
         </div>
       </div>
 
       <div className="container-fluid pt-5">
         <div className="text-center mb-4">
           <h2 className="section-title px-5">
-            <span className="px-2">Just Arrived</span>
+            <span className="px-2">Hàng sắp về</span>
           </h2>
         </div>
         <div className="row px-xl-5 pb-3">
-          {/* {FAKE_PRODUCT_DATA.map((product, index) => (
+          {listComingSoon.map((product, index) => (
             <ProductCard
               key={index}
               product={product}
               setClick={setClick}
               click={click}
             />
-          ))} */}
+          ))}
         </div>
       </div>
 
@@ -303,14 +269,14 @@ const HomePage = () => {
       <div className="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div className="row px-xl-5 pt-5">
           <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="" className="text-decoration-none">
+            <Link to="/" className="text-decoration-none">
               <h1 className="mb-4 display-5 font-weight-semi-bold">
                 <span className="text-primary font-weight-bold border border-white px-3 mr-1">
                   AD
                 </span>
                 Store
               </h1>
-            </a>
+            </Link>
             <p></p>
             <p className="mb-2">
               <i className="fa fa-map-marker-alt text-primary mr-3"></i>TP.HCM
@@ -318,7 +284,7 @@ const HomePage = () => {
             </p>
             <p className="mb-2">
               <i className="fa fa-envelope text-primary mr-3"></i>
-              info@example.com
+              adstore@gmail.com
             </p>
             <p className="mb-0">
               <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
@@ -326,67 +292,16 @@ const HomePage = () => {
             </p>
           </div>
           <div className="col-lg-8 col-md-12">
-            <div className="row">
+            <div className="row" style={{ justifyContent: "center" }}>
               <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
-                <form action="">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control border-0 py-4"
-                      placeholder="Your Name"
-                      required
-                    />
-                  </div>
+                <h5 className="font-weight-bold text-dark mb-4">
+                  Đăng ký để nhận thông báo
+                </h5>
+                <form onSubmit={handleSubmit(subcribe)}>
                   <div className="form-group">
                     <input
                       type="email"
+                      {...register("email")}
                       className="form-control border-0 py-4"
                       placeholder="Your Email"
                       required
@@ -397,7 +312,7 @@ const HomePage = () => {
                       className="btn btn-primary btn-block border-0 py-3"
                       type="submit"
                     >
-                      Subscribe Now
+                      Đăng ký
                     </button>
                   </div>
                 </form>
@@ -405,17 +320,12 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div className="row border-top border-light mx-xl-5 py-4">
-          <div className="col-md-6 px-xl-0"></div>
-          <div className="col-md-6 px-xl-0 text-center text-md-right">
-            <img className="img-fluid" src={payment} alt="" />
-          </div>
-        </div>
+        <div className="row border-top border-light mx-xl-5 py-4"></div>
       </div>
 
-      <a href="#" className="btn btn-primary back-to-top">
+      <Link to="/" className="btn btn-primary back-to-top">
         <i className="fa fa-angle-double-up"></i>
-      </a>
+      </Link>
     </div>
   );
 };

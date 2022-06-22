@@ -74,7 +74,7 @@ const CatTable = () => {
         >
           Áp dụng khuyến mãi
         </Link>
-        <Link to="/category/new" className="link">
+        <Link to="/admin/category/new" className="link">
           Thêm loại hàng
         </Link>
       </div>

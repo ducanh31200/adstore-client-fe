@@ -20,7 +20,7 @@ export const PrivateRoute = (props: IPrivateRoute) => {
     const token = getFromLocalStorage("accessToken");
     if (token) {
       const res = await actionAuth.getUserAsync();
-      console.log("123", res);
+
       if (res && !res.data) {
         if (option) {
           navigate("/");

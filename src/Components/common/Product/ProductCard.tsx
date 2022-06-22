@@ -16,8 +16,8 @@ export const ProductCard = ({
 }) => {
   const [stateCart, actionCart] = useCart();
 
-  console.log("product", product);
   const [stateAuth, actionAuth] = useAuth();
+
   React.useEffect(() => {
     (async () => {
       await actionAuth.getUserAsync();

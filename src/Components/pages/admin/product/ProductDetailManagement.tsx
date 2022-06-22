@@ -1,57 +1,105 @@
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
+import categoryApi from "../../../../api/category/category";
+import productApi from "../../../../api/product/productApi";
+import addimg from "../../../../img/addimg.png";
+import removeimg from "../../../../img/removeimg.png";
+import useAuth from "../../../../store/auth";
+import useProductDetail from "../../../../store/productDetail";
+import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./new.scss";
 import style from "./style.module.css";
-import React, { useState } from "react";
-import Specs from "./specs";
-import { useForm } from "react-hook-form";
-import _ from "lodash";
-import addimg from "../../../img/addimg.png";
-import removeimg from "../../../img/removeimg.png";
-import categoryApi from "../../../api/category/category";
-import ShowSpecs from "./showSpecs";
-import useCate from "../../../store/category";
-import { notifyError, notifySuccess } from "../../../utils/notify";
-import productApi from "../../../api/product/productApi";
-import useAuth from "../../../store/auth";
-import { Link } from "react-router-dom";
-type Props = {
-  inputs: any;
-  title: any;
-};
 
-const NewProduct = (props: Props) => {
-  const inputs = props.inputs;
-  const title = props.title;
-  const [cate, actionCate] = useCate();
+const ProductDetailManagement = () => {
+  const params = useParams<any>();
+  const _id = params._id as string;
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-  const [listCategory, setListCategory] = useState<Array<any>>([]);
   const [listSpecs, setListSpecs] = useState<Array<any>>([]);
+  const [productDetail, actionProductDetail] = useProductDetail();
   const { register, handleSubmit, setValue, reset } = useForm();
-  const [currentCate, setCurrentCate] = React.useState<any>();
+  const [currentCate, setCurrentCate] = React.useState<any>(undefined);
+  const [product, setProduct] = React.useState<any[]>([]);
+  const navigate = useNavigate();
   const [stateAuth, actionAuth] = useAuth();
+
+  const handleBack = () => {
+    navigate("/admin/product");
+  };
+
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-  React.useEffect(() => {
-    (async () => {
-      const list = await categoryApi.list();
 
-      setListCategory(list.data.data);
-      setCurrentCate(list.data.data[0].name);
-    })();
-  }, []);
+  console.log("currentCate", currentCate);
+  // console.log("data", productDetail.data);
+
   React.useEffect(() => {
     (async () => {
-      const list = await categoryApi.read({ name: currentCate });
-      if (list.data) {
-        setListSpecs(list.data.data.specsModel);
+      if (currentCate) {
+        const list = await categoryApi.read({ name: currentCate });
+
+        if (list.data) {
+          setListSpecs(list.data.data.specsModel);
+        }
       }
     })();
   }, [currentCate]);
+
+  function toDataUrl(url: any, callback: any) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+
+  React.useEffect(() => {
+    (async () => {
+      if (_id) {
+        await actionProductDetail.ReadProduct({ _id });
+      }
+    })();
+  }, [_id]);
+
+  React.useEffect(() => {
+    return () => {
+      actionProductDetail.setProduct(undefined);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!!productDetail.data) {
+      setCurrentCate(productDetail.data.category);
+      setValue("category", productDetail.data.category);
+      setValue("name", productDetail.data.name);
+      toDataUrl(productDetail.data.image_url, function (res: any) {
+        const base64 = res.split(",");
+        setImagesBase64(base64[1]);
+      });
+
+      pickedImages[0] = productDetail.data.image_url;
+      setPickedImages(pickedImages);
+
+      const specs = [];
+      for (const [key, value] of Object.entries(productDetail.data)) {
+        specs.push({ key, value });
+      }
+      setProduct(specs);
+    }
+  }, [productDetail.data]);
 
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
@@ -112,23 +160,23 @@ const NewProduct = (props: Props) => {
     });
 
     const payload = {
+      _id: params._id as string,
       name: data.name,
       code: data.code,
       desc: data.desc,
-      category: data.category,
       specs: specs,
       price: data.price,
       sale: data.sale,
       image_base64: imagesBase64,
     };
-    console.log(payload);
+    console.log("payload", payload);
     if (imagesBase64) {
-      const res = await productApi.create(payload);
+      const res = await productApi.update(payload);
       if (res.status === 200) {
-        notifySuccess("Thêm sản phẩm thành công !");
+        notifySuccess("Chỉnh sửa sản phẩm thành công !");
         reset();
         handleRemoveImage(0);
-        window.location.reload();
+        navigate("/admin/product");
       } else notifyError(res.message);
     } else notifyError("Vui lòng thêm hình ảnh !");
   };
@@ -249,7 +297,7 @@ const NewProduct = (props: Props) => {
       <div className="new">
         <div className="newContainer">
           <div className="top">
-            <h1>{title}</h1>
+            <h1>Quản lý sản phẩm</h1>
           </div>
           <div className="bottom">
             {}
@@ -312,31 +360,69 @@ const NewProduct = (props: Props) => {
                     onChange={handlePickImages}
                   />
                 </div>
-                {inputs.map((input: any, idex: number) => (
-                  <div className="formInput" key={idex}>
-                    <label>{input.label}</label>
-                    {input.type === "textarea" ? (
-                      <textarea
-                        placeholder={input.label}
-                        {...register(`${input.key}`)}
-                      />
-                    ) : input.type === "text" ? (
-                      <input
-                        {...register(`${input.key}`)}
-                        type={input.type}
-                        placeholder={input.label}
-                      />
-                    ) : (
-                      <div className="select">
-                        <select onChange={handleShowSpecs}>
-                          <option>Chọn</option>
-                          {listCategory.map((item: any, index: any) => (
-                            <option key={index} value={item.name}>
-                              {item.name}
-                            </option>
-                          ))}
-                        </select>
+                {product.map((input: any, index: number) => (
+                  <div key={index}>
+                    {input.key === "name" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <input
+                          type="text"
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                          {...register(`${input.key}`)}
+                        />
                       </div>
+                    ) : input.key === "code" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <input
+                          type="text"
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                          {...register(`${input.key}`)}
+                        />
+                      </div>
+                    ) : input.key === "price" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <input
+                          type="text"
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                          {...register(`${input.key}`)}
+                        />
+                      </div>
+                    ) : input.key === "sale" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <input
+                          type="text"
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                          {...register(`${input.key}`)}
+                        />
+                      </div>
+                    ) : input.key === "desc" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <textarea
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                          {...register(`${input.key}`)}
+                        />
+                      </div>
+                    ) : input.key === "category" ? (
+                      <div className="formInput">
+                        <label>{input.key}</label>
+                        <input
+                          type="text"
+                          disabled
+                          defaultValue={input.value}
+                          placeholder={input.key}
+                        />
+                      </div>
+                    ) : (
+                      <></>
                     )}
                   </div>
                 ))}
@@ -344,8 +430,17 @@ const NewProduct = (props: Props) => {
                   setValue={setValue}
                   register={register}
                   listSpecs={listSpecs}
+                  listDetail={productDetail.data?.specs}
                 />
-                <button style={{ height: "50px" }}>Send</button>
+                <button style={{ height: "50px" }}>Cập nhật</button>
+                <button
+                  type="button"
+                  className="button"
+                  onClick={handleBack}
+                  style={{ height: "50px" }}
+                >
+                  Trờ về
+                </button>
               </form>
             </div>
           </div>
@@ -354,17 +449,35 @@ const NewProduct = (props: Props) => {
     </div>
   );
 };
+
 const SpecsCategory = ({
   register,
   listSpecs,
   setValue,
+  listDetail,
 }: {
   register: any;
   setValue: any;
   listSpecs: any;
+  listDetail: any;
 }) => {
-  // console.log(listSpecs);
-  // const handleAddInput = () => setInputCount(inputCount + 1);
+  const [arr, setArr] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    if (listDetail) {
+      const specs = [];
+      for (const [key, value] of Object.entries(listDetail)) {
+        specs.push({ name: key, value });
+      }
+      setArr(specs);
+    }
+  }, [listDetail]);
+
+  React.useEffect(() => {
+    return () => {
+      setArr([]);
+    };
+  }, []);
 
   return (
     <div className="">
@@ -372,12 +485,13 @@ const SpecsCategory = ({
       {listSpecs.map((item: any, index: any) => {
         setValue(`spec${index + 1}`, item.name);
         return (
-          <ShowSpecs
+          <ShowSpecsDetail
             register={register}
             id={index + 1}
             key={index}
             name={item.name}
             values={item.values}
+            list={arr[index]?.value}
           />
         );
       })}
@@ -385,4 +499,45 @@ const SpecsCategory = ({
   );
 };
 
-export default NewProduct;
+const ShowSpecsDetail = ({
+  register,
+  id,
+  name,
+  values,
+  list,
+}: {
+  register: any;
+  id: any;
+  name: any;
+  values: any;
+  list: any;
+}) => {
+  return (
+    <div className="formInput">
+      <div className="specs-input">
+        <input
+          //   {...register(`spec${id}`)}
+          type="text"
+          value={name}
+          disabled
+          placeholder="Name Spec"
+        />
+
+        <div className="select">
+          <select {...register(`value${id}`)}>
+            <option value={list}>{list}</option>
+            {values.map((item: any, index: any) => {
+              if (item.value !== list)
+                return (
+                  <option key={index} value={item.value}>
+                    {item.value}
+                  </option>
+                );
+            })}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default ProductDetailManagement;

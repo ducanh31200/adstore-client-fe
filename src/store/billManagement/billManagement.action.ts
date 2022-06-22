@@ -23,19 +23,19 @@ export const GetListBill =
     }
     return false;
   };
-// export const UpdateCart =
-//   (data: any) =>
-//   async ({ setState, getState }: Actions) => {
-//     const result = await cartApi.update(data);
-//     if (result.status === 200) {
-//       console.log("UpdateCart", result);
-//       setState({
-//         ...getState(),
-//         data: result.data.data,
-//         count: result.data.count,
-//       });
+export const UpdateBill =
+  (data: any) =>
+  async ({ setState, getState }: Actions) => {
+    const result = await BillApi.update(data);
+    if (result.status === 200) {
+      const newList = [...getState().data].map((item: any) => {
+        if (item._id === data._id) item.status = data.status;
+        return item;
+      });
+      setState({ ...getState(), data: newList });
+      return true;
 
-//       return true;
-//     }
-//     return false;
-//   };
+      return true;
+    }
+    return false;
+  };

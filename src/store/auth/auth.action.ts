@@ -21,7 +21,7 @@ export const loginAsync =
       saveToLocalStorage("accessToken", result.data.accessToken);
       setState({ ...getState(), isLoggedIn: true });
       notifySuccess("Đăng nhập thành công");
-      return true;
+      return result.data;
     }
     notifyError("Sai tài khoản hoặc mật khẩu");
     return false;
@@ -36,6 +36,7 @@ export const getUserAsync =
       result.data.data.bag_items_length = surface.data.data.bag_items_length;
       result.data.data.notifications_length =
         surface.data.data.notifications_length;
+      result.data.data.bag_products = surface.data.data.bag_products;
     }
     if (result.status === 200) {
       setState({ ...getState(), isLoggedIn: true, data: result.data });

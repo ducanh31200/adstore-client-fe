@@ -40,6 +40,14 @@ const productApi = {
     const url = "/product/hint";
     return axiosClient.post(url, data);
   },
+  top(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/top";
+    return axiosClient.post(url, data);
+  },
+  comingSoon(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/commingSoon";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default productApi;

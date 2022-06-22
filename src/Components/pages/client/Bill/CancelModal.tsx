@@ -23,6 +23,7 @@ const CancelModal = (props: Props) => {
     const res = await BillApi.update(payload);
     if (res) {
       reset();
+      window.location.reload();
       closeModal();
       notifySuccess("Hủy đơn thành công !");
     } else notifyError("Xảy ra lỗi vui lòng thử lại !");

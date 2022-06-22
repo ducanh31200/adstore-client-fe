@@ -7,14 +7,16 @@ import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/persona
 import useAuth from "../../../store/auth";
 import useBillManagement from "../../../store/billManagement";
 import useUser from "../../../store/user";
+import { moneyFormater } from "../../../utils/moneyFormater";
 import BillTable from "./BillTable";
 
-const UserManagement = () => {
+const BillManagement = () => {
   const [listBill, actionBill] = useBillManagement();
   const [stateAuth, actionAuth] = useAuth();
-  const [showInfoModal, setInfoModal] = React.useState(false);
-  const openInfoModal = () => setInfoModal(true);
-  const closeInfoModal = () => setInfoModal(false);
+
+  // const [showInfoModal, setInfoModal] = React.useState(false);
+  // const openInfoModal = () => setInfoModal(true);
+  // const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
@@ -26,15 +28,46 @@ const UserManagement = () => {
     })();
   }, []);
 
-  listBill.data.map((item: any, index: number) => {
+  function padTo2Digits(num: any) {
+    return num.toString().padStart(2, "0");
+  }
+
+  function formatDate(date: any) {
+    return (
+      [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+      ].join("-") +
+      " " +
+      [
+        padTo2Digits(date.getHours()),
+        padTo2Digits(date.getMinutes()),
+        padTo2Digits(date.getSeconds()),
+      ].join(":")
+    );
+  }
+
+  listBill?.data?.map((item: any, index: number) => {
     const addr = [
       item.address?.address,
       item.address?.district,
       item.address?.province,
     ];
+    let formatPhone = "0";
+    item.name = item.account?.name;
+    item.email = item.account?.email;
+    item.createdAt = formatDate(new Date(item.createdAt));
+    item.updatedAt = formatDate(new Date(item.updatedAt));
+    if (item.phone !== undefined && item.phone[0] !== "0")
+      item.phoneformat = formatPhone.concat(item.phone.slice(3));
     item.id = index + 1;
     item.addressformat = addr.join(",");
+    item.discountformat = moneyFormater(item.discount);
+    item.shipformat = moneyFormater(item.ship);
+    item.totalformat = moneyFormater(item.total);
   });
+
   console.log("listUser.data", listBill.data);
   return (
     <div className="home">
@@ -79,7 +112,7 @@ const UserManagement = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/admin" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -135,7 +168,7 @@ const UserManagement = () => {
               <div className="wrap_contentHover">
                 <div className="contentHover py-[16px]">
                   <a
-                    onClick={openInfoModal}
+                    // onClick={openInfoModal}
                     className="menuProfile menuLinkHover"
                   >
                     Thông tin cá nhân
@@ -143,6 +176,7 @@ const UserManagement = () => {
                   <a className="menuProfile menuLinkHover">Tin nhắn</a>
                   <div className="lineMenu"></div>
                   <a
+                    href="/"
                     className="menuProfile menuLinkHover text-red-500 font-bold"
                     onClick={handleLogout}
                   >
@@ -220,12 +254,12 @@ const UserManagement = () => {
                     className="navbar-nav w-100 overflow-hidden"
                     // style={{ height: "410px" }}
                   >
-                    <a href="" className="nav-item nav-link">
+                    <Link to="/admin/revenue" className="nav-item nav-link">
                       Doanh thu
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/admin/bill" className="nav-item nav-link">
                       Đơn hàng
-                    </a>
+                    </Link>
                   </div>
                 </nav>
               </div>
@@ -238,10 +272,10 @@ const UserManagement = () => {
           </div>
         </div>
       </div>
-      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
+      {/* <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
-      </ContainerModal>
+      </ContainerModal> */}
     </div>
   );
 };
-export default UserManagement;
+export default BillManagement;

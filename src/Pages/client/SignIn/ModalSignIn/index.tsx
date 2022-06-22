@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../../../../store/auth";
 import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./style.css";
@@ -15,6 +15,7 @@ const ModalSignIn = (props: Props) => {
   const [authState, actionAuth] = useAuth();
   const { register, handleSubmit, reset } = useForm();
   const [loginType, setloginType] = useState("password");
+  const navigate = useNavigate();
   const handleOpenSignUp = () => {
     closeModal();
     openSignUpModal();
@@ -47,6 +48,7 @@ const ModalSignIn = (props: Props) => {
 
     if (result) {
       const info = await actionAuth.getUserAsync();
+      if (info.data.role === "Admin") navigate("/admin");
       reset();
       closeModal();
     }

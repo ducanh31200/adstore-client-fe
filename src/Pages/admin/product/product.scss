@@ -184,7 +184,14 @@
 .status {
   padding: 5px;
   border-radius: 5px;
-
+  &.false {
+    color: gray;
+    background-color: rgba(0, 128, 0, 0.151);
+  }
+  &.Approved {
+    color: green;
+    background-color: rgba(0, 128, 0, 0.151);
+  }
   &.Approved {
     color: green;
     background-color: rgba(0, 128, 0, 0.151);

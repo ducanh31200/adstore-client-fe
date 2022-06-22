@@ -74,6 +74,13 @@
       border: 1px dotted rgba(0, 0, 139, 0.596);
       cursor: pointer;
     }
+    .disableButton {
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: gray;
+      border: 1px dotted rgba(0, 0, 139, 0.596);
+      cursor: pointer;
+    }
 
     .enableButton {
       padding: 2px 5px;

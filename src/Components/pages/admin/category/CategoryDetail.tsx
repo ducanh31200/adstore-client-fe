@@ -26,7 +26,7 @@ const CategoryDetail = (props: Props) => {
   React.useEffect(() => {
     (async () => {
       await actionCatDetail.ReadCat({ _id: _id });
-      //   if (catDetail.data.image_url) pickedImages[0] = catDetail.data.image_url;
+      if (catDetail.data.image_url) pickedImages[0] = catDetail.data.image_url;
     })();
   }, []);
 

@@ -12,7 +12,11 @@ export const GetListUser =
   async ({ setState, getState }: Actions) => {
     const result = await userApi.list(data);
     if (result.status === 200) {
-      setState({ ...getState(), data: result.data.data });
+      setState({
+        ...getState(),
+        data: result.data.data,
+        count: result.data.count,
+      });
       return true;
     }
     return false;

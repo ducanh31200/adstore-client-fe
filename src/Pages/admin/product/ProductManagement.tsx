@@ -9,7 +9,7 @@ import ProductTable from "./ProductTable";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useProduct from "../../../store/product";
 
-const ProductManage = () => {
+const ProductManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const [listProduct, actionProduct] = useProduct();
@@ -144,6 +144,7 @@ const ProductManage = () => {
                   <a className="menuProfile menuLinkHover">Tin nhắn</a>
                   <div className="lineMenu"></div>
                   <a
+                    href="/"
                     className="menuProfile menuLinkHover text-red-500 font-bold"
                     onClick={handleLogout}
                   >
@@ -218,12 +219,12 @@ const ProductManage = () => {
                   id="navbar-vertical3"
                 >
                   <div className="navbar-nav w-100 overflow-hidden">
-                    <a href="" className="nav-item nav-link">
+                    <Link to="/admin/revenue" className="nav-item nav-link">
                       Doanh thu
-                    </a>
-                    <a href="" className="nav-item nav-link">
+                    </Link>
+                    <Link to="/admin/bill" className="nav-item nav-link">
                       Đơn hàng
-                    </a>
+                    </Link>
                   </div>
                 </nav>
               </div>
@@ -245,4 +246,4 @@ const ProductManage = () => {
   );
 };
 
-export default ProductManage;
+export default ProductManagement;

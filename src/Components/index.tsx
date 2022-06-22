@@ -2,13 +2,14 @@ import { List } from "@mui/material";
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DFRole } from "../Constant/DFRole";
-import CategoryManage from "../Pages/admin/category/CategoryManagement";
+import BillManagement from "../Pages/admin/bill/BillManagement";
+import CategoryManagement from "../Pages/admin/category/CategoryManagement";
 import Dashboard from "../Pages/admin/dashboard/Dashboard";
-import DiscountManage from "../Pages/admin/discount/DiscountManagement";
+import DiscountManagement from "../Pages/admin/discount/DiscountManagement";
 import NewCategory from "../Pages/admin/new/NewCategory";
 import NewDiscount from "../Pages/admin/new/NewDiscount";
 import NewProduct from "../Pages/admin/new/NewProduct";
-import ProductManage from "../Pages/admin/product/ProductManagement";
+import ProductManagement from "../Pages/admin/product/ProductManagement";
 import UserManagement from "../Pages/admin/user/UserManagement";
 import Bill from "../Pages/client/bill/Bill";
 import Cart from "../Pages/client/cart/Cart";
@@ -24,6 +25,7 @@ import {
 } from "../route/formSource";
 import { defaultRoute } from "./defaultRoute";
 import CategoryDetail from "./pages/admin/category/CategoryDetail";
+import ProductDetailManagement from "./pages/admin/product/ProductDetailManagement";
 import { PrivateRoute } from "./PrivateRoute";
 
 interface IRoute {
@@ -107,8 +109,8 @@ const routesPrivate: Array<IPrivateRoute> = [
     roleRoute: [DFRole.Admin],
   },
   {
-    child: <ProductManage />,
-    path: defaultRoute.productManage,
+    child: <ProductManagement />,
+    path: defaultRoute.productManagement,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
@@ -135,8 +137,8 @@ const routesPrivate: Array<IPrivateRoute> = [
     roleRoute: [DFRole.Admin],
   },
   {
-    child: <CategoryManage />,
-    path: defaultRoute.categoryManage,
+    child: <CategoryManagement />,
+    path: defaultRoute.categoryManagement,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
@@ -157,14 +159,21 @@ const routesPrivate: Array<IPrivateRoute> = [
   },
   {
     child: <UserManagement />,
-    path: defaultRoute.userManage,
+    path: defaultRoute.userManagement,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
   },
   {
-    child: <DiscountManage />,
-    path: defaultRoute.discountManage,
+    child: <DiscountManagement />,
+    path: defaultRoute.discountManagement,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Admin],
+  },
+  {
+    child: <BillManagement />,
+    path: defaultRoute.billManagement,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
@@ -172,6 +181,13 @@ const routesPrivate: Array<IPrivateRoute> = [
   {
     child: <NewDiscount inputs={discountInputs} title="Add New Discount" />,
     path: defaultRoute.newDiscount,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Admin],
+  },
+  {
+    child: <ProductDetailManagement />,
+    path: defaultRoute.productDetailManagement,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],

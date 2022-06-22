@@ -97,7 +97,7 @@ const Sidebar = () => {
         </div>
         <div className="row align-items-center py-3 px-xl-5">
           <div className="col-lg-3 d-none d-lg-block">
-            <Link to="/" className="text-decoration-none">
+            <Link to="/admin" className="text-decoration-none">
               <h1 className="m-0 display-5 font-weight-semi-bold">
                 <span className="text-primary font-weight-bold border px-3 mr-1">
                   AD
@@ -251,12 +251,12 @@ const Sidebar = () => {
                   className="navbar-nav w-100 overflow-hidden"
                   // style={{ height: "410px" }}
                 >
-                  <a href="" className="nav-item nav-link">
+                  <Link to="/admin/revenue" className="nav-item nav-link">
                     Doanh thu
-                  </a>
-                  <a href="" className="nav-item nav-link">
+                  </Link>
+                  <Link to="/admin/bill" className="nav-item nav-link">
                     Đơn hàng
-                  </a>
+                  </Link>
                 </div>
               </nav>
             </div>

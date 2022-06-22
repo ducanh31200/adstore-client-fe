@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import categoryApi from "../../../api/category/category";
 import { getFromLocalStorage } from "../../../helper/base.helpers";
 import ModalSignIn from "../../../Pages/client/SignIn/ModalSignIn";
@@ -21,7 +21,7 @@ const Nav = () => {
   const closeInfoModal = () => setInfoModal(false);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const token = getFromLocalStorage("accessToken");
-
+  const navigate = useNavigate();
   React.useEffect(() => {
     if (token) {
       (async () => {
@@ -176,16 +176,13 @@ const Nav = () => {
                         >
                           Thông tin cá nhân
                         </Link>
-                        <Link
-                          to={location.pathname}
-                          className="menuProfile menuLinkHover"
-                        >
+                        <Link to="/bill" className="menuProfile menuLinkHover">
                           Đơn hàng
                         </Link>
                         <div className="lineMenu"></div>
                         <Link
                           to={location.pathname}
-                          className="menuProfile menuLinkHover text-red-500 font-bold"
+                          className="menuProfile menuLinkHover !text-red-500 font-bold"
                           onClick={handleLogout}
                         >
                           Đăng xuất

@@ -1,0 +1,33 @@
+.listImgae {
+  /* border-dashed min-h-[200px] p-5 mt-[10px] border-gray-300 rounded-[3px] border-2 flex justify-center items-center */
+
+  min-height: 200px;
+  padding: 5px;
+  margin-top: 10px;
+  border: 2px dashed gray;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orderDetail {
+  min-height: 200px;
+  min-width: 750px;
+  max-height: 80vh;
+  max-width: 80vw;
+  background-color: #fff;
+  padding: 0 30px 20px;
+  border-radius: 10px;
+}
+
+.headerOrderDetail {
+  height: 50px;
+  padding: 10px 0;
+}
+
+.bodyOrderDetail {
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: calc(80vh - 50px);
+}
