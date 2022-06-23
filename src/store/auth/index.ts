@@ -13,6 +13,7 @@ import { selector } from "./auth.selector";
 export type State = {
   isLoggedIn: boolean;
   data: {
+    role: string;
     msg: string;
     data: any;
     accessToken: string;
@@ -28,6 +29,7 @@ const initialState: State = {
   isLoggedIn: false,
   data: {
     msg: "",
+    role: "",
     data: {},
     accessToken: "",
     chats: [],

@@ -48,7 +48,10 @@ const CatTable = () => {
             <Link to="/users/test" style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link
+              to={`/admin/category/${params.row._id}`}
+              style={{ textDecoration: "none" }}
+            >
               <div className="updateButton">Update</div>
             </Link>
             <div

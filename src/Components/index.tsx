@@ -18,6 +18,7 @@ import HomePage from "../Pages/client/homepage/HomePage";
 import Notifications from "../Pages/client/notification/Notification";
 import Product from "../Pages/client/product/Product";
 import ProductDetail from "../Pages/client/product/ProductDetail";
+import Chat from "./common/chat";
 import {
   categoryInputs,
   discountInputs,
@@ -27,6 +28,8 @@ import { defaultRoute } from "./defaultRoute";
 import CategoryDetail from "./pages/admin/category/CategoryDetail";
 import ProductDetailManagement from "./pages/admin/product/ProductDetailManagement";
 import { PrivateRoute } from "./PrivateRoute";
+import SaleDashboard from "../Pages/sale/dashboard/Dashboard";
+import SaleDiscount from "../Pages/sale/dashboard/discount/SaleDiscount";
 
 interface IRoute {
   exact: Boolean;
@@ -102,11 +105,32 @@ const routes: Array<IRoute> = [
 
 const routesPrivate: Array<IPrivateRoute> = [
   {
+    child: <Chat />,
+    path: defaultRoute.chat,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Sale, DFRole.Customer],
+  },
+  {
     child: <Dashboard />,
     path: defaultRoute.dashboard,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],
+  },
+  {
+    child: <SaleDashboard />,
+    path: defaultRoute.saleDashboard,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Sale],
+  },
+  {
+    child: <SaleDiscount />,
+    path: defaultRoute.saleDiscount,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Sale],
   },
   {
     child: <ProductManagement />,
@@ -151,7 +175,7 @@ const routesPrivate: Array<IPrivateRoute> = [
     roleRoute: [DFRole.Admin],
   },
   {
-    child: <CategoryDetail _id="62a701e0ad91633459e66d84" />,
+    child: <CategoryDetail />,
     path: defaultRoute.viewCategory,
     exact: true,
     option: true,

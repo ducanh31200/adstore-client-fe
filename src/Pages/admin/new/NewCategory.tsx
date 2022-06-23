@@ -10,6 +10,8 @@ import { notifyError, notifySuccess } from "../../../utils/notify";
 import Specs from "./specs";
 import { Link } from "react-router-dom";
 import useAuth from "../../../store/auth";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 
 type Props = {
   inputs: any;
@@ -306,6 +308,9 @@ const NewCategory = (props: Props) => {
           </div>
         </div>
       </div>
+      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
+        <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
     </div>
   );
 };
@@ -314,17 +319,25 @@ const ExtendableInputs = ({ register }: { register: any }) => {
   const [inputCount, setInputCount] = React.useState(1);
 
   const handleAddInput = () => setInputCount(inputCount + 1);
-  // const handleAddInput = () => setInputCount(inputCount + 1);
+  const handleSubInput = () => setInputCount(inputCount - 1);
 
   return (
     <div className="">
-      <label>Specs</label>
+      <label>Thông số kỹ thuật</label>
       {[...Array(inputCount)].map((_, index) => (
         <Specs register={register} id={index + 1} key={index} />
       ))}
       {/* <Specs /> */}
       <button type="button" onClick={handleAddInput}>
         Thêm
+      </button>
+      <button
+        style={{ marginLeft: "20px" }}
+        type="button"
+        disabled={inputCount === 0}
+        onClick={handleSubInput}
+      >
+        Xóa
       </button>
     </div>
   );

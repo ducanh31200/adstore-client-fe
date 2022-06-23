@@ -1,26 +1,14 @@
-import "./new.scss";
-import style from "./style.module.css";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import _ from "lodash";
-
-import { notifyError, notifySuccess } from "../../../utils/notify";
-
-import discountApi from "../../../api/discount/discountApi";
-import useAuth from "../../../store/auth";
 import { Link } from "react-router-dom";
-import { ContainerModal } from "../../../Components/common/ContainerModal";
-import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
-type Props = {
-  inputs: any;
-  title: any;
-};
 
-const NewDiscount = (props: Props) => {
-  const inputs = props.inputs;
-  const title = props.title;
+import ModalInfo from "../PersonalInfo/ModalInfo/personalInfo";
+import useAuth from "../../../store/auth";
+import "./style.scss";
+import { ContainerModal } from "../ContainerModal";
+type Props = {};
 
-  const { register, handleSubmit, reset } = useForm();
+const Chat = (props: Props) => {
   const [stateAuth, actionAuth] = useAuth();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
@@ -28,31 +16,6 @@ const NewDiscount = (props: Props) => {
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-  const onSubmit = async (data: any) => {
-    const payload = {
-      code: data.code,
-      enable: Boolean(data.enable),
-      dateEnd: data.dateEnd,
-      dateStart: data.dateStart,
-      quantity: Number(data.quantity),
-      minPrice: Number(data.minPrice),
-      maxPrice: Number(data.maxPrice),
-      is_percent: Boolean(data.is_percent),
-      is_ship: Boolean(data.is_ship),
-      is_oic: Boolean(data.is_oic),
-      value: Number(data.value),
-    };
-    console.log(payload);
-
-    const res = await discountApi.create(payload);
-    console.log(res);
-    if (res.status === 200) {
-      notifySuccess("Thêm mã giảm giá thành công !");
-      reset();
-      window.location.reload();
-    } else notifyError(res.response.data.msg);
-  };
-
   return (
     <div className="container-fluid">
       <div className="row bg-secondary py-2 px-xl-5">
@@ -166,41 +129,108 @@ const NewDiscount = (props: Props) => {
         </div>
       </div>
       <hr />
-      <div className="new">
-        <div className="newContainer">
-          <div className="top">
-            <h1>{title}</h1>
-          </div>
-          <div className="bottom">
-            <div className="right">
-              <form onSubmit={handleSubmit(onSubmit)}>
-                {inputs.map((input: any, index: number) => (
-                  <div className="formInput" key={index}>
-                    <label>{input.label}</label>
-                    {input.type === "option" ? (
-                      <div className="option">
-                        <select {...register(`${input.key}`)}>
-                          {/* <option>Chọn</option> */}
-                          <option key="1" value="">
-                            False
-                          </option>
-                          <option key="2" value="true">
-                            True
-                          </option>
-                        </select>
-                      </div>
-                    ) : (
-                      <input
-                        {...register(`${input.key}`)}
-                        type={input.type}
-                        placeholder={input.label}
-                        required
-                      />
-                    )}
-                  </div>
-                ))}
+      <div className="container">
+        <div className="Chat">
+          <div className="row no-gutters h-100">
+            <div className="col-md-4 border-right">
+              <div className="settings-tray">
+                <span className="settings-tray--right"></span>
+              </div>
+              <div className="search-box">
+                <div className="input-wrapper">
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                  <input placeholder="Search here" type="text" />
+                </div>
+              </div>
 
-                <button style={{ height: "50px" }}>Send</button>
+              <div className="friend-drawer friend-drawer--onhover">
+                <i
+                  className="fa-solid fa-user"
+                  style={{ fontSize: "45px" }}
+                ></i>
+                <div className="text">
+                  <h6>hello</h6>
+                  <p className="text-muted">123</p>
+                </div>
+                <span className="time text-muted small">13:21</span>
+              </div>
+            </div>
+            <div className="col-md-8 flex flex-column">
+              <div className="settings-tray">
+                <div className="friend-drawer no-gutters friend-drawer--grey">
+                  <i
+                    className="fa-solid fa-user"
+                    style={{ fontSize: "45px" }}
+                  ></i>
+
+                  <div className="text">
+                    <h6>hii</h6>
+                    {/* <p className="text-muted">
+                      Layin' down the law since like before Christ...
+                    </p> */}
+                  </div>
+                  {stateAuth.data.role === "Customer" ? (
+                    <button
+                      type="submit"
+                      style={{
+                        marginLeft: "auto",
+                        borderRadius: "12%",
+                      }}
+                    >
+                      {/* Send */}
+                      Tạo mới
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+                  <span className="settings-tray--right"></span>
+                </div>
+              </div>
+              <div
+                className="chat-panel"
+                style={{
+                  flex: "1",
+                  overflowY: "auto",
+                  maxHeight: "calc(100vh - 240px)",
+                }}
+              >
+                <div className="row no-gutters">
+                  <div className="col-md-3 offset-md-9">
+                    <div className="chat-bubble chat-bubble--right">33333</div>
+                  </div>
+                </div>
+                <div className="row no-gutters">
+                  <div className="col-md-3">
+                    <div className="chat-bubble chat-bubble--left">22222</div>
+                  </div>
+                </div>
+
+                <div className="row no-gutters">
+                  <div className="col-md-3 offset-md-9">
+                    <div className="chat-bubble chat-bubble--right">33333</div>
+                  </div>
+                </div>
+              </div>
+              <form>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="chat-box-tray">
+                      <input
+                        type="text"
+                        placeholder="Type your message here..."
+                        className="px-3"
+                        style={{ width: "100%" }}
+                      />
+                      <button type="submit" style={{ border: "none" }}>
+                        {/* Send */}
+                        <i
+                          className="fa-solid fa-circle-arrow-up"
+                          style={{ fontSize: "30px", margin: 0 }}
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -213,4 +243,4 @@ const NewDiscount = (props: Props) => {
   );
 };
 
-export default NewDiscount;
+export default Chat;

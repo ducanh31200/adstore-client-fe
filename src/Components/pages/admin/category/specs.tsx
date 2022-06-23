@@ -12,14 +12,15 @@ const Specs = ({ register, id }: Props) => {
     <div className="formInput">
       <div className="specs-input">
         <input
+          style={{ width: "190px" }}
           {...register(`name_${id}`)}
           type="text"
           required
           placeholder="Name Spec"
         />
-        <input
+        <textarea
+          style={{ width: "230px" }}
           {...register(`values_${id}`)}
-          type="text"
           placeholder="Value"
           required
         />

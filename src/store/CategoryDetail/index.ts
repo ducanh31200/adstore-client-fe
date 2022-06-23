@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { ISpecs } from "../../model/product.model";
-import { ReadCat } from "./catDetail.action";
+import { ReadCat, setCate } from "./catDetail.action";
 import { selector } from "./catDetail.selector";
 
 export interface Value {
@@ -15,27 +15,24 @@ export interface Spec {
 }
 
 export type State = {
-  data: {
-    _id: string;
-    name: string;
-    image_url: string;
-    products_length: number;
-    specsModel: Array<Spec>;
-  };
+  data:
+    | {
+        _id: string;
+        name: string;
+        image_url: string;
+        products_length: number;
+        specsModel: Array<Spec>;
+      }
+    | undefined;
 };
 
 const initialState: State = {
-  data: {
-    _id: "",
-    name: "",
-    image_url: "",
-    products_length: 0,
-    specsModel: [],
-  },
+  data: undefined,
 };
 
 const actions = {
   ReadCat,
+  setCate,
 };
 
 const Store = createStore({

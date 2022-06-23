@@ -146,7 +146,7 @@ function Router() {
         path="/categoryManage/view"
         element={
           <PrivateRoute>
-            <CategoryDetail _id="62a701e0ad91633459e66d84" />
+            <CategoryDetail />
           </PrivateRoute>
         }
       />

@@ -20,6 +20,10 @@ const categoryApi = {
     const url = "category/create"; //params
     return axiosClient.post(url, data);
   },
+  update(data: any): Promise<ReturnReponse<any>> {
+    const url = "category/update"; //params
+    return axiosClient.post(url, data);
+  },
   delete(data: any): Promise<ReturnReponse<any>> {
     const url = "category/delete"; //params
     return axiosClient.post(url, data);

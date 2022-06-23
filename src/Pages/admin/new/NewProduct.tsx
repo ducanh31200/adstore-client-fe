@@ -13,6 +13,8 @@ import { notifyError, notifySuccess } from "../../../utils/notify";
 import productApi from "../../../api/product/productApi";
 import useAuth from "../../../store/auth";
 import { Link } from "react-router-dom";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 type Props = {
   inputs: any;
   title: any;
@@ -351,6 +353,9 @@ const NewProduct = (props: Props) => {
           </div>
         </div>
       </div>
+      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
+        <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
     </div>
   );
 };

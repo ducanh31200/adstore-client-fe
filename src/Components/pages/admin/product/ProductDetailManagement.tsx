@@ -9,6 +9,8 @@ import removeimg from "../../../../img/removeimg.png";
 import useAuth from "../../../../store/auth";
 import useProductDetail from "../../../../store/productDetail";
 import { notifyError, notifySuccess } from "../../../../utils/notify";
+import { ContainerModal } from "../../../common/ContainerModal";
+import ModalInfo from "../../../common/PersonalInfo/ModalInfo/personalInfo";
 import "./new.scss";
 import style from "./style.module.css";
 
@@ -36,9 +38,6 @@ const ProductDetailManagement = () => {
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-
-  console.log("currentCate", currentCate);
-  // console.log("data", productDetail.data);
 
   React.useEffect(() => {
     (async () => {
@@ -433,19 +432,14 @@ const ProductDetailManagement = () => {
                   listDetail={productDetail.data?.specs}
                 />
                 <button style={{ height: "50px" }}>Cập nhật</button>
-                <button
-                  type="button"
-                  className="button"
-                  onClick={handleBack}
-                  style={{ height: "50px" }}
-                >
-                  Trờ về
-                </button>
               </form>
             </div>
           </div>
         </div>
       </div>
+      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
+        <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
     </div>
   );
 };

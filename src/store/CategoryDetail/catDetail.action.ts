@@ -15,6 +15,12 @@ export const ReadCat =
     }
     return false;
   };
+
+export const setCate =
+  (data: any) =>
+  async ({ setState, getState }: Actions) => {
+    setState({ ...getState(), data });
+  };
 // export const UpdateCat =
 //   (id: any) =>
 //   async ({ setState, getState }: Actions) => {
