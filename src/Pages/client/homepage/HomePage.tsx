@@ -17,7 +17,7 @@ import Nav from "../../../Components/common/Nav/nav";
 import { Carousel } from "../../../Components/common/Carousel/Carousel";
 import categoryApi from "../../../api/category/category";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
-import useCart from "../../../store/cart";
+
 import productApi from "../../../api/product/productApi";
 import { useForm } from "react-hook-form";
 import socialApi from "../../../api/social/socialApi";
@@ -34,7 +34,6 @@ const HomePage = () => {
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();
-
       setListCategory(list.data.data);
     })();
   }, []);
@@ -48,7 +47,6 @@ const HomePage = () => {
   React.useEffect(() => {
     (async () => {
       const listComing = await productApi.comingSoon({ quantity: 5 });
-
       setListComingSoon(listComing.data.data);
     })();
   }, []);
@@ -57,7 +55,6 @@ const HomePage = () => {
       await actionAuth.getUserAsync();
     })();
   }, [click]);
-
   const subcribe = async (data: any, e: any) => {
     e.preventDefault();
     const res = await socialApi.add(data.email);
@@ -66,8 +63,6 @@ const HomePage = () => {
       reset();
     } else notifyError("Xảy ra lỗi vui lòng thử lại !");
   };
-  console.log("listTopProduct", listTopProduct);
-  console.log("listComingSoon", listComingSoon);
   return (
     <div>
       <div className="container-fluid">

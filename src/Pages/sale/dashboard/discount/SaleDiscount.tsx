@@ -77,7 +77,7 @@ const SaleDiscount = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/admin" className="text-decoration-none">
+              <Link to="/sale" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -158,7 +158,7 @@ const SaleDiscount = () => {
             <div className="row border-top pr">
               <div className="d-none d-lg-block" style={{ width: "175px" }}>
                 <Link
-                  to="/admin/user"
+                  to="/sale"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -167,66 +167,32 @@ const SaleDiscount = () => {
                   }}
                 >
                   <i className="fa-solid fa-user i"></i>
-                  <h6 className="m-0">Người dùng</h6>
+                  <h6 className="m-0">Đơn hàng</h6>
                 </Link>
-                <a
+                <Link
+                  to="/sale/discount"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
-                  href="#navbar-vertical2"
                   style={{
                     height: "65px",
                     marginTop: "-1px",
                   }}
                 >
-                  <i className="fa-solid fa-box i"></i>
-                  <h6 className="m-0">Hàng hóa</h6>
-                  <i className="fa fa-angle-down text-dark"></i>
-                </a>
-                <nav
-                  className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
-                  id="navbar-vertical2"
-                >
-                  <div className="navbar-nav w-100 overflow-hidden">
-                    <Link to="/admin/category" className="nav-item nav-link">
-                      Loại hàng
-                    </Link>
-                    <Link to="/admin/product" className="nav-item nav-link">
-                      Sản phẩm
-                    </Link>
-                    <Link to="/admin/discount" className="nav-item nav-link">
-                      Khuyến mãi
-                    </Link>
-                  </div>
-                </nav>
-                <a
+                  <i className="fa-solid fa-user i"></i>
+                  <h6 className="m-0">Khuyến mãi</h6>
+                </Link>
+                <Link
+                  to="/chat"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
-                  href="#navbar-vertical3"
                   style={{
                     height: "65px",
                     marginTop: "-1px",
                   }}
                 >
-                  <i className="fa-solid fa-chart-line i"></i>
-                  <h6 className="m-0">Thống kê</h6>
-                  <i className="fa fa-angle-down text-dark"></i>
-                </a>
-                <nav
-                  className="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0"
-                  id="navbar-vertical3"
-                >
-                  <div
-                    className="navbar-nav w-100 overflow-hidden"
-                    // style={{ height: "410px" }}
-                  >
-                    <Link to="/admin/revenue" className="nav-item nav-link">
-                      Doanh thu
-                    </Link>
-                    <Link to="/admin/bill" className="nav-item nav-link">
-                      Đơn hàng
-                    </Link>
-                  </div>
-                </nav>
+                  <i className="fa-solid fa-user i"></i>
+                  <h6 className="m-0">Tin nhắn</h6>
+                </Link>
               </div>
             </div>
           </div>

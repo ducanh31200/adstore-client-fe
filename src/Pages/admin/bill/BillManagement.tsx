@@ -68,7 +68,6 @@ const BillManagement = () => {
     item.totalformat = moneyFormater(item.total);
   });
 
-  console.log("listUser.data", listBill.data);
   return (
     <div className="home">
       <div className="sidebar">

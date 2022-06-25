@@ -16,6 +16,7 @@ const ModalInfo = (props: Props) => {
   const [phoneOTP, setPhoneOTP] = useState(false);
   const [emailOTP, setEmailOTP] = useState(false);
   let formatPhone = "0";
+
   const submit = async (data: any, e: any) => {
     e.preventDefault();
     if (data.name === "") data.name = authState.data.data.name;
@@ -37,13 +38,14 @@ const ModalInfo = (props: Props) => {
       gender: data.gender,
       address: address,
     };
-    // console.log(payload);
+    console.log(payload);
     const result = await actionAuth.updateInfoAsync(payload);
     // console.log("result", result);
     if (result) {
       notifySuccess("Cập nhật thành công !");
     } else notifyError("Cập nhật thất bại, vui lòng thử lại !");
   };
+
   const handleGetEmailOTP = async () => {
     const email = (document.getElementById("email") as HTMLInputElement).value;
     if (email === "") {

@@ -26,10 +26,11 @@ const Product = () => {
   const [cat, setCat] = useState<any>();
   const [totalProduct, setTotalProduct] = useState<any>(1);
   const [currentPage, setCurrentPage] = useState<any>(0);
-  const [listCategory, setListCategory] = useState<Array<any>>([]);
   const limit = 7;
   const [stateAuth, actionAuth] = useAuth();
   const [click, setClick] = useState(0);
+  const [sortName, setSortName] = useState("sold");
+  const [sortType, setSortType] = useState(-1);
 
   const [searchParams] = useSearchParams();
   React.useEffect(() => {
@@ -53,7 +54,6 @@ const Product = () => {
           setTotalProduct(result.data.count);
         }
         const getCat = await categoryApi.read(params);
-        console.log("result.data.data", result.data.data);
         setListProduct(result.data.data);
         setCat(getCat.data.data);
       })();
@@ -62,6 +62,8 @@ const Product = () => {
     React.useEffect(() => {
       (async () => {
         const result = await productApi.list({
+          sortName: sortName,
+          sortType: sortType,
           skip: currentPage * limit,
           limit: limit,
         });
@@ -69,11 +71,9 @@ const Product = () => {
         if (currentPage === 0) {
           setTotalProduct(result.data.count);
         }
-        const listcat = await categoryApi.list();
-        setListCategory(listcat.data.data);
         setListProduct(result.data.data);
       })();
-    }, [currentPage]);
+    }, [currentPage, click]);
     React.useEffect(() => {
       const filter: any = {};
       for (const entry of searchParams.entries()) {
@@ -86,7 +86,8 @@ const Product = () => {
       }
       filter.skip = currentPage * limit;
       filter.limit = limit;
-      console.log("filter", filter);
+      filter.sortName = sortName;
+      filter.sortType = sortType;
       (async () => {
         const result = await productApi.list(filter);
         if (currentPage === 0) {
@@ -94,7 +95,7 @@ const Product = () => {
         }
         setListProduct(result.data.data);
       })();
-    }, [searchParams]);
+    }, [searchParams, currentPage, click]);
   }
   if (Object.keys(params).length !== 0) {
     React.useEffect(() => {
@@ -114,7 +115,8 @@ const Product = () => {
       filter.skip = currentPage * limit;
       filter.category = params.name;
       filter.limit = limit;
-      console.log("filter", filter);
+      filter.sortName = sortName;
+      filter.sortType = sortType;
       (async () => {
         const result = await productApi.list(filter);
         console.log("result", result);
@@ -123,13 +125,15 @@ const Product = () => {
         }
         setListProduct(result.data.data);
       })();
-    }, [searchParams]);
+    }, [searchParams, click, currentPage]);
   }
-  let totalproductcat = 0;
-  listCategory.forEach((item: any) => {
-    totalproductcat = totalproductcat + item.products_length;
-  });
-
+  const handleSort = (name: string, type: number, text: string) => {
+    setSortName(name);
+    setSortType(type);
+    setClick(click + 1);
+    const btn = document.getElementById("triggerId");
+    btn ? (btn.textContent = text) : {};
+  };
   // console.log(listProduct);
   return (
     <div>
@@ -286,20 +290,35 @@ const Product = () => {
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      Sort by
+                      Sắp xếp
                     </button>
                     <div
                       className="dropdown-menu dropdown-menu-right"
                       aria-labelledby="triggerId"
                     >
-                      <a className="dropdown-item" href="#">
-                        Latest
+                      <a
+                        onClick={() => handleSort("price", -1, "Giá giảm dần")}
+                        className="dropdown-item"
+                      >
+                        Giá giảm dần
                       </a>
-                      <a className="dropdown-item" href="#">
-                        Popularity
+                      <a
+                        onClick={() => handleSort("price", +1, "Giá tăng dần")}
+                        className="dropdown-item"
+                      >
+                        Giá tăng dần
                       </a>
-                      <a className="dropdown-item" href="#">
-                        Best Rating
+                      <a
+                        onClick={() => handleSort("sale", -1, "Khuyến mãi")}
+                        className="dropdown-item"
+                      >
+                        Khuyến mãi
+                      </a>
+                      <a
+                        onClick={() => handleSort("sold", -1, "Đang bán chạy")}
+                        className="dropdown-item"
+                      >
+                        Đang bán chạy
                       </a>
                     </div>
                   </div>

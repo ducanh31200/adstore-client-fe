@@ -24,7 +24,7 @@ export const loginAsync =
       return result.data;
     }
     notifyError("Sai tài khoản hoặc mật khẩu");
-    return false;
+    return result;
   };
 
 export const getUserAsync =

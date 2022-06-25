@@ -2,7 +2,7 @@ import axiosClient from "../axiosClient";
 import { ReturnReponse } from "../response.interface";
 
 const chatApi = {
-  new(data: any): Promise<ReturnReponse<{ data: Array<any> }>> {
+  new(data: any): Promise<ReturnReponse<any>> {
     const url = "/chat/new";
     return axiosClient.post(url, data);
   },
@@ -14,9 +14,9 @@ const chatApi = {
     const url = "/chat/addMessage";
     return axiosClient.post(url, data);
   },
-  list(data: any): Promise<ReturnReponse<any>> {
+  list(): Promise<ReturnReponse<any>> {
     const url = "/chat/list";
-    return axiosClient.post(url, data);
+    return axiosClient.get(url);
   },
 };
 

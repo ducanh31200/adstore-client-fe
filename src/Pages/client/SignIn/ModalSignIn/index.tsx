@@ -47,8 +47,10 @@ const ModalSignIn = (props: Props) => {
     }
 
     if (result) {
-      const info = await actionAuth.getUserAsync();
-      if (info.data.role === "Admin") navigate("/admin");
+      console.log("res", result);
+      if (result?.data?.role === "Admin") navigate("/admin");
+      else if (result?.data?.role === "Sale") navigate("/sale");
+      else navigate("/");
       reset();
       closeModal();
     }

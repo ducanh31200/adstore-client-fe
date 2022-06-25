@@ -4,18 +4,68 @@ import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
+import useBillManagement from "../../../store/billManagement";
+import { moneyFormater } from "../../../utils/moneyFormater";
+import BillTable from "../../admin/bill/BillTable";
 
 import "./home.scss";
 
 const SaleDashboard = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [listBill, actionBill] = useBillManagement();
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
+  React.useEffect(() => {
+    (async () => {
+      await actionBill.GetListBill({});
 
+      //   setCurrentCate(list.data.data[0].name);
+    })();
+  }, []);
+
+  function padTo2Digits(num: any) {
+    return num.toString().padStart(2, "0");
+  }
+
+  function formatDate(date: any) {
+    return (
+      [
+        date.getFullYear(),
+        padTo2Digits(date.getMonth() + 1),
+        padTo2Digits(date.getDate()),
+      ].join("-") +
+      " " +
+      [
+        padTo2Digits(date.getHours()),
+        padTo2Digits(date.getMinutes()),
+        padTo2Digits(date.getSeconds()),
+      ].join(":")
+    );
+  }
+
+  listBill?.data?.map((item: any, index: number) => {
+    const addr = [
+      item.address?.address,
+      item.address?.district,
+      item.address?.province,
+    ];
+    let formatPhone = "0";
+    item.name = item.account?.name;
+    item.email = item.account?.email;
+    item.createdAt = formatDate(new Date(item.createdAt));
+    item.updatedAt = formatDate(new Date(item.updatedAt));
+    if (item.phone !== undefined && item.phone[0] !== "0")
+      item.phoneformat = formatPhone.concat(item.phone.slice(3));
+    item.id = index + 1;
+    item.addressformat = addr.join(",");
+    item.discountformat = moneyFormater(item.discount);
+    item.shipformat = moneyFormater(item.ship);
+    item.totalformat = moneyFormater(item.total);
+  });
   return (
     <div className="home">
       <div className="sidebar">
@@ -59,7 +109,7 @@ const SaleDashboard = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/admin" className="text-decoration-none">
+              <Link to="/sale" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -152,7 +202,7 @@ const SaleDashboard = () => {
                   <h6 className="m-0">Đơn hàng</h6>
                 </Link>
                 <Link
-                  to="/admin/user"
+                  to="/sale/discount"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -185,10 +235,12 @@ const SaleDashboard = () => {
                 <Widget type="order" />
               </div>
             </div>
+
+            <div className="chart">
+              <BillTable />;
+            </div>
           </div>
         </div>
-
-        <div className="bottom"></div>
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />

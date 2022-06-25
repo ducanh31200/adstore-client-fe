@@ -1,50 +1,45 @@
 import { createHook, createStore } from "react-sweet-state";
 
-import { GetListDiscount } from "./chat.action";
+import { Get, List, SendMessage } from "./chat.action";
 import { selector } from "./chat.selector";
 
+export interface Message {
+  _id: string;
+  isCustomer: boolean;
+  message: string;
+  createdAt: any;
+}
+export interface Saler {
+  _id: string;
+  name: string;
+  email: string;
+}
+export interface Customer {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
 export type State = {
-  data: [
-    {
-      _id: string;
-      code: string;
-      enable: boolean;
-      dateStart: string;
-      dateEnd: string;
-      quantity: number;
-      minPrice: number;
-      maxPrice: number;
-      is_percent: boolean;
-      is_ship: boolean;
-      is_oid: boolean;
-      is_oic: boolean;
-      value: number;
-    }
-  ];
+  data:
+    | {
+        _id: string;
+        seen: boolean;
+        messages: Array<Message>;
+        saler?: Saler;
+        customer?: Customer;
+      }
+    | undefined;
 };
 
 const initialState: State = {
-  data: [
-    {
-      _id: "",
-      code: "",
-      enable: false,
-      dateStart: "",
-      dateEnd: "",
-      quantity: 0,
-      minPrice: 0,
-      maxPrice: 0,
-      is_percent: false,
-      is_ship: false,
-      is_oid: false,
-      is_oic: false,
-      value: 0,
-    },
-  ],
+  data: undefined,
 };
-
 const actions = {
-  GetListDiscount,
+  Get,
+  List,
+  SendMessage,
 };
 
 const Store = createStore({

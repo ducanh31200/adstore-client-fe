@@ -11,7 +11,7 @@ import {
 import { IResGetOTP, IResLogin } from "./auth.interface.res";
 
 const authApi = {
-  login(data: IReqSignIn): Promise<ReturnReponse<IResLogin>> {
+  login(data: IReqSignIn): Promise<ReturnReponse<any>> {
     const url = "account/login"; //params
 
     return axiosClient.post(url, data);

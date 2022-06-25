@@ -25,6 +25,7 @@
     "react-file-base64": "^1.0.3",
     "react-hook-form": "^7.31.3",
     "react-hot-toast": "^2.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
     "react-inputs-validation": "^4.9.2",
     "react-ranger": "^2.1.0",
     "react-router": "^6.3.0",
