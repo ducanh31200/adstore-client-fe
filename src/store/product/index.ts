@@ -3,14 +3,19 @@ import { IProduct } from "../../model/product.model";
 import {
   GetListProduct,
   AddColor,
+  UpdateColor,
   ChangeStatusProduct,
   ImportProduct,
+  AddCarousel,
 } from "./product.action";
 import { selector } from "./product.selector";
 
 export interface Color {
   color: string;
   quantity?: number;
+  image_url: string;
+}
+export interface Catalogue {
   image_url: string;
 }
 
@@ -23,6 +28,7 @@ export type State = {
       image_url: string;
       quantity: number;
       colors: Array<Color>;
+      catalogue: Array<Catalogue>;
       category: string;
       code: string;
       enable: boolean;
@@ -42,6 +48,7 @@ const initialState: State = {
       image_url: "",
       quantity: 0,
       colors: [],
+      catalogue: [],
       category: "",
       code: "",
       enable: true,
@@ -57,6 +64,8 @@ const actions = {
   AddColor,
   ChangeStatusProduct,
   ImportProduct,
+  UpdateColor,
+  AddCarousel,
 };
 
 const Store = createStore({

@@ -116,8 +116,16 @@ const BillTable = () => {
               Xem đơn hàng
             </div>
             <div
-              className="enableButton"
-              onClick={() => handleUpdateBill(params.row._id)}
+              className={
+                params.row.status !== "Cancel"
+                  ? "enableButton"
+                  : "disableButton"
+              }
+              onClick={() =>
+                params.row.status !== "Cancel"
+                  ? handleUpdateBill(params.row._id)
+                  : {}
+              }
             >
               Cập nhật
             </div>
@@ -129,7 +137,7 @@ const BillTable = () => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        Danh sách người dùng
+        Danh sách đơn hàng
         <Link
           to={location.pathname}
           className="link"

@@ -95,7 +95,7 @@ const Contact = () => {
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <a href="">Home</a>
+              <Link to="/">Home</Link>
             </p>
             <p className="m-0 px-2">-</p>
             <p className="m-0">Contact</p>
@@ -106,11 +106,11 @@ const Contact = () => {
       <div className="container-fluid pt-5">
         <div className="text-center mb-4">
           <h2 className="section-title px-5">
-            <span className="px-2">Contact For Any Problems</span>
+            <span className="px-2">Giải đáp thắc mắc</span>
           </h2>
         </div>
         <div className="row px-xl-5">
-          <div className="col-lg-7 mb-5">
+          <div className="col-lg-9 mb-5">
             <div className="contact-form">
               <div id="success"></div>
               <form name="sentMessage" id="contactForm">
@@ -166,34 +166,19 @@ const Contact = () => {
             </div>
           </div>
           <div className="col-lg-5 mb-5">
-            <h5 className="font-weight-semi-bold mb-3">Get In Touch</h5>
+            <h5 className="font-weight-semi-bold mb-3">Liên hệ</h5>
             <p></p>
             <div className="d-flex flex-column mb-3">
-              <h5 className="font-weight-semi-bold mb-3">Store 1</h5>
+              <h5 className="font-weight-semi-bold mb-3">AD Store</h5>
               <p className="mb-2">
-                <i className="fa fa-map-marker-alt text-primary mr-3"></i>123
-                Street, HCMC, VN
+                <i className="fa fa-map-marker-alt text-primary mr-3"></i>DVB
+                Street,TD, HCMC, VN
               </p>
               <p className="mb-2">
                 <i className="fa fa-envelope text-primary mr-3"></i>
-                info@example.com
+                adstore@example.com
               </p>
               <p className="mb-2">
-                <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
-                67890
-              </p>
-            </div>
-            <div className="d-flex flex-column">
-              <h5 className="font-weight-semi-bold mb-3">Store 2</h5>
-              <p className="mb-2">
-                <i className="fa fa-map-marker-alt text-primary mr-3"></i>123
-                Street, HCMC, VN
-              </p>
-              <p className="mb-2">
-                <i className="fa fa-envelope text-primary mr-3"></i>
-                info@example.com
-              </p>
-              <p className="mb-0">
                 <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
                 67890
               </p>

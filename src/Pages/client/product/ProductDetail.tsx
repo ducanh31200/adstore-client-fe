@@ -42,11 +42,13 @@ const ProductDetail = (props: Props) => {
     sale: 0,
     total_rate: 0,
   };
+
+  const [listHint, setListHint] = useState<Array<any>>([]);
   const [product, setProduct] = useState(initProduct);
   const [comment, setComment] = useState(initProduct);
   const [colorState, setColorState] = useState(product.colors[0].color);
   const [colorIndexState, setColorIndexState] = useState(0);
-
+  const currentSlide = 0;
   if (id) {
     React.useEffect(() => {
       (async () => {
@@ -56,6 +58,18 @@ const ProductDetail = (props: Props) => {
         const comment = await productApi.comment({
           _id: id,
         });
+        let list: any[] = [];
+        stateAuth.isLoggedIn
+          ? (list = stateAuth.data?.data?.bag_products)
+          : (list = []);
+        list.push(id);
+        console.log(list);
+        const listHint = await productApi.hint({
+          products: list,
+          quantity: 5,
+        });
+        console.log("list", listHint);
+        setListHint(listHint.data?.data);
         setComment(comment.data.data);
         setProduct(result.data.data);
       })();
@@ -67,21 +81,7 @@ const ProductDetail = (props: Props) => {
       await actionAuth.getUserAsync();
     })();
   }, [click]);
-  const [listHint, setListHint] = useState<Array<any>>([]);
-  React.useEffect(() => {
-    (async () => {
-      const list = stateAuth.data.data.bag_products;
-      list.push(id);
-      console.log("list", list);
-      const listHint = await productApi.hint({
-        products: list,
-        quantity: 5,
-      });
 
-      setListHint(listHint.data?.data);
-    })();
-  }, [click, id]);
-  // console.log("listHint", listHint);
   const handleAddtoCart = async () => {
     let added: number = 0;
     let item_quantity = stateCart.data.filter((item, index) => {
@@ -117,7 +117,7 @@ const ProductDetail = (props: Props) => {
     setColorState(value);
   };
 
-  // console.log(colorState);
+  console.log("stateAuth.data.data", stateAuth.data.data);
   return (
     <div>
       <div className="container-fluid">
@@ -213,11 +213,11 @@ const ProductDetail = (props: Props) => {
           style={{ minHeight: "300px" }}
         >
           <h1 className="font-weight-semi-bold text-uppercase mb-3">
-            Shop Detail
+            Product Detail
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <a href="">Home</a>
+              <Link to="/">Home</Link>
             </p>
             <p className="m-0 px-2">-</p>
             <p className="m-0">Product Detail</p>
@@ -233,46 +233,21 @@ const ProductDetail = (props: Props) => {
               data-ride="carousel"
             >
               <div className="carousel-inner border">
-                <div
-                  className="carousel-item active"
-                  style={{ width: "550px", height: "400px" }}
-                >
-                  <img
-                    className="w-100 h-100 object-cover"
-                    src={product1}
-                    alt="Image"
-                  />
-                </div>
-                <div
-                  className="carousel-item "
-                  style={{ width: "550px", height: "400px" }}
-                >
-                  <img
-                    className="w-100 h-100 object-cover"
-                    src={product2}
-                    alt="Image"
-                  />
-                </div>
-                <div
-                  className="carousel-item"
-                  style={{ width: "550px", height: "400px" }}
-                >
-                  <img
-                    className="w-100 h-100 object-cover"
-                    src={product3}
-                    alt="Image"
-                  />
-                </div>
-                <div
-                  className="carousel-item"
-                  style={{ width: "550px", height: "400px" }}
-                >
-                  <img
-                    className="w-100 h-100 object-cover"
-                    src={product4}
-                    alt="Image"
-                  />
-                </div>
+                {product.colors.map((item: any, index: number) => (
+                  <div
+                    style={{ width: "550px", height: "400px" }}
+                    key={index}
+                    className={`carousel-item ${
+                      currentSlide === index ? "active" : ""
+                    }`}
+                  >
+                    <img
+                      className="w-100 h-100 object-cover"
+                      src={item.image_url}
+                      alt="Image"
+                    />
+                  </div>
+                ))}
               </div>
               <a
                 className="carousel-control-prev"

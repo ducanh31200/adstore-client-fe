@@ -29,7 +29,7 @@ import CategoryDetail from "./pages/admin/category/CategoryDetail";
 import ProductDetailManagement from "./pages/admin/product/ProductDetailManagement";
 import { PrivateRoute } from "./PrivateRoute";
 import SaleDashboard from "../Pages/sale/dashboard/Dashboard";
-import SaleDiscount from "../Pages/sale/dashboard/discount/SaleDiscount";
+import Follower from "../Pages/sale/follower/Follower";
 
 interface IRoute {
   exact: Boolean;
@@ -126,12 +126,13 @@ const routesPrivate: Array<IPrivateRoute> = [
     roleRoute: [DFRole.Sale],
   },
   {
-    child: <SaleDiscount />,
-    path: defaultRoute.saleDiscount,
+    child: <Follower />,
+    path: defaultRoute.saleFollower,
     exact: true,
     option: true,
-    roleRoute: [DFRole.Sale],
+    roleRoute: [DFRole.Sale, DFRole.Admin],
   },
+
   {
     child: <ProductManagement />,
     path: defaultRoute.productManagement,

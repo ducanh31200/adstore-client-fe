@@ -48,6 +48,7 @@ const ModalSignIn = (props: Props) => {
 
     if (result) {
       console.log("res", result);
+      actionAuth.getUserAsync();
       if (result?.data?.role === "Admin") navigate("/admin");
       else if (result?.data?.role === "Sale") navigate("/sale");
       else navigate("/");

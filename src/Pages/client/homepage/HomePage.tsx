@@ -30,6 +30,7 @@ const HomePage = () => {
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const [listTopProduct, setListTopProduct] = useState<Array<any>>([]);
   const [listComingSoon, setListComingSoon] = useState<Array<any>>([]);
+  const [listCarousel, setListCarousel] = useState<Array<any>>([]);
 
   React.useEffect(() => {
     (async () => {
@@ -37,6 +38,13 @@ const HomePage = () => {
       setListCategory(list.data.data);
     })();
   }, []);
+  React.useEffect(() => {
+    (async () => {
+      const list = await productApi.listCarousel({});
+      setListCarousel(list.data.data);
+    })();
+  }, []);
+  console.log("crs", listCarousel);
   React.useEffect(() => {
     (async () => {
       const listTop = await productApi.top({ quantity: 5 });
@@ -57,7 +65,7 @@ const HomePage = () => {
   }, [click]);
   const subcribe = async (data: any, e: any) => {
     e.preventDefault();
-    const res = await socialApi.add(data.email);
+    const res = await socialApi.add({ email: data.email });
     if (res) {
       notifySuccess("Đăng ký thành công !");
       reset();
@@ -158,7 +166,7 @@ const HomePage = () => {
 
       {/* carousel */}
       <div>
-        <Carousel carousel_items={CAROUSEL_ITEMS} />
+        <Carousel carousel_items={listCarousel} />
       </div>
       <div className="container-fluid pt-5">
         <div className="row px-xl-5 pb-3">

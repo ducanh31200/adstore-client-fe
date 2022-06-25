@@ -170,7 +170,9 @@ const SaleDashboard = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link to="/chat" className="menuProfile menuLinkHover">
+                    Tin nhắn
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -201,8 +203,9 @@ const SaleDashboard = () => {
                   <i className="fa-solid fa-user i"></i>
                   <h6 className="m-0">Đơn hàng</h6>
                 </Link>
+
                 <Link
-                  to="/sale/discount"
+                  to="/sale/follower"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -211,19 +214,7 @@ const SaleDashboard = () => {
                   }}
                 >
                   <i className="fa-solid fa-user i"></i>
-                  <h6 className="m-0">Khuyến mãi</h6>
-                </Link>
-                <Link
-                  to="/chat"
-                  className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-                  data-toggle="collapse"
-                  style={{
-                    height: "65px",
-                    marginTop: "-1px",
-                  }}
-                >
-                  <i className="fa-solid fa-user i"></i>
-                  <h6 className="m-0">Tin nhắn</h6>
+                  <h6 className="m-0">Người đăng ký</h6>
                 </Link>
               </div>
             </div>

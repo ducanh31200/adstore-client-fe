@@ -1,39 +1,34 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { ContainerModal } from "../../../../Components/common/ContainerModal";
-import ModalInfo from "../../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
-import useAuth from "../../../../store/auth";
-import useDiscount from "../../../../store/discount";
-import { moneyFormater } from "../../../../utils/moneyFormater";
+import socialApi from "../../../api/social/socialApi";
+import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
+import useAuth from "../../../store/auth";
+import useDiscount from "../../../store/discount";
+import useFollow from "../../../store/social";
+import { moneyFormater } from "../../../utils/moneyFormater";
 
-import "./discount.scss";
-import DiscountTable from "./DiscountTable";
+import "./follower.scss";
+import DiscountTable from "./FollowerTable";
 
-const SaleDiscount = () => {
+const Follower = () => {
   const [stateAuth, actionAuth] = useAuth();
-  const [listDiscount, actionDiscount] = useDiscount();
+  const [listFollower, actionFollower] = useFollow();
+
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
+
   React.useEffect(() => {
     (async () => {
-      await actionDiscount.GetListDiscount({});
-
-      //   setCurrentCate(list.data.data[0].name);
+      await actionFollower.GetListFollower({});
     })();
   }, []);
+  console.log("res", listFollower);
 
-  listDiscount.data.map((item: any, index: number) => {
-    item.id = index + 1;
-    item.maxPriceformat = moneyFormater(item.maxPrice);
-    item.minPriceformat = moneyFormater(item.minPrice);
-    !item.is_percent
-      ? (item.valueformat = moneyFormater(item.value))
-      : (item.valueformat = `${item.value}%`);
-  });
   return (
     <div className="home">
       <div className="sidebar">
@@ -138,7 +133,9 @@ const SaleDiscount = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link to="/chat" className="menuProfile menuLinkHover">
+                    Tin nhắn
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -169,8 +166,9 @@ const SaleDiscount = () => {
                   <i className="fa-solid fa-user i"></i>
                   <h6 className="m-0">Đơn hàng</h6>
                 </Link>
+
                 <Link
-                  to="/sale/discount"
+                  to="/sale/follower"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                   data-toggle="collapse"
                   style={{
@@ -179,19 +177,7 @@ const SaleDiscount = () => {
                   }}
                 >
                   <i className="fa-solid fa-user i"></i>
-                  <h6 className="m-0">Khuyến mãi</h6>
-                </Link>
-                <Link
-                  to="/chat"
-                  className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
-                  data-toggle="collapse"
-                  style={{
-                    height: "65px",
-                    marginTop: "-1px",
-                  }}
-                >
-                  <i className="fa-solid fa-user i"></i>
-                  <h6 className="m-0">Tin nhắn</h6>
+                  <h6 className="m-0">Người đăng ký</h6>
                 </Link>
               </div>
             </div>
@@ -212,4 +198,4 @@ const SaleDiscount = () => {
   );
 };
 
-export default SaleDiscount;
+export default Follower;

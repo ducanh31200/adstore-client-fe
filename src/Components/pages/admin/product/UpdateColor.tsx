@@ -12,27 +12,45 @@ import productApi from "../../../../api/product/productApi";
 import useProduct from "../../../../store/product";
 interface Props {
   closeModal: () => void;
-  openUpdateColorModel: () => void;
+  openAddColorModel: () => void;
   _id: string;
 }
 
-const ModalAddColor = (props: Props) => {
-  const { closeModal, openUpdateColorModel, _id } = props;
+const ModalUpdateColor = (props: Props) => {
+  const { closeModal, _id, openAddColorModel } = props;
   const [listproduct, actionProduct] = useProduct();
-  const { register, handleSubmit, reset } = useForm();
+  const { register, handleSubmit, reset, setValue } = useForm();
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
+  const [product, setProduct] = React.useState<any>({});
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-  const submit = async (data: any, e: any) => {
-    e.preventDefault();
+  console.log("id", _id);
 
-    // if (result) {
-    //   const info = await actionAuth.getUserAsync();
-    //   reset();
-    //   closeModal();
-    // }
-  };
-
+  function toDataUrl(url: any, callback: any) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+  React.useEffect(() => {
+    (async () => {
+      if (_id) {
+        const res = await productApi.read({ _id });
+        console.log("res", res.data.data);
+        setProduct(res.data.data);
+        setValue("color", "Chọn");
+        setImagesBase64("");
+        setPickedImages([]);
+      }
+    })();
+  }, [_id, listproduct]);
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -65,9 +83,8 @@ const ModalAddColor = (props: Props) => {
     const newImages = pickedImages.filter((_, i) => i !== index); // string url, not files
     const newImagesFiles = images.filter((_, i) => i !== index); // these are files
     setPickedImages(newImages);
-    setImages(newImagesFiles);
     setImagesBase64("");
-    // setValue(name, newImagesFiles);
+    setImages(newImagesFiles);
   };
 
   const onSubmit = async (data: any) => {
@@ -76,10 +93,8 @@ const ModalAddColor = (props: Props) => {
       color: data.color,
       image_base64: imagesBase64,
     };
-    console.log("_id", _id);
-    console.log("payload", payload);
     if (imagesBase64) {
-      const res = await actionProduct.AddColor(payload);
+      const res = await actionProduct.UpdateColor(payload);
       console.log("res", res);
       if (res) {
         reset();
@@ -89,10 +104,24 @@ const ModalAddColor = (props: Props) => {
       } else notifyError(res.message);
     } else notifyError("Vui lòng thêm hình ảnh !");
   };
-
-  const handleOpenUpdate = () => {
+  const handleOpenAdd = () => {
     closeModal();
-    openUpdateColorModel();
+    openAddColorModel();
+  };
+
+  const handleShowColors = (e: any) => {
+    if (e.target.index !== 0) {
+      const value = e.target.value;
+      const color = product.colors.filter((item: any) => item.color === value);
+      toDataUrl(color[0].image_url, function (res: any) {
+        const base64 = res.split(",");
+        setImagesBase64(base64[1]);
+      });
+      console.log("color", color);
+      pickedImages[0] = color[0].image_url;
+      setPickedImages(pickedImages);
+      //   setCurrentCate(value);
+    }
   };
   return (
     <div className="new">
@@ -138,7 +167,7 @@ const ModalAddColor = (props: Props) => {
               ) : (
                 <label
                   className="h-[150px] w-[150px] opacity-30 cursor-pointer"
-                  htmlFor="added_color_image"
+                  htmlFor="updated_color_image"
                 >
                   <img src={addimg} alt="add_image" className="w-full h-full" />
                 </label>
@@ -151,26 +180,39 @@ const ModalAddColor = (props: Props) => {
                 <input
                   type="file"
                   // name={name}
-                  id="added_color_image"
+                  id="updated_color_image"
                   hidden
                   accept="image/*"
                   onChange={handlePickImages}
                 />
               </div>
-              <label style={{ textAlign: "center" }}>
+              <label>
                 Màu: &nbsp;
-                <input {...register("color")} type="text" placeholder="Color" />
+                <div className="select" style={{ width: "300px" }}>
+                  <select
+                    {...register("color")}
+                    id="selectColor"
+                    onChange={handleShowColors}
+                  >
+                    <option value="Chọn">Chọn</option>
+                    {product?.colors?.map((item: any, index: any) => (
+                      <option key={index} value={item.color}>
+                        {item.color}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </label>
-              <button style={{ height: "50px" }}>Thêm màu</button>
               <button
                 className="btn btn-primary btn-sign-up btn-sign-up"
                 style={{ height: "50px" }}
                 type="button"
-                onClick={handleOpenUpdate}
+                onClick={handleOpenAdd}
               >
-                Sửa màu
-                <i className="fa-solid fa-angle-right angle-right"></i>
+                Thêm màu
+                <i className="fa-solid fa-angle-left angle-left"></i>
               </button>
+              <button style={{ height: "50px" }}>Sửa màu</button>
             </form>
           </div>
         </div>
@@ -179,4 +221,4 @@ const ModalAddColor = (props: Props) => {
   );
 };
 
-export default ModalAddColor;
+export default ModalUpdateColor;

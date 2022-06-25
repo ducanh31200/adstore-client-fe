@@ -179,6 +179,9 @@ const Nav = () => {
                         <Link to="/bill" className="menuProfile menuLinkHover">
                           Đơn hàng
                         </Link>
+                        <Link to="/chat" className="menuProfile menuLinkHover">
+                          Tin nhắn
+                        </Link>
                         <div className="lineMenu"></div>
                         <Link
                           to={location.pathname}

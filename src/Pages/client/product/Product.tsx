@@ -237,7 +237,7 @@ const Product = () => {
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <a href="">Home</a>
+              <Link to="/">Home</Link>
             </p>
             <p className="m-0 px-2">-</p>
             <p className="m-0">Shop</p>

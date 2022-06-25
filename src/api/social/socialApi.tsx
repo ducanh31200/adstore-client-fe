@@ -10,6 +10,14 @@ const socialApi = {
     const url = "/follow/list";
     return axiosClient.post(url, data);
   },
+  delete(data: any): Promise<ReturnReponse<any>> {
+    const url = "/follow/delete";
+    return axiosClient.post(url, data);
+  },
+  sendMail(data: any): Promise<ReturnReponse<any>> {
+    const url = "/emails/send";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default socialApi;

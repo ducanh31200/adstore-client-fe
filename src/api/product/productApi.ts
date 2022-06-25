@@ -28,6 +28,14 @@ const productApi = {
     const url = "/product/addColor";
     return axiosClient.post(url, data);
   },
+  updateColor(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/updateColor";
+    return axiosClient.post(url, data);
+  },
+  addCarousel(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/addCatalogue";
+    return axiosClient.post(url, data);
+  },
   import(data: any): Promise<ReturnReponse<any>> {
     const url = "/product/imports";
     return axiosClient.post(url, data);
@@ -46,6 +54,10 @@ const productApi = {
   },
   comingSoon(data: any): Promise<ReturnReponse<any>> {
     const url = "/product/commingSoon";
+    return axiosClient.post(url, data);
+  },
+  listCarousel(data: any): Promise<ReturnReponse<any>> {
+    const url = "/product/sale";
     return axiosClient.post(url, data);
   },
 };

@@ -20,5 +20,5 @@ export const defaultRoute = {
   newDiscount: "/admin/discount/new",
   billManagement: "/admin/bill",
   saleDashboard: "/sale",
-  saleDiscount: "/sale/discount",
+  saleFollower: "/sale/follower",
 };

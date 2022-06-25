@@ -8,31 +8,52 @@ import style from "./style.module.css";
 import addimg from "../../../../img/addimg.png";
 
 import removeimg from "../../../../img/removeimg.png";
-import productApi from "../../../../api/product/productApi";
 import useProduct from "../../../../store/product";
+import productApi from "../../../../api/product/productApi";
 interface Props {
   closeModal: () => void;
-  openUpdateColorModel: () => void;
   _id: string;
 }
 
-const ModalAddColor = (props: Props) => {
-  const { closeModal, openUpdateColorModel, _id } = props;
+const ModalAddCarousel = (props: Props) => {
+  const { closeModal, _id } = props;
   const [listproduct, actionProduct] = useProduct();
-  const { register, handleSubmit, reset } = useForm();
+  const { handleSubmit, reset } = useForm();
   const [images, setImages] = React.useState<Array<any>>([]);
   const [imagesBase64, setImagesBase64] = React.useState<any>("");
   const [pickedImages, setPickedImages] = React.useState<Array<any>>([]);
-  const submit = async (data: any, e: any) => {
-    e.preventDefault();
-
-    // if (result) {
-    //   const info = await actionAuth.getUserAsync();
-    //   reset();
-    //   closeModal();
-    // }
-  };
-
+  function toDataUrl(url: any, callback: any) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+  React.useEffect(() => {
+    (async () => {
+      if (_id) {
+        const res = await productApi.read({ _id });
+        console.log("res", res.data.data);
+        if (res.data.data.catalogue.length !== 0) {
+          toDataUrl(res.data.data.catalogue[0].image_url, function (res: any) {
+            const base64 = res.split(",");
+            setImagesBase64(base64[1]);
+          });
+          pickedImages[0] = res.data.data.catalogue[0].image_url;
+          setPickedImages(pickedImages);
+        } else {
+          setImagesBase64("");
+          setPickedImages([]);
+        }
+      }
+    })();
+  }, [_id, listproduct]);
   const getBase64 = (file: any, cb: any) => {
     let reader = new FileReader();
     reader.readAsDataURL(file);
@@ -65,40 +86,30 @@ const ModalAddColor = (props: Props) => {
     const newImages = pickedImages.filter((_, i) => i !== index); // string url, not files
     const newImagesFiles = images.filter((_, i) => i !== index); // these are files
     setPickedImages(newImages);
-    setImages(newImagesFiles);
     setImagesBase64("");
-    // setValue(name, newImagesFiles);
+    setImages(newImagesFiles);
   };
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async () => {
     const payload = {
       _id: _id,
-      color: data.color,
       image_base64: imagesBase64,
     };
-    console.log("_id", _id);
-    console.log("payload", payload);
     if (imagesBase64) {
-      const res = await actionProduct.AddColor(payload);
-      console.log("res", res);
+      const res = await actionProduct.AddCarousel(payload);
+      console.log("rescata", res);
       if (res) {
-        reset();
+        notifySuccess("Thành công");
         handleRemoveImage(0);
         closeModal();
-        notifySuccess(res.msg);
-      } else notifyError(res.message);
+      } else notifyError("Thất bại");
     } else notifyError("Vui lòng thêm hình ảnh !");
-  };
-
-  const handleOpenUpdate = () => {
-    closeModal();
-    openUpdateColorModel();
   };
   return (
     <div className="new">
       <div className="newContainer" style={{ backgroundColor: "white" }}>
         <div className="top">
-          <h1>Add Color</h1>
+          <h1>Thêm ảnh khuyến mãi</h1>
         </div>
         <div className="bottom">
           {}
@@ -138,7 +149,7 @@ const ModalAddColor = (props: Props) => {
               ) : (
                 <label
                   className="h-[150px] w-[150px] opacity-30 cursor-pointer"
-                  htmlFor="added_color_image"
+                  htmlFor="carousel_images"
                 >
                   <img src={addimg} alt="add_image" className="w-full h-full" />
                 </label>
@@ -151,26 +162,14 @@ const ModalAddColor = (props: Props) => {
                 <input
                   type="file"
                   // name={name}
-                  id="added_color_image"
+                  id="carousel_images"
                   hidden
                   accept="image/*"
                   onChange={handlePickImages}
                 />
               </div>
-              <label style={{ textAlign: "center" }}>
-                Màu: &nbsp;
-                <input {...register("color")} type="text" placeholder="Color" />
-              </label>
-              <button style={{ height: "50px" }}>Thêm màu</button>
-              <button
-                className="btn btn-primary btn-sign-up btn-sign-up"
-                style={{ height: "50px" }}
-                type="button"
-                onClick={handleOpenUpdate}
-              >
-                Sửa màu
-                <i className="fa-solid fa-angle-right angle-right"></i>
-              </button>
+
+              <button style={{ height: "50px" }}>Send</button>
             </form>
           </div>
         </div>
@@ -179,4 +178,4 @@ const ModalAddColor = (props: Props) => {
   );
 };
 
-export default ModalAddColor;
+export default ModalAddCarousel;

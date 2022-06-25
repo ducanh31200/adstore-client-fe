@@ -264,7 +264,7 @@ const Cart = (props: Props) => {
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <a href="">Home</a>
+              <Link to="/">Home</Link>
             </p>
             <p className="m-0 px-2">-</p>
             <p className="m-0">Shopping Cart</p>
@@ -307,9 +307,7 @@ const Cart = (props: Props) => {
                       <td className="align-middle">
                         {moneyFormater(item.price)}
                       </td>
-                      <td className="align-middle">
-                        {moneyFormater(item.sale)}
-                      </td>
+                      <td className="align-middle">{`${item.sale}%`}</td>
                       <td className="align-middle">
                         <div
                           className="input-group quantity mx-auto"
@@ -345,7 +343,9 @@ const Cart = (props: Props) => {
                         </div>
                       </td>
                       <td className="align-middle">
-                        {moneyFormater(item.quantity * item.price)}
+                        {moneyFormater(
+                          item.quantity * item.price * (1 - item.sale / 100)
+                        )}
                       </td>
                       <td className="align-middle">
                         <button

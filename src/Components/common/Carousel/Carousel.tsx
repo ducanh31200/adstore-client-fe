@@ -1,4 +1,5 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Carousel = ({
   carousel_items,
@@ -6,6 +7,11 @@ export const Carousel = ({
   carousel_items: Array<any>;
 }) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
+
+  const navigate = useNavigate();
+  const onClick = (cate: string, _id: string) => {
+    navigate(`/products/${cate}/${_id}`);
+  };
   return (
     <div
       id="header-carousel"
@@ -21,8 +27,10 @@ export const Carousel = ({
               currentSlide === index ? "active" : ""
             }`}
             style={{ height: "410px" }}
+            onClick={() => onClick(item.category, item._id)}
           >
-            <img className="img-fluid" src={item.image} alt="Image" />
+            <img className="img-fluid" src={item.image_url} alt="Image" />
+
             <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
               <div className="p-3" style={{ maxWidth: "720px" }}></div>
             </div>

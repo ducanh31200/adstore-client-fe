@@ -3,14 +3,15 @@ import { DataGrid, selectedIdsLookupSelector } from "@mui/x-data-grid";
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ModalAddCarousel from "../../../Components/pages/admin/product/AddCarousel";
 import ModalAddColor from "../../../Components/pages/admin/product/AddColor";
 import ModalApplyDiscountPro from "../../../Components/pages/admin/product/ApplyDiscountPro";
-import ModalApplyDiscount from "../../../Components/pages/admin/product/ApplyDiscountPro";
 import ModalImportProduct from "../../../Components/pages/admin/product/ImportProduct";
+import ModalUpdateColor from "../../../Components/pages/admin/product/UpdateColor";
 import useProduct from "../../../store/product";
 
 const userColumns = [
-  { field: "id", headerName: "ID", width: 70 },
+  { field: "id", headerName: "ID", width: 40 },
   { field: "code", headerName: "Code", width: 120 },
   {
     field: "name",
@@ -74,9 +75,15 @@ const ProductTable = () => {
   const [id_product, setId_product] = React.useState("");
   const [selected, setSelected] = React.useState<any>([]);
   const [code, setCode] = React.useState("");
+  const [showAddCarouselModal, setAddCarouselModal] = React.useState(false);
+  const openAddCarouselModal = () => setAddCarouselModal(true);
+  const closeAddCarouselModal = () => setAddCarouselModal(false);
   const [showAddColorModal, setAddColorModal] = React.useState(false);
   const openAddColorModal = () => setAddColorModal(true);
   const closeAddColorModal = () => setAddColorModal(false);
+  const [showUpdateColorModal, setUpdateColorModal] = React.useState(false);
+  const openUpdateColorModal = () => setUpdateColorModal(true);
+  const closeUpdateColorModal = () => setUpdateColorModal(false);
   const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
   const openApplyDiscountModal = () => setApplyDiscountModal(true);
   const closeApplyDiscountModal = () => setApplyDiscountModal(false);
@@ -96,12 +103,17 @@ const ProductTable = () => {
     openAddColorModal();
   };
 
+  const handleAddCarousel = (id: string) => {
+    setId_product(id);
+    openAddCarouselModal();
+  };
+
   const location = useLocation();
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 350,
+      width: 480,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
@@ -121,7 +133,14 @@ const ProductTable = () => {
               style={{ textDecoration: "none" }}
               onClick={() => handleAddcolor(params.row._id)}
             >
-              <div className="viewButton">Thêm màu</div>
+              <div className="viewButton">Danh sách màu</div>
+            </Link>
+            <Link
+              to={location.pathname}
+              style={{ textDecoration: "none" }}
+              onClick={() => handleAddCarousel(params.row._id)}
+            >
+              <div className="viewButton">Khuyến mãi</div>
             </Link>
             <Link
               to={`/admin/product/${params.row._id}`}
@@ -135,7 +154,7 @@ const ProductTable = () => {
                 handleChangeStatus(params.row._id, params.row.enable)
               }
             >
-              {params.row.enable ? "Disable" : "Enable"}
+              {params.row.enable ? "Ngừng bán" : "Bán lại"}
             </div>
           </div>
         );
@@ -175,10 +194,30 @@ const ProductTable = () => {
         }}
       />
       <ContainerModal
+        isVisible={showAddCarouselModal}
+        closeModal={closeAddCarouselModal}
+      >
+        <ModalAddCarousel closeModal={closeAddCarouselModal} _id={id_product} />
+      </ContainerModal>
+      <ContainerModal
         isVisible={showAddColorModal}
         closeModal={closeAddColorModal}
       >
-        <ModalAddColor closeModal={closeAddColorModal} _id={id_product} />
+        <ModalAddColor
+          closeModal={closeAddColorModal}
+          openUpdateColorModel={openUpdateColorModal}
+          _id={id_product}
+        />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showUpdateColorModal}
+        closeModal={closeUpdateColorModal}
+      >
+        <ModalUpdateColor
+          closeModal={closeUpdateColorModal}
+          openAddColorModel={openAddColorModal}
+          _id={id_product}
+        />
       </ContainerModal>
       <ContainerModal
         isVisible={showApplyDiscountModal}
