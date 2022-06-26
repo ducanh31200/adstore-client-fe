@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Cart from "../../../Pages/client/cart/Cart";
 import useAuth from "../../../store/auth";
 import useCart from "../../../store/cart";
+import useLocalCart from "../../../store/localCart";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 
@@ -15,32 +17,76 @@ export const ProductCard = ({
   click: number;
 }) => {
   const [stateCart, actionCart] = useCart();
+  const [stateLocalCart, actionLocalCart] = useLocalCart();
 
   const [stateAuth, actionAuth] = useAuth();
 
   React.useEffect(() => {
     (async () => {
-      await actionAuth.getUserAsync();
+      if (stateAuth.isLoggedIn) await actionAuth.getUserAsync();
     })();
   }, [click]);
   const handleAddtoCart = async (_id: any) => {
     let added: number = 0;
-    let item_quantity = stateCart.data.filter((item, index) => {
-      if (item.product._id === _id) added = item.quantity;
-    });
-    if (item_quantity) {
-      added = 0;
-    }
-    if (product.colors[0].quantity > added) {
-      const res = await actionCart.PushCart({
-        _id: _id,
-        quantity: 1,
-        color: product.colors[0].color,
+    if (stateAuth.isLoggedIn) {
+      stateCart.data.filter((item, index) => {
+        if (item.product._id === _id && item.color === product.colors[0].color)
+          added = item.quantity;
       });
-      if (res) {
-        setClick(click + 1);
+    } else {
+      stateLocalCart?.data?.map((item) => {
+        if (item.product === _id && item.color === product.colors[0].color) {
+          added = item.quantity;
+        }
+      });
+    }
+
+    if (product.colors[0].quantity > added) {
+      if (stateAuth.isLoggedIn) {
+        const res = await actionCart.PushCart({
+          _id: _id,
+          quantity: 1,
+          color: product.colors[0].color,
+        });
+        if (res) {
+          setClick(click + 1);
+          notifySuccess("Thêm vào giỏ hàng thành công !");
+        } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+      } else {
+        let cart: any = [];
+        if (stateLocalCart.data) {
+          let check = true;
+          cart = stateLocalCart.data.map((item) => {
+            if (
+              item.product === _id &&
+              item.color === product.colors[0].color
+            ) {
+              item.quantity = item.quantity + 1;
+              check = false;
+            }
+            return item;
+          });
+          check &&
+            cart.push({
+              product: _id,
+              quantity: 1,
+              color: product.colors[0].color,
+            });
+        } else {
+          cart = [
+            {
+              product: _id,
+              quantity: 1,
+              color: product.colors[0].color,
+            },
+          ];
+        }
+        actionLocalCart.PushLocalCart({
+          data: cart,
+          count: stateLocalCart.count + 1,
+        });
         notifySuccess("Thêm vào giỏ hàng thành công !");
-      } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+      }
     } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
 

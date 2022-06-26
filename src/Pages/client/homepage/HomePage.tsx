@@ -17,14 +17,15 @@ import Nav from "../../../Components/common/Nav/nav";
 import { Carousel } from "../../../Components/common/Carousel/Carousel";
 import categoryApi from "../../../api/category/category";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
-
 import productApi from "../../../api/product/productApi";
 import { useForm } from "react-hook-form";
 import socialApi from "../../../api/social/socialApi";
 import { notifyError, notifySuccess } from "../../../utils/notify";
+import useLocalCart from "../../../store/localCart";
 
 const HomePage = () => {
   const [stateAuth, actionAuth] = useAuth();
+  const [localCart, actionLocalCart] = useLocalCart();
   const [click, setClick] = useState(0);
   const { register, handleSubmit, reset } = useForm();
   const [listCategory, setListCategory] = useState<Array<any>>([]);
@@ -39,16 +40,19 @@ const HomePage = () => {
     })();
   }, []);
   React.useEffect(() => {
+    (() => {
+      if (!stateAuth.isLoggedIn) actionLocalCart.GetLocalCart();
+    })();
+  }, []);
+  React.useEffect(() => {
     (async () => {
       const list = await productApi.listCarousel({});
       setListCarousel(list.data.data);
     })();
   }, []);
-  console.log("crs", listCarousel);
   React.useEffect(() => {
     (async () => {
       const listTop = await productApi.top({ quantity: 5 });
-
       setListTopProduct(listTop.data.data);
     })();
   }, []);
@@ -60,7 +64,7 @@ const HomePage = () => {
   }, []);
   React.useEffect(() => {
     (async () => {
-      await actionAuth.getUserAsync();
+      if (stateAuth.isLoggedIn) await actionAuth.getUserAsync();
     })();
   }, [click]);
   const subcribe = async (data: any, e: any) => {
@@ -76,7 +80,7 @@ const HomePage = () => {
       <div className="container-fluid">
         <div className="row bg-secondary py-2 px-xl-5">
           <div className="col-lg-6 d-none d-lg-block">
-            <div className="d-inline-flex align-items-center">
+            {/* <div className="d-inline-flex align-items-center">
               <a className="text-dark" href="">
                 FAQs
               </a>
@@ -88,24 +92,27 @@ const HomePage = () => {
               <a className="text-dark" href="">
                 Support
               </a>
-            </div>
+            </div> */}
           </div>
 
           <div className="col-lg-6 text-center text-lg-right">
             <div className="d-inline-flex align-items-center">
-              <a className="text-dark px-2" href="">
+              <a
+                className="text-dark px-2"
+                href="https://www.facebook.com/anh.doduc.312/"
+              >
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a className="text-dark px-2" href="">
-                <i className="fab fa-twitter"></i>
-              </a>
-              <a className="text-dark px-2" href="">
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-              <a className="text-dark px-2" href="">
+              <a
+                className="text-dark px-2"
+                href="https://www.instagram.com/duc.anhhh3/"
+              >
                 <i className="fab fa-instagram"></i>
               </a>
-              <a className="text-dark pl-2" href="">
+              <a
+                className="text-dark pl-2"
+                href="https://www.youtube.com/channel/UCbxYQOD3UTWawQQlC0JWGjg"
+              >
                 <i className="fab fa-youtube"></i>
               </a>
             </div>
@@ -155,7 +162,7 @@ const HomePage = () => {
               <span className="badge">
                 {stateAuth.isLoggedIn
                   ? stateAuth.data.data.bag_items_length
-                  : 0}
+                  : localCart.count}
               </span>
             </Link>
           </div>
@@ -176,7 +183,7 @@ const HomePage = () => {
               style={{ padding: "30px" }}
             >
               <h1 className="fa fa-check text-primary m-0 mr-3"></h1>
-              <h5 className="font-weight-semi-bold m-0">Quality Product</h5>
+              <h5 className="font-weight-semi-bold m-0">Sản phẩm chất lượng</h5>
             </div>
           </div>
           <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -185,7 +192,9 @@ const HomePage = () => {
               style={{ padding: "30px" }}
             >
               <h1 className="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
-              <h5 className="font-weight-semi-bold m-0">Free Shipping</h5>
+              <h5 className="font-weight-semi-bold m-0">
+                Giao hàng nhanh chóng
+              </h5>
             </div>
           </div>
           <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -194,7 +203,7 @@ const HomePage = () => {
               style={{ padding: "30px" }}
             >
               <h1 className="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
-              <h5 className="font-weight-semi-bold m-0">14-Day Return</h5>
+              <h5 className="font-weight-semi-bold m-0">Bảo hành - Đổi trả</h5>
             </div>
           </div>
           <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -203,7 +212,7 @@ const HomePage = () => {
               style={{ padding: "30px" }}
             >
               <h1 className="fa fa-phone-volume text-primary m-0 mr-3"></h1>
-              <h5 className="font-weight-semi-bold m-0">24/7 Support</h5>
+              <h5 className="font-weight-semi-bold m-0">Sẵn sàng hỗ trợ</h5>
             </div>
           </div>
         </div>

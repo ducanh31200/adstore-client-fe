@@ -15,6 +15,7 @@ import useCart from "../../../store/cart";
 import { notifyError, notifySuccess } from "../../../utils/notify";
 import useAuth from "../../../store/auth";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
+import useLocalCart from "../../../store/localCart";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
@@ -42,14 +43,17 @@ const ProductDetail = (props: Props) => {
     sale: 0,
     total_rate: 0,
   };
-
+  const [localCart, actionLocalCart] = useLocalCart();
   const [listHint, setListHint] = useState<Array<any>>([]);
   const [product, setProduct] = useState(initProduct);
   const [comment, setComment] = useState(initProduct);
-  const [colorState, setColorState] = useState(product.colors[0].color);
+  const [colorState, setColorState] = useState("");
   const [colorIndexState, setColorIndexState] = useState(0);
   const currentSlide = 0;
   if (id) {
+    React.useEffect(() => {
+      !stateAuth.isLoggedIn && actionLocalCart.GetLocalCart();
+    }, []);
     React.useEffect(() => {
       (async () => {
         const result = await productApi.read({
@@ -68,7 +72,7 @@ const ProductDetail = (props: Props) => {
           products: list,
           quantity: 5,
         });
-        console.log("list", listHint);
+        if (colorState === "") setColorState(result.data.data.colors[0].color);
         setListHint(listHint.data?.data);
         setComment(comment.data.data);
         setProduct(result.data.data);
@@ -77,32 +81,73 @@ const ProductDetail = (props: Props) => {
   }
   const [click, setClick] = useState(0);
   React.useEffect(() => {
-    (async () => {
-      await actionAuth.getUserAsync();
-    })();
+    stateAuth.isLoggedIn &&
+      (async () => {
+        await actionAuth.getUserAsync();
+      })();
   }, [click]);
 
   const handleAddtoCart = async () => {
     let added: number = 0;
-    let item_quantity = stateCart.data.filter((item, index) => {
-      if (item.product._id === id) added = item.quantity;
-    });
-    if (item_quantity) {
-      added = 0;
+    if (stateAuth.isLoggedIn) {
+      stateCart.data.filter((item) => {
+        if (item.product._id === id && item.color === colorState)
+          added = item.quantity;
+      });
+    } else {
+      localCart?.data?.map((item) => {
+        if (item.product === id && item.color === colorState) {
+          added = item.quantity;
+        }
+      });
     }
     const value = (document.getElementById("quantity") as HTMLInputElement)
       .value;
-    console.log("item_quantity", item_quantity[0]?.quantity);
     if (product.colors[colorIndexState].quantity >= Number(value) + added) {
-      const res = await actionCart.PushCart({
-        _id: id,
-        quantity: Number(value),
-        color: colorState,
-      });
-      if (res) {
-        setClick(click + 1);
-        notifySuccess("Thêm vào giỏ hàng thành công !");
-      } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+      if (stateAuth.isLoggedIn) {
+        const res = await actionCart.PushCart({
+          _id: id,
+          quantity: Number(value),
+          color: colorState,
+        });
+        if (res) {
+          setClick(click + 1);
+          notifySuccess("Thêm vào giỏ hàng thành công !");
+        } else notifyError("Thêm vào giỏ hàng thất bại, vui lòng thử lại !");
+      } else {
+        {
+          let cart: any = [];
+          if (localCart.data) {
+            let check = true;
+            cart = localCart.data.map((item) => {
+              if (item.product === id && item.color === colorState) {
+                item.quantity = item.quantity + Number(value);
+                check = false;
+              }
+              return item;
+            });
+            check &&
+              cart.push({
+                product: id,
+                quantity: 1,
+                color: colorState,
+              });
+          } else {
+            cart = [
+              {
+                product: id,
+                quantity: Number(value),
+                color: colorState,
+              },
+            ];
+          }
+          actionLocalCart.PushLocalCart({
+            data: cart,
+            count: localCart.count + Number(value),
+          });
+          notifySuccess("Thêm vào giỏ hàng thành công !");
+        }
+      }
     } else notifyError("Số lượng sản phẩm còn lại không đủ !");
   };
   const list_specs: any = [];
@@ -200,7 +245,7 @@ const ProductDetail = (props: Props) => {
               <span className="badge">
                 {stateAuth.isLoggedIn
                   ? stateAuth.data.data.bag_items_length
-                  : 0}
+                  : localCart.count}
               </span>
             </Link>
           </div>

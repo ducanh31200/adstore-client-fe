@@ -203,7 +203,6 @@ const SaleDashboard = () => {
                   <i className="fa-solid fa-user i"></i>
                   <h6 className="m-0">Đơn hàng</h6>
                 </Link>
-
                 <Link
                   to="/sale/follower"
                   className="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"

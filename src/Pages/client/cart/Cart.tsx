@@ -12,70 +12,103 @@ import BillApi from "../../../api/cart/BillApi";
 import useBill from "../../../store/bill";
 import { changePhoneAsync } from "../../../store/auth/auth.action";
 import { notifyError } from "../../../utils/notify";
+import useLocalCart from "../../../store/localCart";
 
 type Props = {};
 
 const Cart = (props: Props) => {
   const [stateAuth, actionAuth] = useAuth();
+  const [localCart, actionLocalCart] = useLocalCart();
   const [stateBill, actionBill] = useBill();
   const [stateChange, setStateChange] = useState(0);
   const [statePayment, setStatePayment] = useState(true);
   let formatPhone = "0";
   React.useEffect(() => {
-    const province = (document.getElementById("province") as HTMLInputElement)
-      .value;
-    const district = (document.getElementById("district") as HTMLInputElement)
-      .value;
-    const address = (document.getElementById("address") as HTMLInputElement)
-      .value;
-    const address_ship: any = {};
-    address_ship.province = province;
-    address_ship.district = district;
-    address_ship.address = address;
-    (async () => {
-      await actionBill.Calc({
-        address: address_ship.province === "" ? undefined : address_ship,
-      });
-    })();
+    !stateAuth.isLoggedIn && actionLocalCart.GetLocalCart();
   }, []);
   React.useEffect(() => {
+    if (stateAuth.isLoggedIn) {
+      const province = (document.getElementById("province") as HTMLInputElement)
+        .value;
+      const district = (document.getElementById("district") as HTMLInputElement)
+        .value;
+      const address = (document.getElementById("address") as HTMLInputElement)
+        .value;
+      const address_ship: any = {};
+      address_ship.province = province;
+      address_ship.district = district;
+      address_ship.address = address;
+
+      (async () => {
+        await actionBill.Calc({
+          address: address_ship.province === "" ? undefined : address_ship,
+        });
+      })();
+    }
+  }, []);
+  React.useEffect(() => {
+    if (!stateAuth.isLoggedIn && localCart.data) {
+      const province = (document.getElementById("province") as HTMLInputElement)
+        .value;
+      const district = (document.getElementById("district") as HTMLInputElement)
+        .value;
+      const address = (document.getElementById("address") as HTMLInputElement)
+        .value;
+      const address_ship: any = {};
+      address_ship.province = province;
+      address_ship.district = district;
+      address_ship.address = address;
+      if (
+        address_ship.province !== "" &&
+        address_ship.district !== "" &&
+        address_ship.address !== ""
+      ) {
+        (async () => {
+          await actionBill.Calc({
+            bag: localCart.data,
+            address: address_ship,
+          });
+        })();
+      }
+    }
+  }, [localCart, stateChange]);
+  React.useEffect(() => {
     (async () => {
-      await actionAuth.getUserAsync();
+      stateAuth.isLoggedIn && (await actionAuth.getUserAsync());
     })();
   }, [stateChange]);
 
   React.useEffect(() => {
-    const cart: any = [];
-    const discountCode = (
-      document.getElementById("couponcode") as HTMLInputElement
-    ).value;
-    const province = (document.getElementById("province") as HTMLInputElement)
-      .value;
-    const district = (document.getElementById("district") as HTMLInputElement)
-      .value;
-    const address = (document.getElementById("address") as HTMLInputElement)
-      .value;
-    const address_ship: any = {};
-    address_ship.province = province;
-    address_ship.district = district;
-    address_ship.address = address;
-    stateBill.data?.bag_details.map((item: any) => {
-      cart.push({
-        product: item.product,
-        quantity: item.quantity,
-        color: item.color,
+    if (stateAuth.isLoggedIn) {
+      const cart: any = [];
+      const discountCode = (
+        document.getElementById("couponcode") as HTMLInputElement
+      ).value;
+      const province = (document.getElementById("province") as HTMLInputElement)
+        .value;
+      const district = (document.getElementById("district") as HTMLInputElement)
+        .value;
+      const address = (document.getElementById("address") as HTMLInputElement)
+        .value;
+      const address_ship: any = {};
+      address_ship.province = province;
+      address_ship.district = district;
+      address_ship.address = address;
+      stateBill.data?.bag_details.map((item: any) => {
+        cart.push({
+          product: item.product,
+          quantity: item.quantity,
+          color: item.color,
+        });
       });
-    });
-    console.log("cart", cart);
-    console.log("discountCode", discountCode);
-    console.log("address_ship", address_ship);
-    (async () => {
-      await actionBill.Calc({
-        bag: cart[0].product === "" || cart.length == 0 ? undefined : cart,
-        discountCode: discountCode,
-        address: address_ship.province === "" ? undefined : address_ship,
-      });
-    })();
+      (async () => {
+        await actionBill.Calc({
+          bag: cart[0].product === "" || cart.length == 0 ? undefined : cart,
+          discountCode: discountCode,
+          address: address_ship.province === "" ? undefined : address_ship,
+        });
+      })();
+    }
   }, [stateChange]);
   const handleOrder = async () => {
     console.log("first");
@@ -107,15 +140,14 @@ const Cart = (props: Props) => {
       });
     });
 
-    const payload = {
-      bag: cart,
-      phone: phone,
-      name: name,
-      discountCode: discountCode,
-      address: address_ship,
-      cod: statePayment,
-    };
-    console.log("payload", payload);
+    // const payload = {
+    //   bag: cart,
+    //   phone: phone,
+    //   name: name,
+    //   discountCode: discountCode,
+    //   address: address_ship,
+    //   cod: statePayment,
+    // };
     if (phone === "") notifyError("Vui lòng nhập số điện thoại !");
     else {
       const phoneRegex =
@@ -148,11 +180,8 @@ const Cart = (props: Props) => {
       }
     });
     setStateChange(stateChange + 1);
-
-    // console.log(_id);
   };
   const handleRemove = (_id: any, color: any) => {
-    const check = false;
     stateBill.data?.bag_details.map((item: any) => {
       if (item.product === _id && item.color === color) {
         item.quantity = 0;
@@ -245,7 +274,7 @@ const Cart = (props: Props) => {
               <span className="badge">
                 {stateAuth.isLoggedIn
                   ? stateAuth.data.data.bag_items_length
-                  : 0}
+                  : localCart.count}
               </span>
             </Link>
           </div>

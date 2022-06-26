@@ -18,21 +18,26 @@ import { FilterColor } from "../../../Components/pages/client/product/FilterColo
 import payment from "../../../img/payments.png";
 import useAuth from "../../../store/auth";
 import useCart from "../../../store/cart";
+import useLocalCart from "../../../store/localCart";
 
 const Product = () => {
   const params = useParams<any>();
+
+  const [localCart, actionLocalCart] = useLocalCart();
   const [listProduct, setListProduct] = useState<Array<any>>([]);
   const [listAllProduct, setListAllProduct] = useState<Array<any>>([]);
   const [cat, setCat] = useState<any>();
   const [totalProduct, setTotalProduct] = useState<any>(1);
   const [currentPage, setCurrentPage] = useState<any>(0);
   const limit = 7;
-  const [stateAuth, actionAuth] = useAuth();
+  const [stateAuth] = useAuth();
   const [click, setClick] = useState(0);
   const [sortName, setSortName] = useState("sold");
   const [sortType, setSortType] = useState(-1);
-
   const [searchParams] = useSearchParams();
+  React.useEffect(() => {
+    !stateAuth.isLoggedIn && actionLocalCart.GetLocalCart();
+  }, []);
   React.useEffect(() => {
     (async () => {
       const result = await productApi.list({
@@ -217,7 +222,7 @@ const Product = () => {
               <span className="badge">
                 {stateAuth.isLoggedIn
                   ? stateAuth.data?.data?.bag_items_length
-                  : 0}
+                  : localCart.count}
               </span>
             </Link>
           </div>

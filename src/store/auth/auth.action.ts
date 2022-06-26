@@ -49,6 +49,7 @@ export const logoutAsync =
   ({ setState, getState }: Actions) => {
     localStorage.removeItem("accessToken");
     setState({ ...getState(), isLoggedIn: false });
+    window.location.href = "/";
   };
 
 export const getOTPAsync = (payload: IReqGetOTP) => async () => {
@@ -70,16 +71,14 @@ export const signUpAsync =
     }
     return false;
   };
-export const changePhoneAsync =
-  (payload: IReqChangePhone) =>
-  async ({ setState, getState }: Actions) => {
-    const result = await authApi.updatePhone(payload);
-    // console.log(result);
-    if (result.status === 200) {
-      return true;
-    }
-    return false;
-  };
+export const changePhoneAsync = (payload: IReqChangePhone) => async () => {
+  const result = await authApi.updatePhone(payload);
+  // console.log(result);
+  if (result.status === 200) {
+    return true;
+  }
+  return false;
+};
 export const updateInfoAsync =
   (payload: IReqUpdateInfo) =>
   async ({ setState, getState }: Actions) => {
