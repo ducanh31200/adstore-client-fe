@@ -57,7 +57,7 @@ export const FilterColor = ({ listProduct }: { listProduct: any }) => {
 
   return (
     <div className="border-bottom mb-4 pb-4">
-      <h5 className="font-weight-semi-bold mb-4">Filter by color</h5>
+      <h5 className="font-weight-semi-bold mb-4">Lọc theo màu</h5>
       <form>
         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
           <input

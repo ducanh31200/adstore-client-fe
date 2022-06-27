@@ -56,7 +56,7 @@ const Nav = () => {
             href="#navbar-vertical"
             style={{ height: "65px", marginTop: "-1px", padding: "0 30px" }}
           >
-            <h6 className="m-0">Categories</h6>
+            <h6 className="m-0">Loại hàng</h6>
             <i className="fa fa-angle-down text-dark"></i>
           </a>
           <nav
@@ -106,7 +106,7 @@ const Nav = () => {
                     location.pathname === "/" ? "active" : ""
                   }`}
                 >
-                  Home
+                  Trang chủ
                 </Link>
                 <Link
                   to="/products"
@@ -114,42 +114,16 @@ const Nav = () => {
                     location.pathname === "/products" ? "active" : ""
                   }`}
                 >
-                  Product
+                  Sản phẩm
                 </Link>
-                <div className="nav-item dropdown">
-                  <a
-                    href="#"
-                    className="nav-link dropdown-toggle"
-                    data-toggle="dropdown"
-                  >
-                    Pages
-                  </a>
-                  <div className="dropdown-menu rounded-0 m-0">
-                    <Link
-                      to="/cart"
-                      className={`nav-item nav-link ${
-                        location.pathname === "/cart" ? "active" : ""
-                      }`}
-                    >
-                      Cart
-                    </Link>
-                    <Link
-                      to="/bill"
-                      className={`nav-item nav-link ${
-                        location.pathname === "/bill" ? "active" : ""
-                      }`}
-                    >
-                      Bill
-                    </Link>
-                  </div>
-                </div>
+
                 <Link
                   to="/contact"
                   className={`nav-item nav-link ${
                     location.pathname === "/contact" ? "active" : ""
                   }`}
                 >
-                  Contact
+                  Hỗ trợ
                 </Link>
               </div>
               <div className="navbar-nav ml-auto py-0">

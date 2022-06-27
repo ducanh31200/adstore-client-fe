@@ -17,7 +17,6 @@ import { FilterColor } from "../../../Components/pages/client/product/FilterColo
 
 import payment from "../../../img/payments.png";
 import useAuth from "../../../store/auth";
-import useCart from "../../../store/cart";
 import useLocalCart from "../../../store/localCart";
 
 const Product = () => {
@@ -34,7 +33,7 @@ const Product = () => {
   const [click, setClick] = useState(0);
   const [sortName, setSortName] = useState("sold");
   const [sortType, setSortType] = useState(-1);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   React.useEffect(() => {
     !stateAuth.isLoggedIn && actionLocalCart.GetLocalCart();
   }, []);
@@ -72,7 +71,6 @@ const Product = () => {
           skip: currentPage * limit,
           limit: limit,
         });
-
         if (currentPage === 0) {
           setTotalProduct(result.data.count);
         }
@@ -87,6 +85,8 @@ const Product = () => {
           const p = entry[1].split(",");
           filter.max_price = Number(p[1]);
           filter.min_price = Number(p[0]);
+        } else if (entry[0] === "search") {
+          filter.search = entry[1];
         }
       }
       filter.skip = currentPage * limit;
@@ -138,6 +138,13 @@ const Product = () => {
     setClick(click + 1);
     const btn = document.getElementById("triggerId");
     btn ? (btn.textContent = text) : {};
+  };
+  const handleSearch = () => {
+    const value = document.getElementById("search-product") as HTMLInputElement;
+    if (value.value !== "") {
+      searchParams.set("search", value.value);
+    } else searchParams.delete("search");
+    setSearchParams(searchParams);
   };
   // console.log(listProduct);
   return (
@@ -194,13 +201,16 @@ const Product = () => {
             <form action="">
               <div className="input-group">
                 <input
+                  id="search-product"
                   type="text"
                   className="form-control"
                   placeholder="Search for products"
                 />
                 <div className="input-group-append">
                   <span className="input-group-text bg-transparent text-primary">
-                    <i className="fa fa-search"></i>
+                    <a onClick={handleSearch}>
+                      <i className="fa fa-search"></i>
+                    </a>
                   </span>
                 </div>
               </div>
@@ -254,10 +264,9 @@ const Product = () => {
         <div className="row px-xl-5">
           <div className="col-lg-3 col-md-12">
             <div className="border-bottom mb-4 pb-4">
-              <h5 className="font-weight-semi-bold mb-4">Filter by price</h5>
+              <h5 className="font-weight-semi-bold mb-4">Lọc theo giá</h5>
               <PriceFilter />
             </div>
-
             <FilterColor listProduct={listAllProduct} />
             {Object.keys(params).length !== 0 ? (
               cat?.specsModel.map((item: any, index: any) => (
@@ -377,53 +386,7 @@ const Product = () => {
           <div className="col-lg-8 col-md-12">
             <div className="row">
               <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
+                <h5 className="font-weight-bold text-dark mb-4">Đăng ký</h5>
                 <form action="">
                   <div className="form-group">
                     <input
@@ -446,7 +409,7 @@ const Product = () => {
                       className="btn btn-primary btn-block border-0 py-3"
                       type="submit"
                     >
-                      Subscribe Now
+                      Đăng ký
                     </button>
                   </div>
                 </form>

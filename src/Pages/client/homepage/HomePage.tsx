@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import "./style.css";
-import offer1 from "../../../img/iphone13.jpg";
-import offer2 from "../../../img/samsungs22.jpg";
-
-import payment from "../../../img/payments.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CategoryCard from "../../../Components/pages/client/homepage/CategoryCard";
-import {
-  FAKE_PRODUCT_DATA,
-  CAROUSEL_ITEMS,
-} from "../../../constants/base.constants";
 
 import useAuth from "../../../store/auth";
 import Nav from "../../../Components/common/Nav/nav";
@@ -32,7 +24,7 @@ const HomePage = () => {
   const [listTopProduct, setListTopProduct] = useState<Array<any>>([]);
   const [listComingSoon, setListComingSoon] = useState<Array<any>>([]);
   const [listCarousel, setListCarousel] = useState<Array<any>>([]);
-
+  const navigate = useNavigate();
   React.useEffect(() => {
     (async () => {
       const list = await categoryApi.list();
@@ -74,6 +66,10 @@ const HomePage = () => {
       notifySuccess("Đăng ký thành công !");
       reset();
     } else notifyError("Xảy ra lỗi vui lòng thử lại !");
+  };
+  const handleSearch = () => {
+    const value = document.getElementById("search-product") as HTMLInputElement;
+    if (value.value !== "") navigate(`/products?search=${value.value}`);
   };
   return (
     <div>
@@ -133,13 +129,16 @@ const HomePage = () => {
             <form action="">
               <div className="input-group">
                 <input
+                  id="search-product"
                   type="text"
                   className="form-control"
-                  placeholder="Search for products"
+                  placeholder="Tìm kiếm sản phẩm"
                 />
                 <div className="input-group-append">
                   <span className="input-group-text bg-transparent text-primary">
-                    <i className="fa fa-search"></i>
+                    <a onClick={handleSearch}>
+                      <i className="fa fa-search"></i>
+                    </a>
                   </span>
                 </div>
               </div>

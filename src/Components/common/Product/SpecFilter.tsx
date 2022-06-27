@@ -36,7 +36,7 @@ export const SpecFilter = ({ spec }: { spec: any }) => {
 
   return (
     <div className="mb-5">
-      <h5 className="font-weight-semi-bold mb-4">Filter by {spec.name}</h5>
+      <h5 className="font-weight-semi-bold mb-4">Lọc theo {spec.name}</h5>
       <form>
         <div className="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
           <input

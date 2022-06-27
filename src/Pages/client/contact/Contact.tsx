@@ -264,15 +264,8 @@ const Contact = () => {
           <div className="col-lg-8 col-md-12">
             <div className="row">
               <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
+                <h5 className="font-weight-bold text-dark mb-4">Đăng ký</h5>
                 <form action="">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control border-0 py-4"
-                      placeholder="Your Name"
-                    />
-                  </div>
                   <div className="form-group">
                     <input
                       type="email"
@@ -285,7 +278,7 @@ const Contact = () => {
                       className="btn btn-primary btn-block border-0 py-3"
                       type="submit"
                     >
-                      Subscribe Now
+                      Đăng ký
                     </button>
                   </div>
                 </form>

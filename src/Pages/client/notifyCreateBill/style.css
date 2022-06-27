@@ -1,0 +1,190 @@
+.payment1 {
+  border: 1px solid #f2f2f2;
+  height: 280px;
+  border-radius: 20px;
+  background: #fff;
+}
+.payment_header1 {
+  background: #59ada4;
+  padding: 20px;
+  border-radius: 20px 20px 0px 0px;
+}
+
+.check1 {
+  margin: 0px auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: #fff;
+  text-align: center;
+}
+
+.check1 i {
+  vertical-align: middle;
+  line-height: 50px;
+  font-size: 30px;
+}
+
+.content1 {
+  text-align: center;
+}
+
+.content1 h1 {
+  font-size: 25px;
+  padding-top: 25px;
+}
+
+.content1 a {
+  width: 200px;
+  height: 35px;
+  color: #fff;
+  border-radius: 30px;
+  padding: 5px 10px;
+  background: #59ada4;
+  transition: all ease-in-out 0.3s;
+}
+
+.content1 a:hover {
+  text-decoration: none;
+  background: #fff;
+}
+.topbar {
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  position: sticky;
+  top: 0;
+}
+
+.topbarWrapper {
+  height: 100%;
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 30px;
+  color: darkblue;
+  cursor: pointer;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+}
+
+.topbarIconContainer {
+  position: relative;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #555;
+}
+
+.topIconBadge {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.topAvatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.wrap_menuAvatar {
+  cursor: pointer;
+  position: relative;
+}
+
+.wrap_contentHover {
+  position: absolute;
+  bottom: 0px;
+  right: -5px;
+  width: 300px;
+  transform: translateY(100%);
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  -o-transform: translateY(100%);
+  z-index: 999;
+  /* display: block; */
+  display: none;
+}
+
+.wrap_menuAvatar .wrap_contentHover .contentHover {
+  margin-top: 10px;
+  width: 100%;
+  padding: 16px 0;
+  background: #ffffff;
+  box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.wrap_menuAvatar:hover .wrap_contentHover {
+  display: block;
+}
+
+.wrap_menuAvatar:hover .iconAvatar {
+  outline: 3px solid #59ada4;
+}
+
+.wrap_menuAvatar .menuProfile {
+  /* width: 100%; */
+  padding: 5px 20px;
+  font-size: 16px;
+  line-height: 48px;
+  color: black;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.wrap_menuAvatar .lineMenu {
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  height: 0.2px;
+  background-color: gray;
+}
+
+.wrap_menuAvatar .menuLinkHover:hover {
+  background-color: rgb(240, 240, 255);
+}
+
+.iconAvatar {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+.icon-avt {
+  height: 40px;
+  width: 40px;
+}
+
+.user_avatar {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.a {
+  text-decoration: none;
+}

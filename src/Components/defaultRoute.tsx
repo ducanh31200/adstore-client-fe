@@ -21,4 +21,6 @@ export const defaultRoute = {
   billManagement: "/admin/bill",
   saleDashboard: "/sale",
   saleFollower: "/sale/follower",
+  success: "/success",
+  failure: "/failure",
 };

@@ -113,7 +113,9 @@ export const ProductCard = ({
               " " +
               (product?.colors.length !== 0 ? product.colors[0].color : "")}
           </h6>
-          <h6>{moneyFormater(product?.price - product?.sale)}</h6>
+          <h6>
+            {moneyFormater((product?.price * (100 - product?.sale)) / 100)}
+          </h6>
           {product?.sale ? (
             <h6 className="text-muted ml-2">
               <del>{moneyFormater(product?.price)}</del>

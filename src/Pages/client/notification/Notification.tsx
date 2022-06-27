@@ -177,7 +177,7 @@ const Notifications = () => {
               <div></div>
             </thead>
             <tbody>
-              {list?.data?.map((item: any, index: any) => (
+              {list?.data?.reverse().map((item: any, index: any) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.message}</td>
@@ -230,62 +230,8 @@ const Notifications = () => {
           <div className="col-lg-8 col-md-12">
             <div className="row">
               <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
+                <h5 className="font-weight-bold text-dark mb-4">Đăng ký</h5>
                 <form action="">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control border-0 py-4"
-                      placeholder="Your Name"
-                      required
-                    />
-                  </div>
                   <div className="form-group">
                     <input
                       type="email"
@@ -299,7 +245,7 @@ const Notifications = () => {
                       className="btn btn-primary btn-block border-0 py-3"
                       type="submit"
                     >
-                      Subscribe Now
+                      Đăng ký
                     </button>
                   </div>
                 </form>
