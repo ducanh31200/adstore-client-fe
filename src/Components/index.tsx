@@ -103,6 +103,24 @@ const routes: Array<IRoute> = [
     path: defaultRoute.contact,
     exact: true,
   },
+  {
+    child: (
+      <>
+        <Success />
+      </>
+    ),
+    path: defaultRoute.success,
+    exact: true,
+  },
+  {
+    child: (
+      <>
+        <Failure />
+      </>
+    ),
+    path: defaultRoute.failure,
+    exact: true,
+  },
 ];
 
 const routesPrivate: Array<IPrivateRoute> = [
@@ -113,20 +131,7 @@ const routesPrivate: Array<IPrivateRoute> = [
     option: true,
     roleRoute: [DFRole.Sale, DFRole.Customer],
   },
-  {
-    child: <Success />,
-    path: defaultRoute.success,
-    exact: true,
-    option: true,
-    roleRoute: [DFRole.Customer],
-  },
-  {
-    child: <Failure />,
-    path: defaultRoute.failure,
-    exact: true,
-    option: true,
-    roleRoute: [DFRole.Customer],
-  },
+
   {
     child: <Dashboard />,
     path: defaultRoute.dashboard,

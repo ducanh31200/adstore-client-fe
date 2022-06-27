@@ -3,7 +3,7 @@ import product1 from "../../../img/iphone13.jpg";
 import emptyCart from "../../../img/emptyCart.png";
 
 import payment from "../../../img/payments.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
 import useCart from "../../../store/cart";
 import { moneyFormater } from "../../../utils/moneyFormater";
@@ -17,6 +17,7 @@ import useLocalCart from "../../../store/localCart";
 type Props = {};
 
 const Cart = (props: Props) => {
+  const navigate = useNavigate();
   const [stateAuth, actionAuth] = useAuth();
   const [localCart, actionLocalCart] = useLocalCart();
   const [stateBill, actionBill] = useBill();
@@ -178,6 +179,7 @@ const Cart = (props: Props) => {
       if (url) {
         localStorage.removeItem("cart");
         if (!statePayment) window.location.href = url.data;
+        else navigate("/success");
         notifySuccess("Tạo đơn hàng thành công !");
         setStateChange(stateChange + 1);
       } else notifyError("Có lỗi xảy ra, vui lòng thử lại !");
