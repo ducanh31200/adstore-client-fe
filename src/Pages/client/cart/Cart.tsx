@@ -11,7 +11,7 @@ import useAuth from "../../../store/auth";
 import BillApi from "../../../api/cart/BillApi";
 import useBill from "../../../store/bill";
 import { changePhoneAsync } from "../../../store/auth/auth.action";
-import { notifyError } from "../../../utils/notify";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 import useLocalCart from "../../../store/localCart";
 
 type Props = {};
@@ -48,6 +48,9 @@ const Cart = (props: Props) => {
   }, []);
   React.useEffect(() => {
     if (!stateAuth.isLoggedIn && localCart.data) {
+      const discountCode = (
+        document.getElementById("couponcode") as HTMLInputElement
+      ).value;
       const province = (document.getElementById("province") as HTMLInputElement)
         .value;
       const district = (document.getElementById("district") as HTMLInputElement)
@@ -58,20 +61,17 @@ const Cart = (props: Props) => {
       address_ship.province = province;
       address_ship.district = district;
       address_ship.address = address;
-      if (
-        address_ship.province !== "" &&
-        address_ship.district !== "" &&
-        address_ship.address !== ""
-      ) {
-        (async () => {
-          await actionBill.Calc({
-            bag: localCart.data,
-            address: address_ship,
-          });
-        })();
-      }
+
+      (async () => {
+        const res = await actionBill.Calc({
+          bag: localCart.data,
+          address: address_ship,
+          discountCode: discountCode,
+        });
+      })();
     }
   }, [localCart, stateChange]);
+
   React.useEffect(() => {
     (async () => {
       stateAuth.isLoggedIn && (await actionAuth.getUserAsync());
@@ -127,7 +127,6 @@ const Cart = (props: Props) => {
 
     let phone = (document.getElementById("phoneUser") as HTMLInputElement)
       .value;
-
     const address_ship: any = {};
     address_ship.province = province;
     address_ship.district = district;
@@ -149,6 +148,12 @@ const Cart = (props: Props) => {
     //   cod: statePayment,
     // };
     if (phone === "") notifyError("Vui lòng nhập số điện thoại !");
+    else if (
+      address_ship.address === "" ||
+      address_ship.district === "" ||
+      address_ship.province === ""
+    )
+      notifyError("Vui lòng nhập địa chỉ giao hàng !");
     else {
       const phoneRegex =
         /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
@@ -170,7 +175,12 @@ const Cart = (props: Props) => {
         address: address_ship,
         cod: statePayment,
       });
-      window.location.href = url;
+      if (url) {
+        localStorage.removeItem("cart");
+        if (!statePayment) window.location.href = url.data;
+        notifySuccess("Tạo đơn hàng thành công !");
+        setStateChange(stateChange + 1);
+      } else notifyError("Có lỗi xảy ra, vui lòng thử lại !");
     }
   };
   const handleQuantity = (_id: string, color: any, change: number) => {
@@ -179,6 +189,19 @@ const Cart = (props: Props) => {
         item.quantity = item.quantity + change;
       }
     });
+    if (!stateAuth.isLoggedIn) {
+      const newlist = localCart.data?.map((item: any) => {
+        if (item.product === _id && item.color === color) {
+          item.quantity = item.quantity + change;
+        }
+        return item;
+      });
+      const cart = newlist?.filter((item: any) => item.quantity !== 0);
+      actionLocalCart.PushLocalCart({
+        data: cart?.length === 0 ? undefined : cart,
+        count: localCart.count + change,
+      });
+    }
     setStateChange(stateChange + 1);
   };
   const handleRemove = (_id: any, color: any) => {
@@ -187,6 +210,20 @@ const Cart = (props: Props) => {
         item.quantity = 0;
       }
     });
+    if (!stateAuth.isLoggedIn) {
+      const newlist = localCart.data?.map((item: any) => {
+        if (item.product === _id && item.color === color) {
+          localCart.count = localCart.count - item.quantity;
+          item.quantity = 0;
+        }
+        return item;
+      });
+      const cart = newlist?.filter((item: any) => item.quantity !== 0);
+      actionLocalCart.PushLocalCart({
+        data: cart?.length === 0 ? undefined : cart,
+        count: localCart.count,
+      });
+    }
     setStateChange(stateChange + 1);
   };
   const handleSubmit = (e: any) => {
@@ -314,6 +351,7 @@ const Cart = (props: Props) => {
                   <tr>
                     <th>STT</th>
                     <th>Sản phẩm</th>
+                    <th>Màu</th>
                     <th>Giá</th>
                     <th>Giảm giá</th>
                     <th>Số lượng</th>
@@ -333,6 +371,7 @@ const Cart = (props: Props) => {
                         />{" "}
                         {item.name}
                       </td>
+                      <td className="align-middle">{item.color}</td>
                       <td className="align-middle">
                         {moneyFormater(item.price)}
                       </td>

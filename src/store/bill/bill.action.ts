@@ -22,7 +22,7 @@ export const Create = (data: any) => async () => {
   const result = await BillApi.create(data);
   if (result.status === 200) {
     console.log("res", result.data.data);
-    return result.data.data;
+    return result.data;
   }
   return false;
 };

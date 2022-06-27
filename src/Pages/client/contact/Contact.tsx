@@ -1,8 +1,35 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import socialApi from "../../../api/social/socialApi";
 import Nav from "../../../Components/common/Nav/nav";
 import payment from "../../../img/payments.png";
+import useAuth from "../../../store/auth";
+import useLocalCart from "../../../store/localCart";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 const Contact = () => {
+  const [stateAuth, actionAuth] = useAuth();
+  const [localCart, actionLocalCart] = useLocalCart();
+  const { register, reset, handleSubmit } = useForm();
+  React.useEffect(() => {
+    (() => {
+      if (!stateAuth.isLoggedIn) actionLocalCart.GetLocalCart();
+    })();
+  }, []);
+  const submit = async (data: any, e: any) => {
+    e.preventDefault();
+    const result = await socialApi.support({
+      email: data.email,
+      name: data.name,
+      subject: data.subject,
+      message: data.message,
+    });
+
+    if (result) {
+      notifySuccess("Gửi phản hồi thành công !");
+      reset();
+    } else notifyError("Gửi phản hồi thất bại !");
+  };
   return (
     <div>
       <div className="container-fluid">
@@ -71,14 +98,25 @@ const Contact = () => {
             </form>
           </div>
           <div className="col-lg-3 col-6 text-right">
-            <a href="" className="btn border">
+            <Link to="/notification" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
-            </a>
-            <a href="" className="btn border">
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
+            </Link>
+
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
-            </a>
+              <span className="badge">
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data.data.bag_items_length
+                  : localCart.count}
+              </span>
+            </Link>
           </div>
         </div>
       </div>
@@ -106,20 +144,26 @@ const Contact = () => {
       <div className="container-fluid pt-5">
         <div className="text-center mb-4">
           <h2 className="section-title px-5">
-            <span className="px-2">Giải đáp thắc mắc</span>
+            <span className="px-2">Hỗ trợ</span>
           </h2>
         </div>
         <div className="row px-xl-5">
           <div className="col-lg-9 mb-5">
             <div className="contact-form">
               <div id="success"></div>
-              <form name="sentMessage" id="contactForm">
+              <form
+                onSubmit={handleSubmit(submit)}
+                name="sentMessage"
+                id="contactForm"
+              >
                 <div className="control-group">
                   <input
                     type="text"
                     className="form-control"
                     id="name"
                     placeholder="Your Name"
+                    required
+                    {...register("name")}
                   />
 
                   <p className="help-block text-danger"></p>
@@ -130,6 +174,8 @@ const Contact = () => {
                     className="form-control"
                     id="email"
                     placeholder="Your Email"
+                    {...register("email")}
+                    required
                   />
 
                   <p className="help-block text-danger"></p>
@@ -140,6 +186,8 @@ const Contact = () => {
                     className="form-control"
                     id="subject"
                     placeholder="Subject"
+                    required
+                    {...register("subject")}
                   />
                   <p className="help-block text-danger"></p>
                 </div>
@@ -149,6 +197,7 @@ const Contact = () => {
                     rows={6}
                     id="message"
                     placeholder="Message"
+                    {...register("message")}
                     data-validation-required-message="Please enter your message"
                   ></textarea>
                   <p className="help-block text-danger"></p>
@@ -190,14 +239,14 @@ const Contact = () => {
       <div className="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div className="row px-xl-5 pt-5">
           <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="" className="text-decoration-none">
+            <Link to="/" className="text-decoration-none">
               <h1 className="mb-4 display-5 font-weight-semi-bold">
                 <span className="text-primary font-weight-bold border border-white px-3 mr-1">
                   AD
                 </span>
                 Store
               </h1>
-            </a>
+            </Link>
             <p></p>
             <p className="mb-2">
               <i className="fa fa-map-marker-alt text-primary mr-3"></i>TP.HCM
@@ -205,7 +254,7 @@ const Contact = () => {
             </p>
             <p className="mb-2">
               <i className="fa fa-envelope text-primary mr-3"></i>
-              info@example.com
+              adstore@example.com
             </p>
             <p className="mb-0">
               <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
@@ -214,52 +263,6 @@ const Contact = () => {
           </div>
           <div className="col-lg-8 col-md-12">
             <div className="row">
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Quick Links</h5>
-                <div className="d-flex flex-column justify-content-start">
-                  <a className="text-dark mb-2" href="index.html">
-                    <i className="fa fa-angle-right mr-2"></i>Home
-                  </a>
-                  <a className="text-dark mb-2" href="shop.html">
-                    <i className="fa fa-angle-right mr-2"></i>Our Shop
-                  </a>
-                  <a className="text-dark mb-2" href="detail.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shop Detail
-                  </a>
-                  <a className="text-dark mb-2" href="cart.html">
-                    <i className="fa fa-angle-right mr-2"></i>Shopping Cart
-                  </a>
-                  <a className="text-dark mb-2" href="checkout.html">
-                    <i className="fa fa-angle-right mr-2"></i>Checkout
-                  </a>
-                  <a className="text-dark" href="contact.html">
-                    <i className="fa fa-angle-right mr-2"></i>Contact Us
-                  </a>
-                </div>
-              </div>
               <div className="col-md-4 mb-5">
                 <h5 className="font-weight-bold text-dark mb-4">Newsletter</h5>
                 <form action="">
@@ -288,12 +291,6 @@ const Contact = () => {
                 </form>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="row border-top border-light mx-xl-5 py-4">
-          <div className="col-md-6 px-xl-0"></div>
-          <div className="col-md-6 px-xl-0 text-center text-md-right">
-            <img className="img-fluid" src={payment} alt="" />
           </div>
         </div>
       </div>

@@ -18,6 +18,10 @@ const socialApi = {
     const url = "/emails/send";
     return axiosClient.post(url, data);
   },
+  support(data: any): Promise<ReturnReponse<any>> {
+    const url = "/comment/add";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default socialApi;
