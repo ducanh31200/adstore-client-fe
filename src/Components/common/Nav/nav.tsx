@@ -6,6 +6,7 @@ import ModalSignIn from "../../../Pages/client/SignIn/ModalSignIn";
 import ModalSignUp from "../../../Pages/client/SignUp/ModalSignUp/SignUp";
 import useAuth from "../../../store/auth";
 import { ContainerModal } from "../ContainerModal";
+import ChangePass from "../PersonalInfo/ChangePass/changepass";
 import ModalInfo from "../PersonalInfo/ModalInfo/personalInfo";
 
 const Nav = () => {
@@ -19,6 +20,9 @@ const Nav = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [showChangePassModal, setChangePassModal] = React.useState(false);
+  const openChangePassModal = () => setChangePassModal(true);
+  const closeChangePassModal = () => setChangePassModal(false);
   const [listCategory, setListCategory] = useState<Array<any>>([]);
   const token = getFromLocalStorage("accessToken");
   const navigate = useNavigate();
@@ -160,6 +164,13 @@ const Nav = () => {
                         <Link
                           to={location.pathname}
                           className="menuProfile menuLinkHover !text-red-500 font-bold"
+                          onClick={openChangePassModal}
+                        >
+                          Đổi mật khẩu
+                        </Link>
+                        <Link
+                          to={location.pathname}
+                          className="menuProfile menuLinkHover !text-red-500 font-bold"
                           onClick={handleLogout}
                         >
                           Đăng xuất
@@ -182,14 +193,20 @@ const Nav = () => {
           </nav>
         </div>
       </div>
+      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
+        <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showChangePassModal}
+        closeModal={closeChangePassModal}
+      >
+        <ChangePass closeModal={closeChangePassModal} />
+      </ContainerModal>
       <ContainerModal isVisible={showSignInModal} closeModal={closeSignInModal}>
         <ModalSignIn
           closeModal={closeSignInModal}
           openSignUpModal={openSignUpModal}
         />
-      </ContainerModal>
-      <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
-        <ModalInfo closeModal={closeInfoModal} />
       </ContainerModal>
       <ContainerModal isVisible={showSignUpModal} closeModal={closeSignUpModal}>
         <ModalSignUp

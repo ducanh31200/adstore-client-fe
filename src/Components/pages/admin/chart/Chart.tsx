@@ -10,6 +10,10 @@ import {
 import React, { useState } from "react";
 import revenueApi from "../../../../api/revenue/revenueApi";
 import { moneyFormater } from "../../../../utils/moneyFormater";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { ContainerModal } from "../../../common/ContainerModal";
+import ExportData from "./ExportData";
 
 type Props = {
   aspect: any;
@@ -22,7 +26,11 @@ const Chart = (props: Props) => {
   const [dateEnd, setDateEnd] = useState("");
   const [dateStart, setDateStart] = useState("");
   const [step, setStep] = useState("");
+  const [type, setType] = useState("");
   const [dataChart, setDataChart] = useState({ graph: [], products: [] });
+  const [showExportDataModal, setExportDataModal] = React.useState(false);
+  const openExportDataModal = () => setExportDataModal(true);
+  const closeExportDataModal = () => setExportDataModal(false);
   function padTo2Digits(num: any) {
     return num.toString().padStart(2, "0");
   }
@@ -43,26 +51,29 @@ const Chart = (props: Props) => {
   React.useEffect(() => {
     (async () => {
       const res = await revenueApi.list({
-        type: "bill",
+        type: type,
         dateStart: dateStart,
         dateEnd: dateEnd,
         step: step,
       });
       setDataChart(res?.data?.data);
     })();
-  }, [dateEnd, dateStart, step]);
+  }, [dateEnd, dateStart, step, type]);
   const onDateStart = (e: any) => {
     const value = e.target.value;
-    console.log("value", value);
     setDateStart(value);
   };
   const onDateEnd = (e: any) => {
     const value = e.target.value;
     setDateEnd(value);
   };
-  const handleShowSpecs = (e: any) => {
+  const handleSetStep = (e: any) => {
     const value = e.target.value;
     setStep(value);
+  };
+  const handleSetType = (e: any) => {
+    const value = e.target.value;
+    setType(value);
   };
   const data = [{}];
   dataChart.graph.map((item: any, index: any) => {
@@ -95,7 +106,7 @@ const Chart = (props: Props) => {
       total: moneyFormater(item.total),
     });
   });
-  console.log("data", dataChart);
+
   return (
     <div className="chart">
       <div className="title">{title}</div>
@@ -112,7 +123,7 @@ const Chart = (props: Props) => {
       <label style={{ marginRight: "20px" }} htmlFor="step">
         {" "}
         Thống kê theo :&nbsp;
-        <select id="step" onChange={handleShowSpecs}>
+        <select id="step" onChange={handleSetStep}>
           <option>Chọn</option>
 
           <option key="1" value="second">
@@ -129,6 +140,29 @@ const Chart = (props: Props) => {
           </option>
         </select>
       </label>
+      <label style={{ marginRight: "20px" }} htmlFor="step">
+        {" "}
+        Thống kê theo :&nbsp;
+        <select id="step" onChange={handleSetType}>
+          <option>Chọn</option>
+
+          <option key="1" value="bill">
+            Doanh Thu
+          </option>
+          <option key="2" value="import">
+            Nhập kho
+          </option>
+        </select>
+      </label>
+      <button
+        disabled={dateEnd === "" || dateStart === ""}
+        className={
+          dateEnd === "" || dateStart === "" ? "disableButton" : "enableButton"
+        }
+        onClick={openExportDataModal}
+      >
+        Xuất dữ liệu
+      </button>
       <ResponsiveContainer width="100%" aspect={aspect}>
         <AreaChart
           width={730}
@@ -185,6 +219,16 @@ const Chart = (props: Props) => {
           </tbody>
         </table>
       </div>
+      <ContainerModal
+        isVisible={showExportDataModal}
+        closeModal={closeExportDataModal}
+      >
+        <ExportData
+          dateEnd={new Date(dateEnd).getTime()}
+          dateStart={new Date(dateStart).getTime()}
+          closeModal={closeExportDataModal}
+        />
+      </ContainerModal>
     </div>
   );
 };

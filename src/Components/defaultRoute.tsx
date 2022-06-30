@@ -10,6 +10,7 @@ export const defaultRoute = {
   contact: "/contact",
   dashboard: "/admin",
   productManagement: "/admin/product",
+  revenue: "/admin/revenue",
   productDetailManagement: "/admin/product/:_id",
   newProduct: "/admin/product/new",
   categoryManagement: "/admin/category",

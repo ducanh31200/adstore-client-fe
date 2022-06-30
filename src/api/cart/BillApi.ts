@@ -2,11 +2,11 @@ import axiosClient from "../axiosClient";
 import { ReturnListReponse, ReturnReponse } from "../response.interface";
 
 const BillApi = {
-  create(data: any): Promise<ReturnReponse<{ data: Array<any> }>> {
+  create(data: any): Promise<ReturnReponse<any>> {
     const url = "/bill/create";
     return axiosClient.post(url, data);
   },
-  calc(data: any): Promise<ReturnReponse<{ data: Array<any> }>> {
+  calc(data: any): Promise<ReturnReponse<any>> {
     const url = "/bill/billCalc";
     return axiosClient.post(url, data);
   },

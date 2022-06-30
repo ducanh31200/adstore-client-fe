@@ -320,10 +320,12 @@ const ProductDetail = (props: Props) => {
                 value={product.total_rate + 1}
                 editing={false}
               />
-              <small className="pt-1">(50 Reviews)</small>
+              <small className="pt-1">()</small>
             </div>
             <div className="justify-content-center">
-              <h6>{moneyFormater(product.price - product.sale)}</h6>
+              <h6>
+                {moneyFormater((product.price * (100 - product.sale)) / 100)}
+              </h6>
 
               {product.sale !== 0 && (
                 <h6
@@ -448,7 +450,7 @@ const ProductDetail = (props: Props) => {
               <div className="tab-pane fade" id="tab-pane-3">
                 <div className="row">
                   <div className="col-md-6">
-                    <h4 className="mb-4">1 review for "Iphone 13"</h4>
+                    {/* <h4 className="mb-4">1 review for "Iphone 13"</h4>
                     <div className="media mb-4">
                       <img
                         src={user}
@@ -465,7 +467,7 @@ const ProductDetail = (props: Props) => {
                         />
                         <p></p>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

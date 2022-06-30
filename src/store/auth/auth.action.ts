@@ -1,3 +1,4 @@
+import { boolean } from "yup";
 import { State } from ".";
 import {
   IReqChangePhone,
@@ -79,13 +80,21 @@ export const changePhoneAsync = (payload: IReqChangePhone) => async () => {
   }
   return false;
 };
+export const changePassAsync = (payload: any) => async () => {
+  const result = await authApi.updatePassword(payload);
+  // console.log(result);
+  if (result.status === 200) {
+    return true;
+  }
+  return false;
+};
 export const updateInfoAsync =
   (payload: IReqUpdateInfo) =>
   async ({ setState, getState }: Actions) => {
     const result = await authApi.updateInfo(payload);
     getUserAsync();
     if (result.status === 200) {
-      setState({ ...getState() });
+      setState({ ...getState(), change: !getState().change });
       return result.data.msg;
     }
     return false;

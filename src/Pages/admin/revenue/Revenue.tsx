@@ -1,88 +1,25 @@
-// import "./list.scss"
-
 import React from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ChangePass from "../../../Components/common/PersonalInfo/ChangePass/changepass";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
+import Chart from "../../../Components/pages/admin/chart/Chart";
+import Widget from "../../../Components/pages/admin/widget/Widget";
 import useAuth from "../../../store/auth";
-import useBillManagement from "../../../store/billManagement";
-import useUser from "../../../store/user";
-import { moneyFormater } from "../../../utils/moneyFormater";
-import BillTable from "./BillTable";
 
-const BillManagement = () => {
-  const [listBill, actionBill] = useBillManagement();
+import "./style.scss";
+
+const Revenue = () => {
   const [stateAuth, actionAuth] = useAuth();
-
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
   const [showChangePassModal, setChangePassModal] = React.useState(false);
   const openChangePassModal = () => setChangePassModal(true);
   const closeChangePassModal = () => setChangePassModal(false);
-  const [searchParams, setSearchParams] = useSearchParams();
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
-  React.useEffect(() => {
-    (async () => {
-      const filter: any = {};
-      for (const entry of searchParams.entries()) {
-        if (entry[0] === "search") filter.search = entry[1];
-        else if (entry[0] === "status") filter.status = entry[1];
-      }
-      await actionBill.GetListBill(filter);
-
-      //   setCurrentCate(list.data.data[0].name);
-    })();
-  }, [searchParams]);
-
-  function padTo2Digits(num: any) {
-    return num.toString().padStart(2, "0");
-  }
-
-  function formatDate(date: any) {
-    return (
-      [
-        date.getFullYear(),
-        padTo2Digits(date.getMonth() + 1),
-        padTo2Digits(date.getDate()),
-      ].join("-") +
-      " " +
-      [
-        padTo2Digits(date.getHours()),
-        padTo2Digits(date.getMinutes()),
-        padTo2Digits(date.getSeconds()),
-      ].join(":")
-    );
-  }
-  const handleSearch = () => {
-    const value = document.getElementById("search-product") as HTMLInputElement;
-    if (value.value !== "") {
-      searchParams.set("search", value.value);
-    } else searchParams.delete("search");
-    setSearchParams(searchParams);
-  };
-  listBill?.data?.map((item: any, index: number) => {
-    const addr = [
-      item.address?.address,
-      item.address?.district,
-      item.address?.province,
-    ];
-    let formatPhone = "0";
-    item.name = item.account?.name;
-    item.email = item.account?.email;
-    item.createdAt = formatDate(new Date(item.createdAt));
-    item.updatedAt = formatDate(new Date(item.updatedAt));
-    if (item.phone !== undefined && item.phone[0] !== "0")
-      item.phoneformat = formatPhone.concat(item.phone.slice(3));
-    item.id = index + 1;
-    item.addressformat = addr.join(",");
-    item.discountformat = moneyFormater(item.discount);
-    item.shipformat = moneyFormater(item.ship);
-    item.totalformat = moneyFormater(item.total);
-  });
 
   return (
     <div className="home">
@@ -139,19 +76,7 @@ const BillManagement = () => {
             <div className="col-lg-6 col-6 text-left">
               <form action="">
                 <div className="input-group">
-                  <input
-                    id="search-product"
-                    type="text"
-                    className="form-control"
-                    placeholder="Tìm kiếm đơn hàng"
-                  />
-                  <div className="input-group-append">
-                    <span className="input-group-text bg-transparent text-primary">
-                      <a onClick={handleSearch}>
-                        <i className="fa fa-search"></i>
-                      </a>
-                    </span>
-                  </div>
+                  <div className="input-group-append"></div>
                 </div>
               </form>
             </div>
@@ -291,10 +216,18 @@ const BillManagement = () => {
           </div>
           <div className="flex-1">
             <div className="homeContainer">
-              <BillTable />;
+              <div className="widgets">
+                <Widget type="earning" />
+                <Widget type="balance" />
+              </div>
+            </div>
+
+            <div className="chart">
+              <Chart title="Doanh thu" aspect={2 / 1} />
             </div>
           </div>
         </div>
+        <div className="bottom"></div>
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
@@ -308,4 +241,5 @@ const BillManagement = () => {
     </div>
   );
 };
-export default BillManagement;
+
+export default Revenue;

@@ -6,11 +6,13 @@ import {
   getOTPAsync,
   signUpAsync,
   changePhoneAsync,
+  changePassAsync,
   updateInfoAsync,
 } from "./auth.action";
 import { selector } from "./auth.selector";
 
 export type State = {
+  change: boolean;
   isLoggedIn: boolean;
   data: {
     role: string;
@@ -26,6 +28,7 @@ export type State = {
 };
 
 const initialState: State = {
+  change: false,
   isLoggedIn: false,
   data: {
     msg: "",
@@ -48,6 +51,7 @@ const actions = {
   signUpAsync,
   changePhoneAsync,
   updateInfoAsync,
+  changePassAsync,
 };
 
 const Store = createStore({

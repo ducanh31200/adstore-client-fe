@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
+import ChangePass from "../../../Components/common/PersonalInfo/ChangePass/changepass";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import Chart from "../../../Components/pages/admin/chart/Chart";
 import Sidebar from "../../../Components/pages/admin/sidabar/Sidebar";
@@ -14,6 +15,9 @@ const Dashboard = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [showChangePassModal, setChangePassModal] = React.useState(false);
+  const openChangePassModal = () => setChangePassModal(true);
+  const closeChangePassModal = () => setChangePassModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
@@ -113,7 +117,13 @@ const Dashboard = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link
+                    to={location.pathname}
+                    className="menuProfile menuLinkHover !text-red-500 font-bold"
+                    onClick={openChangePassModal}
+                  >
+                    Đổi mật khẩu
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -225,6 +235,12 @@ const Dashboard = () => {
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showChangePassModal}
+        closeModal={closeChangePassModal}
+      >
+        <ChangePass closeModal={closeChangePassModal} />
       </ContainerModal>
     </div>
   );

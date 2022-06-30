@@ -175,7 +175,10 @@ const ModalUpdateColor = (props: Props) => {
             </div>
           </div>
           <div className="right">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              style={{ display: "grid", placeItems: "center" }}
+            >
               <div className="formInput">
                 <input
                   type="file"
@@ -186,23 +189,26 @@ const ModalUpdateColor = (props: Props) => {
                   onChange={handlePickImages}
                 />
               </div>
-              <label>
-                Màu: &nbsp;
-                <div className="select" style={{ width: "300px" }}>
-                  <select
-                    {...register("color")}
-                    id="selectColor"
-                    onChange={handleShowColors}
-                  >
-                    <option value="Chọn">Chọn</option>
-                    {product?.colors?.map((item: any, index: any) => (
-                      <option key={index} value={item.color}>
-                        {item.color}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </label>
+              <div>
+                <label>
+                  Màu: &nbsp;
+                  <div className="select" style={{ width: "300px" }}>
+                    <select
+                      {...register("color")}
+                      id="selectColor"
+                      onChange={handleShowColors}
+                    >
+                      <option value="Chọn">Chọn</option>
+                      {product?.colors?.map((item: any, index: any) => (
+                        <option key={index} value={item.color}>
+                          {item.color}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </label>
+              </div>
+
               <button
                 className="btn btn-primary btn-sign-up btn-sign-up"
                 style={{ height: "50px" }}

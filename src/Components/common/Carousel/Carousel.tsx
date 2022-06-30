@@ -26,10 +26,14 @@ export const Carousel = ({
             className={`carousel-item ${
               currentSlide === index ? "active" : ""
             }`}
-            style={{ height: "410px" }}
+            style={{ height: "500px", width: "100%" }}
             onClick={() => onClick(item.category, item._id)}
           >
-            <img className="img-fluid" src={item.image_url} alt="Image" />
+            <img
+              src={item.image_url}
+              alt="Image"
+              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            />
 
             <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
               <div className="p-3" style={{ maxWidth: "720px" }}></div>

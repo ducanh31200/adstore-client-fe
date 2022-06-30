@@ -94,7 +94,7 @@ const Widget = (props: Props) => {
       }, []);
       data = {
         count: moneyFormater(importCosts),
-        title: "BALANCE",
+        title: "Nhập hàng",
         isMoney: true,
         label: "Xem chi tiết",
         link: "/admin/revenue",

@@ -1,9 +1,12 @@
+import jwtDecode from "jwt-decode";
 import React, { useState } from "react";
+import GoogleLogin from "react-google-login";
 import { useForm } from "react-hook-form";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../../../../store/auth";
 import { notifyError, notifySuccess } from "../../../../utils/notify";
 import "./style.css";
+import { useScript } from "./usescript";
 
 interface Props {
   closeModal: () => void;
@@ -77,7 +80,46 @@ const ModalSignIn = (props: Props) => {
     const value = e.target.value;
     setloginType(value);
   };
+  const handleLoginWithGoogle = async (res: any) => {
+    // console.log("token", res.getAuthResponse().id_token);
 
+    console.log("info", res.credential);
+    let result = undefined;
+    result = await actionAuth.loginAsync({
+      googleToken: res.credential,
+    });
+
+    if (result) {
+      console.log("res", result);
+      actionAuth.getUserAsync();
+      if (result?.data?.role === "Admin") navigate("/admin");
+      else if (result?.data?.role === "Sale") navigate("/sale");
+      else navigate("/");
+      reset();
+      closeModal();
+    }
+  };
+
+  useScript("https://accounts.google.com/gsi/client", () => {
+    window.google.accounts.id.initialize({
+      client_id:
+        "927619983589-5rkcndfvutjt9c00i9vpg45lhqjpciq9.apps.googleusercontent.com",
+      callback: handleLoginWithGoogle,
+      auto_select: false,
+    });
+
+    window.google.accounts.id.renderButton(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      document.getElementById("login-social")!,
+      { theme: "outline", type: "standard", size: "large" }
+    );
+  });
+  // const responseSuccessGoogle = (res: any) => {
+  //   console.log("res", res);
+  // };
+  // const responseFailureGoogle = (res: any) => {
+  //   console.log("resF", res);
+  // };
   return (
     <div className="login">
       <div className="card login-card">
@@ -176,17 +218,7 @@ const ModalSignIn = (props: Props) => {
             <button type="submit" className="btn btn-primary btn-login">
               Login
             </button>
-            <div className="login-social">
-              <span>or login by:</span>
-              <div className="social-list">
-                <a href="#">
-                  <i className="fab fa-facebook"></i>
-                </a>
-                <a href="#">
-                  <i className="fab fa-google"></i>
-                </a>
-              </div>
-            </div>
+            <div id="login-social"></div>
             <a
               onClick={handleOpenSignUp}
               className="btn btn-primary btn-sign-up btn-sign-up"

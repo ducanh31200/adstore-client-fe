@@ -1,6 +1,6 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import React, { useState } from "react";
 
 import useBillManagement from "../../../store/billManagement";
@@ -68,6 +68,18 @@ export const userColumns = [
     },
   },
   {
+    field: "refund",
+    headerName: "Hoàn tiền",
+    width: 140,
+    renderCell: (params: any) => {
+      return (
+        <div className={`status ${params.row.refund}`}>
+          {params.row.paid ? "Đã hoàn tiền" : "Chưa hoàn tiền"}
+        </div>
+      );
+    },
+  },
+  {
     field: "verify",
     headerName: "Xác thực",
     width: 125,
@@ -85,14 +97,21 @@ const BillTable = () => {
   const [showUpdateBillModal, setUpdateBillModal] = React.useState(false);
   const openUpdateBillModal = () => setUpdateBillModal(true);
   const closeUpdateBillModal = () => setUpdateBillModal(false);
-  const [showApplyDiscountModal, setApplyDiscountModal] = React.useState(false);
-  const openApplyDiscountModal = () => setApplyDiscountModal(true);
-  const closeApplyDiscountModal = () => setApplyDiscountModal(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showBillDetailModal, setBillDetailModal] = React.useState(false);
   const openBillDetailModal = () => setBillDetailModal(true);
   const closeBillDetailModal = () => setBillDetailModal(false);
   const [IDBill, setIDBill] = React.useState("");
-
+  const handleShowStatus = (e: any) => {
+    if (e.target.index !== 0) {
+      const value = e.target.value;
+      if (value !== "") {
+        searchParams.set("status", value);
+      } else searchParams.delete("status");
+      setSearchParams(searchParams);
+    }
+  };
   const handleReadBill = (_id: any) => {
     setIDBill(_id);
     openBillDetailModal();
@@ -138,14 +157,39 @@ const BillTable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Danh sách đơn hàng
-        <Link
-          to={location.pathname}
-          className="link"
-          style={{ marginLeft: "auto" }}
-          onClick={openApplyDiscountModal}
+        <div
+          style={{
+            display: "flex",
+            marginLeft: "auto",
+            fontSize: "20px",
+            alignItems: "center",
+          }}
         >
-          Áp dụng khuyến mãi
-        </Link>
+          Trạng thái :
+          <label>
+            {" "}
+            <div>
+              <select onChange={handleShowStatus}>
+                <option key="0" value="">
+                  Tất cả
+                </option>
+
+                <option key="1" value="Preparing">
+                  Preparing
+                </option>
+                <option key="2" value="Delivering">
+                  Delivering
+                </option>
+                <option key="3" value="Done">
+                  Done
+                </option>
+                <option key="4" value="Cancel">
+                  Cancelled
+                </option>
+              </select>
+            </div>
+          </label>
+        </div>
       </div>
       <DataGrid
         rows={listBill.data}

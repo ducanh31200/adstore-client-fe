@@ -177,12 +177,14 @@ const Cart = (props: Props) => {
         cod: statePayment,
       });
       if (url) {
-        localStorage.removeItem("cart");
+        if (!stateAuth.isLoggedIn) localStorage.removeItem("cart");
         if (!statePayment) window.location.href = url.data;
         else navigate("/success");
         notifySuccess("Tạo đơn hàng thành công !");
         setStateChange(stateChange + 1);
-      } else notifyError("Có lỗi xảy ra, vui lòng thử lại !");
+      } else {
+        notifyError("Có lỗi xảy ra, vui lòng thử lại !");
+      }
     }
   };
   const handleQuantity = (_id: string, color: any, change: number) => {
@@ -235,21 +237,7 @@ const Cart = (props: Props) => {
     <div>
       <div className="container-fluid">
         <div className="row bg-secondary py-2 px-xl-5">
-          <div className="col-lg-6 d-none d-lg-block">
-            <div className="d-inline-flex align-items-center">
-              <a className="text-dark" href="">
-                FAQs
-              </a>
-              <span className="text-muted px-2">|</span>
-              <a className="text-dark" href="">
-                Help
-              </a>
-              <span className="text-muted px-2">|</span>
-              <a className="text-dark" href="">
-                Support
-              </a>
-            </div>
-          </div>
+          <div className="col-lg-6 d-none d-lg-block"></div>
           <div className="col-lg-6 text-center text-lg-right">
             <div className="d-inline-flex align-items-center">
               <a className="text-dark px-2" href="">

@@ -1,5 +1,6 @@
 import { Box, Slider } from "@mui/material";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   createSearchParams,
   Link,
@@ -8,6 +9,7 @@ import {
 } from "react-router-dom";
 import categoryApi from "../../../api/category/category";
 import productApi from "../../../api/product/productApi";
+import socialApi from "../../../api/social/socialApi";
 import Nav from "../../../Components/common/Nav/nav";
 import Pagination from "../../../Components/common/Pagination/Pagination";
 import PriceFilter from "../../../Components/common/Product/PriceFilter";
@@ -18,6 +20,7 @@ import { FilterColor } from "../../../Components/pages/client/product/FilterColo
 import payment from "../../../img/payments.png";
 import useAuth from "../../../store/auth";
 import useLocalCart from "../../../store/localCart";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 
 const Product = () => {
   const params = useParams<any>();
@@ -28,6 +31,7 @@ const Product = () => {
   const [cat, setCat] = useState<any>();
   const [totalProduct, setTotalProduct] = useState<any>(1);
   const [currentPage, setCurrentPage] = useState<any>(0);
+  const { reset, handleSubmit, register } = useForm();
   const limit = 7;
   const [stateAuth] = useAuth();
   const [click, setClick] = useState(0);
@@ -138,6 +142,14 @@ const Product = () => {
     setClick(click + 1);
     const btn = document.getElementById("triggerId");
     btn ? (btn.textContent = text) : {};
+  };
+  const subcribe = async (data: any, e: any) => {
+    e.preventDefault();
+    const res = await socialApi.add({ email: data.email });
+    if (res) {
+      notifySuccess("Đăng ký thành công !");
+      reset();
+    } else notifyError("Xảy ra lỗi vui lòng thử lại !");
   };
   const handleSearch = () => {
     const value = document.getElementById("search-product") as HTMLInputElement;
@@ -361,14 +373,14 @@ const Product = () => {
       <div className="container-fluid bg-secondary text-dark mt-5 pt-5">
         <div className="row px-xl-5 pt-5">
           <div className="col-lg-4 col-md-12 mb-5 pr-3 pr-xl-5">
-            <a href="" className="text-decoration-none">
+            <Link to="/" className="text-decoration-none">
               <h1 className="mb-4 display-5 font-weight-semi-bold">
                 <span className="text-primary font-weight-bold border border-white px-3 mr-1">
                   AD
                 </span>
                 Store
               </h1>
-            </a>
+            </Link>
             <p></p>
             <p className="mb-2">
               <i className="fa fa-map-marker-alt text-primary mr-3"></i>TP.HCM
@@ -376,7 +388,7 @@ const Product = () => {
             </p>
             <p className="mb-2">
               <i className="fa fa-envelope text-primary mr-3"></i>
-              info@example.com
+              adstore@gmail.com
             </p>
             <p className="mb-0">
               <i className="fa fa-phone-alt text-primary mr-3"></i>+012 345
@@ -384,21 +396,16 @@ const Product = () => {
             </p>
           </div>
           <div className="col-lg-8 col-md-12">
-            <div className="row">
+            <div className="row" style={{ justifyContent: "center" }}>
               <div className="col-md-4 mb-5">
-                <h5 className="font-weight-bold text-dark mb-4">Đăng ký</h5>
-                <form action="">
-                  <div className="form-group">
-                    <input
-                      type="text"
-                      className="form-control border-0 py-4"
-                      placeholder="Your Name"
-                      required
-                    />
-                  </div>
+                <h5 className="font-weight-bold text-dark mb-4">
+                  Đăng ký để nhận thông báo
+                </h5>
+                <form onSubmit={handleSubmit(subcribe)}>
                   <div className="form-group">
                     <input
                       type="email"
+                      {...register("email")}
                       className="form-control border-0 py-4"
                       placeholder="Your Email"
                       required
@@ -417,12 +424,7 @@ const Product = () => {
             </div>
           </div>
         </div>
-        <div className="row border-top border-light mx-xl-5 py-4">
-          <div className="col-md-6 px-xl-0"></div>
-          <div className="col-md-6 px-xl-0 text-center text-md-right">
-            <img className="img-fluid" src={payment} alt="" />
-          </div>
-        </div>
+        <div className="row border-top border-light mx-xl-5 py-4"></div>
       </div>
 
       <a href="#" className="btn btn-primary back-to-top">

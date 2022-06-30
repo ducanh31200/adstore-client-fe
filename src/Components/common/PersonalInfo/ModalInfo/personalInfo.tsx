@@ -16,7 +16,6 @@ const ModalInfo = (props: Props) => {
   const [phoneOTP, setPhoneOTP] = useState(false);
   const [emailOTP, setEmailOTP] = useState(false);
   let formatPhone = "0";
-
   const submit = async (data: any, e: any) => {
     e.preventDefault();
     if (data.name === "") data.name = authState.data.data.name;
@@ -368,11 +367,7 @@ const ModalInfo = (props: Props) => {
                 required
               />
             </div>
-            <div className="link-forgot">
-              <a href="#" style={{ color: "#47c0d0 " }}>
-                Change password
-              </a>
-            </div>
+
             <button
               type="submit"
               className="btn btn-primary btn-login"

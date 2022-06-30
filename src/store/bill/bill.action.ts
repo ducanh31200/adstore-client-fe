@@ -17,15 +17,37 @@ export const Calc =
     }
     return false;
   };
-export const Create = (data: any) => async () => {
-  console.log("data-up", data);
-  const result = await BillApi.create(data);
-  if (result.status === 200) {
-    console.log("res", result.data.data);
-    return result.data;
-  }
-  return false;
-};
+export const Create =
+  (data: any) =>
+  async ({ setState, getState }: Actions) => {
+    const result = await BillApi.create(data);
+    if (result.status === 200) {
+      setState({
+        ...getState(),
+        data: {
+          bag_details: [
+            {
+              code: "",
+              name: "",
+              color: "",
+              image_url: "",
+              category: "",
+              price: 0,
+              quantity: 0,
+              colorIndex: 0,
+              sale: 0,
+              product: "",
+            },
+          ],
+          discount: 0,
+          ship: 0,
+          total: 0,
+        },
+      });
+      return result.data;
+    }
+    return false;
+  };
 // export const UpdateCart =
 //   (data: any) =>
 //   async ({ setState, getState }: Actions) => {

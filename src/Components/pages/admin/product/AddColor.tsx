@@ -146,7 +146,10 @@ const ModalAddColor = (props: Props) => {
             </div>
           </div>
           <div className="right">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              style={{ display: "grid", placeItems: "center" }}
+            >
               <div className="formInput">
                 <input
                   type="file"

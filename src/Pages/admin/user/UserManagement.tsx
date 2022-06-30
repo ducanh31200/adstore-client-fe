@@ -1,7 +1,7 @@
 // import "./list.scss"
 
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import Chart from "../../../Components/pages/admin/chart/Chart";
@@ -16,17 +16,27 @@ const UserManagement = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
   React.useEffect(() => {
     (async () => {
-      await actionUser.GetListUser({});
-
-      //   setCurrentCate(list.data.data[0].name);
+      const filter: any = {};
+      for (const entry of searchParams.entries()) {
+        if (entry[0] === "search") filter.search = entry[1];
+      }
+      await actionUser.GetListUser(filter);
     })();
-  }, []);
-
+  }, [stateAuth, searchParams]);
+  const handleSearch = () => {
+    const value = document.getElementById("search-product") as HTMLInputElement;
+    if (value.value !== "") {
+      searchParams.set("search", value.value);
+    } else searchParams.delete("search");
+    setSearchParams(searchParams);
+  };
   listUser.data.map((item: any, index: number) => {
     const addr = [
       item.address?.address,
@@ -80,7 +90,7 @@ const UserManagement = () => {
           </div>
           <div className="row align-items-center px-xl-5">
             <div className="col-lg-3 d-none d-lg-block">
-              <Link to="/" className="text-decoration-none">
+              <Link to="/admin" className="text-decoration-none">
                 <h1 className="m-0 display-5 font-weight-semi-bold">
                   <span className="text-primary font-weight-bold border px-3 mr-1">
                     AD
@@ -92,7 +102,19 @@ const UserManagement = () => {
             <div className="col-lg-6 col-6 text-left">
               <form action="">
                 <div className="input-group">
-                  <div className="input-group-append"></div>
+                  <input
+                    id="search-product"
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm người dùng"
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text bg-transparent text-primary">
+                      <a onClick={handleSearch}>
+                        <i className="fa fa-search"></i>
+                      </a>
+                    </span>
+                  </div>
                 </div>
               </form>
             </div>

@@ -13,7 +13,6 @@ import { IResGetOTP, IResLogin } from "./auth.interface.res";
 const authApi = {
   login(data: IReqSignIn): Promise<ReturnReponse<any>> {
     const url = "account/login"; //params
-
     return axiosClient.post(url, data);
   },
   getUser(): Promise<ReturnReponse<any>> {
@@ -34,6 +33,10 @@ const authApi = {
   },
   updatePhone(data: IReqChangePhone): Promise<ReturnReponse<any>> {
     const url = "account/updatePhone";
+    return axiosClient.post(url, data);
+  },
+  updatePassword(data: IReqChangePhone): Promise<ReturnReponse<any>> {
+    const url = "account/updatePassword";
     return axiosClient.post(url, data);
   },
   updateInfo(data: IReqUpdateInfo): Promise<ReturnReponse<any>> {

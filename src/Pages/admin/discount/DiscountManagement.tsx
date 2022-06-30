@@ -9,6 +9,7 @@ import DiscountTable from "./DiscountTable";
 import discountApi from "../../../api/discount/discountApi";
 import useDiscount from "../../../store/discount";
 import { moneyFormater } from "../../../utils/moneyFormater";
+import ChangePass from "../../../Components/common/PersonalInfo/ChangePass/changepass";
 
 const DiscountManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
@@ -16,6 +17,9 @@ const DiscountManagement = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [showChangePassModal, setChangePassModal] = React.useState(false);
+  const openChangePassModal = () => setChangePassModal(true);
+  const closeChangePassModal = () => setChangePassModal(false);
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
@@ -130,7 +134,13 @@ const DiscountManagement = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link
+                    to={location.pathname}
+                    className="menuProfile menuLinkHover !text-red-500 font-bold"
+                    onClick={openChangePassModal}
+                  >
+                    Đổi mật khẩu
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -233,6 +243,12 @@ const DiscountManagement = () => {
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showChangePassModal}
+        closeModal={closeChangePassModal}
+      >
+        <ChangePass closeModal={closeChangePassModal} />
       </ContainerModal>
     </div>
   );

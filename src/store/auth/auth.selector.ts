@@ -4,5 +4,6 @@ export const selector = (state: State) => {
   return {
     isLoggedIn: state.isLoggedIn,
     data: state.data,
+    change: state.change,
   };
 };

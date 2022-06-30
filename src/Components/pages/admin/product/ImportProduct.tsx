@@ -5,6 +5,7 @@ import "./style.scss";
 import useDiscount from "../../../../store/discount";
 import useProduct from "../../../../store/product";
 import { lineHeight } from "@mui/system";
+import productApi from "../../../../api/product/productApi";
 interface Props {
   closeModal: () => void;
   code: string;
@@ -12,9 +13,9 @@ interface Props {
 
 const ModalImportProduct = (props: Props) => {
   const { closeModal, code } = props;
-  const { handleSubmit, reset, register } = useForm();
-  const [, actionProduct] = useProduct();
-
+  const { handleSubmit, reset, register, setValue } = useForm();
+  const [listproduct, actionProduct] = useProduct();
+  const [product, setProduct] = React.useState<any>({});
   const onApply = async (data: any, e: any) => {
     e.preventDefault();
     const payload = [];
@@ -32,6 +33,16 @@ const ModalImportProduct = (props: Props) => {
       notifySuccess("Nhập hàng thành công !");
     } else notifyError("Xảy ra lỗi vui lòng thử lại !");
   };
+  React.useEffect(() => {
+    (async () => {
+      if (code) {
+        const res = await productApi.read({ code });
+        console.log("res", res.data.data);
+        setProduct(res.data.data);
+        setValue("color", "Chọn");
+      }
+    })();
+  }, [code, listproduct]);
 
   return (
     <div className="new">
@@ -47,11 +58,16 @@ const ModalImportProduct = (props: Props) => {
                   <label style={{ lineHeight: "1px" }}>
                     {" "}
                     Màu &nbsp;
-                    <input
-                      {...register("color")}
-                      type="text"
-                      placeholder="Màu"
-                    />
+                    <div className="select" style={{ width: "300px" }}>
+                      <select {...register("color")} id="selectColor">
+                        <option value="Chọn">Chọn</option>
+                        {product?.colors?.map((item: any, index: any) => (
+                          <option key={index} value={item.color}>
+                            {item.color}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </label>
                   <label style={{ textAlign: "center", width: "200px" }}>
                     {" "}

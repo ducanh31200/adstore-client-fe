@@ -32,6 +32,7 @@ import SaleDashboard from "../Pages/sale/dashboard/Dashboard";
 import Follower from "../Pages/sale/follower/Follower";
 import Success from "../Pages/client/notifyCreateBill/success";
 import Failure from "../Pages/client/notifyCreateBill/failure";
+import Revenue from "../Pages/admin/revenue/Revenue";
 
 interface IRoute {
   exact: Boolean;
@@ -135,6 +136,13 @@ const routesPrivate: Array<IPrivateRoute> = [
   {
     child: <Dashboard />,
     path: defaultRoute.dashboard,
+    exact: true,
+    option: true,
+    roleRoute: [DFRole.Admin],
+  },
+  {
+    child: <Revenue />,
+    path: defaultRoute.revenue,
     exact: true,
     option: true,
     roleRoute: [DFRole.Admin],

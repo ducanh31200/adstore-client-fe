@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import useAuth from "../../../store/auth";
@@ -8,6 +8,7 @@ import CatTable from "./CatTable";
 import "./cat.scss";
 import categoryApi from "../../../api/category/category";
 import useCate from "../../../store/category";
+import ChangePass from "../../../Components/common/PersonalInfo/ChangePass/changepass";
 
 const CategoryManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
@@ -15,6 +16,10 @@ const CategoryManagement = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [showChangePassModal, setChangePassModal] = React.useState(false);
+  const openChangePassModal = () => setChangePassModal(true);
+  const closeChangePassModal = () => setChangePassModal(false);
+
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
@@ -123,7 +128,13 @@ const CategoryManagement = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link
+                    to={location.pathname}
+                    className="menuProfile menuLinkHover !text-red-500 font-bold"
+                    onClick={openChangePassModal}
+                  >
+                    Đổi mật khẩu
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -226,6 +237,12 @@ const CategoryManagement = () => {
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showChangePassModal}
+        closeModal={closeChangePassModal}
+      >
+        <ChangePass closeModal={closeChangePassModal} />
       </ContainerModal>
     </div>
   );

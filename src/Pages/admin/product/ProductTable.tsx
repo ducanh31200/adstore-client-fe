@@ -1,7 +1,9 @@
 import { Button } from "@mui/material";
 import { DataGrid, selectedIdsLookupSelector } from "@mui/x-data-grid";
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import categoryApi from "../../../api/category/category";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalAddCarousel from "../../../Components/pages/admin/product/AddCarousel";
 import ModalAddColor from "../../../Components/pages/admin/product/AddColor";
@@ -75,6 +77,7 @@ const ProductTable = () => {
   const [id_product, setId_product] = React.useState("");
   const [selected, setSelected] = React.useState<any>([]);
   const [code, setCode] = React.useState("");
+  const [listCategory, setListCategory] = useState<Array<any>>([]);
   const [showAddCarouselModal, setAddCarouselModal] = React.useState(false);
   const openAddCarouselModal = () => setAddCarouselModal(true);
   const closeAddCarouselModal = () => setAddCarouselModal(false);
@@ -91,6 +94,23 @@ const ProductTable = () => {
   const openImportProductModal = () => setImportProductModal(true);
   const closeImportProductModal = () => setImportProductModal(false);
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  React.useEffect(() => {
+    (async () => {
+      const list = await categoryApi.list();
+
+      setListCategory(list.data.data);
+    })();
+  }, []);
+  const handleShowSpecs = (e: any) => {
+    if (e.target.index !== 0) {
+      const value = e.target.value;
+      if (value !== "") {
+        searchParams.set("category", value);
+      } else searchParams.delete("category");
+      setSearchParams(searchParams);
+    }
+  };
   const handleChangeStatus = (id: string, enable: boolean) => {
     actionProduct.ChangeStatusProduct(id, enable);
   };
@@ -165,10 +185,41 @@ const ProductTable = () => {
     <div className="datatable">
       <div className="datatableTitle">
         Danh sách sản phẩm
+        <div
+          style={{
+            display: "flex",
+            marginLeft: "auto",
+            fontSize: "20px",
+            alignItems: "center",
+          }}
+        >
+          Loại hàng :
+          <label>
+            {" "}
+            <div>
+              <select
+                onChange={handleShowSpecs}
+                style={{ fontSize: "20px", marginTop: "8px" }}
+              >
+                <option style={{ fontSize: "20px" }} value="">
+                  Tất cả
+                </option>
+                {listCategory.map((item: any, index: any) => (
+                  <option
+                    key={index}
+                    value={item.name}
+                    style={{ fontSize: "20px" }}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </label>
+        </div>
         <Link
           to={location.pathname}
           className="link"
-          style={{ marginLeft: "auto" }}
           onClick={openApplyDiscountModal}
         >
           Áp dụng khuyến mãi

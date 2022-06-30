@@ -12,9 +12,9 @@ import { notifyError, notifySuccess } from "../../utils/notify";
 type Actions = { setState: any; getState: () => State; dispatch: any };
 
 export const GetListProduct =
-  () =>
+  (data: any) =>
   async ({ setState, getState }: Actions) => {
-    const result = await productApi.list({});
+    const result = await productApi.list(data);
     if (result.status === 200) {
       setState({ ...getState(), data: result.data.data });
 

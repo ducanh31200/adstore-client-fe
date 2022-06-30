@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import Widget from "../../../Components/pages/admin/widget/Widget";
@@ -16,16 +16,21 @@ const SaleDashboard = () => {
   const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
   React.useEffect(() => {
     (async () => {
-      await actionBill.GetListBill({});
-
-      //   setCurrentCate(list.data.data[0].name);
+      const filter: any = {};
+      for (const entry of searchParams.entries()) {
+        if (entry[0] === "search") filter.search = entry[1];
+        else if (entry[0] === "status") filter.status = entry[1];
+      }
+      await actionBill.GetListBill(filter);
     })();
-  }, []);
+  }, [searchParams]);
 
   function padTo2Digits(num: any) {
     return num.toString().padStart(2, "0");
@@ -66,6 +71,13 @@ const SaleDashboard = () => {
     item.shipformat = moneyFormater(item.ship);
     item.totalformat = moneyFormater(item.total);
   });
+  const handleSearch = () => {
+    const value = document.getElementById("search-product") as HTMLInputElement;
+    if (value.value !== "") {
+      searchParams.set("search", value.value);
+    } else searchParams.delete("search");
+    setSearchParams(searchParams);
+  };
   return (
     <div className="home">
       <div className="sidebar">
@@ -122,13 +134,16 @@ const SaleDashboard = () => {
               <form action="">
                 <div className="input-group">
                   <input
+                    id="search-product"
                     type="text"
                     className="form-control"
-                    placeholder="Search for products"
+                    placeholder="Tìm kiếm đơn hàng"
                   />
                   <div className="input-group-append">
                     <span className="input-group-text bg-transparent text-primary">
-                      <i className="fa fa-search"></i>
+                      <a onClick={handleSearch}>
+                        <i className="fa fa-search"></i>
+                      </a>
                     </span>
                   </div>
                 </div>

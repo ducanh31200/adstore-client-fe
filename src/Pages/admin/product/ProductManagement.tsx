@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ContainerModal } from "../../../Components/common/ContainerModal";
 import ModalInfo from "../../../Components/common/PersonalInfo/ModalInfo/personalInfo";
 import useAuth from "../../../store/auth";
@@ -8,21 +8,31 @@ import "./product.scss";
 import ProductTable from "./ProductTable";
 import { moneyFormater } from "../../../utils/moneyFormater";
 import useProduct from "../../../store/product";
+import ChangePass from "../../../Components/common/PersonalInfo/ChangePass/changepass";
 
 const ProductManagement = () => {
   const [stateAuth, actionAuth] = useAuth();
-  const [showInfoModal, setInfoModal] = React.useState(false);
   const [listProduct, actionProduct] = useProduct();
+  const [showInfoModal, setInfoModal] = React.useState(false);
   const openInfoModal = () => setInfoModal(true);
   const closeInfoModal = () => setInfoModal(false);
+  const [showChangePassModal, setChangePassModal] = React.useState(false);
+  const openChangePassModal = () => setChangePassModal(true);
+  const closeChangePassModal = () => setChangePassModal(false);
+  const [searchParams, setSearchParams] = useSearchParams();
   const handleLogout = () => {
     actionAuth.logoutAsync();
   };
   React.useEffect(() => {
     (async () => {
-      await actionProduct.GetListProduct();
+      const filter: any = {};
+      for (const entry of searchParams.entries()) {
+        if (entry[0] === "search") filter.search = entry[1];
+        else if (entry[0] === "category") filter.category = entry[1];
+      }
+      await actionProduct.GetListProduct(filter);
     })();
-  }, []);
+  }, [searchParams]);
   listProduct.data.map((item: any, index: number) => {
     item.id = index + 1;
     item.priceformat = moneyFormater(item.price);
@@ -36,7 +46,13 @@ const ProductManagement = () => {
     item.color = colors.join(",");
     item.quantity = quantity;
   });
-
+  const handleSearch = () => {
+    const value = document.getElementById("search-product") as HTMLInputElement;
+    if (value.value !== "") {
+      searchParams.set("search", value.value);
+    } else searchParams.delete("search");
+    setSearchParams(searchParams);
+  };
   return (
     <div className="home">
       <div className="sidebar">
@@ -92,7 +108,19 @@ const ProductManagement = () => {
             <div className="col-lg-6 col-6 text-left">
               <form action="">
                 <div className="input-group">
-                  <div className="input-group-append"></div>
+                  <input
+                    id="search-product"
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm sản phẩm"
+                  />
+                  <div className="input-group-append">
+                    <span className="input-group-text bg-transparent text-primary">
+                      <a onClick={handleSearch}>
+                        <i className="fa fa-search"></i>
+                      </a>
+                    </span>
+                  </div>
                 </div>
               </form>
             </div>
@@ -132,7 +160,13 @@ const ProductManagement = () => {
                   >
                     Thông tin cá nhân
                   </a>
-                  <a className="menuProfile menuLinkHover">Tin nhắn</a>
+                  <Link
+                    to={location.pathname}
+                    className="menuProfile menuLinkHover !text-red-500 font-bold"
+                    onClick={openChangePassModal}
+                  >
+                    Đổi mật khẩu
+                  </Link>
                   <div className="lineMenu"></div>
                   <a
                     href="/"
@@ -232,6 +266,12 @@ const ProductManagement = () => {
       </div>
       <ContainerModal isVisible={showInfoModal} closeModal={closeInfoModal}>
         <ModalInfo closeModal={closeInfoModal} />
+      </ContainerModal>
+      <ContainerModal
+        isVisible={showChangePassModal}
+        closeModal={closeChangePassModal}
+      >
+        <ChangePass closeModal={closeChangePassModal} />
       </ContainerModal>
     </div>
   );
