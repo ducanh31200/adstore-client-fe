@@ -56,21 +56,7 @@ const Notifications = () => {
     <div>
       <div className="container-fluid">
         <div className="row bg-secondary py-2 px-xl-5">
-          <div className="col-lg-6 d-none d-lg-block">
-            <div className="d-inline-flex align-items-center">
-              <a className="text-dark" href="">
-                FAQs
-              </a>
-              <span className="text-muted px-2">|</span>
-              <a className="text-dark" href="">
-                Help
-              </a>
-              <span className="text-muted px-2">|</span>
-              <a className="text-dark" href="">
-                Support
-              </a>
-            </div>
-          </div>
+          <div className="col-lg-6 d-none d-lg-block"></div>
           <div className="col-lg-6 text-center text-lg-right">
             <div className="d-inline-flex align-items-center">
               <a className="text-dark px-2" href="">
@@ -157,7 +143,7 @@ const Notifications = () => {
               <Link to="/ ">Home</Link>
             </p>
             <p className="m-0 px-2">-</p>
-            <p className="m-0">Shop</p>
+            <p className="m-0"> Thông báo</p>
           </div>
         </div>
       </div>

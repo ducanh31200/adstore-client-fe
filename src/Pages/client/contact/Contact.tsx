@@ -128,15 +128,13 @@ const Contact = () => {
           className="d-flex flex-column align-items-center justify-content-center"
           style={{ minHeight: "300px" }}
         >
-          <h1 className="font-weight-semi-bold text-uppercase mb-3">
-            Contact Us
-          </h1>
+          <h1 className="font-weight-semi-bold text-uppercase mb-3">Hỗ trợ</h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <Link to="/">Home</Link>
+              <Link to="/">Trang chủ</Link>
             </p>
             <p className="m-0 px-2">-</p>
-            <p className="m-0">Contact</p>
+            <p className="m-0">Hỗ trợ</p>
           </div>
         </div>
       </div>

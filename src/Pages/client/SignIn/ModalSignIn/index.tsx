@@ -218,14 +218,15 @@ const ModalSignIn = (props: Props) => {
             <button type="submit" className="btn btn-primary btn-login">
               Login
             </button>
-            <div id="login-social"></div>
             <a
+              style={{ marginBottom: "10px", marginTop: "10px" }}
               onClick={handleOpenSignUp}
               className="btn btn-primary btn-sign-up btn-sign-up"
             >
               Sign up
               <i className="fa-solid fa-angle-right angle-right"></i>
             </a>
+            <div id="login-social"></div>
           </form>
         </div>
       </div>

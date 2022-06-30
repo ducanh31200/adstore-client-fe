@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import product1 from "../../../img/iphone13.jpg";
-import product2 from "../../../img/samsungs22.jpg";
-import product3 from "../../../img/laptopasus.jpg";
-import product4 from "../../../img/macbook.jpg";
 import payment from "../../../img/payments.png";
-import user from "../../../img/user.jpg";
 import StarRatingComponent from "react-star-rating-component";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import Nav from "../../../Components/common/Nav/nav";
 import productApi from "../../../api/product/productApi";
 import { IProduct } from "../../../model/product.model";
@@ -16,6 +11,11 @@ import { notifyError, notifySuccess } from "../../../utils/notify";
 import useAuth from "../../../store/auth";
 import { ProductCard } from "../../../Components/common/Product/ProductCard";
 import useLocalCart from "../../../store/localCart";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  FacebookMessengerShareButton,
+} from "react-share";
 type Props = {};
 const ProductDetail = (props: Props) => {
   const params = useParams<any>();
@@ -43,6 +43,7 @@ const ProductDetail = (props: Props) => {
     sale: 0,
     total_rate: 0,
   };
+  const location = useLocation();
   const [localCart, actionLocalCart] = useLocalCart();
   const [listHint, setListHint] = useState<Array<any>>([]);
   const [product, setProduct] = useState(initProduct);
@@ -230,7 +231,7 @@ const ProductDetail = (props: Props) => {
             </form>
           </div>
           <div className="col-lg-3 col-6 text-right">
-            <a href="" className="btn border">
+            <Link to="/notification" className="btn border">
               <i className="fas fa-heart text-primary"></i>
               <span className="badge">
                 {!stateAuth.isLoggedIn
@@ -239,7 +240,7 @@ const ProductDetail = (props: Props) => {
                   ? stateAuth.data?.data?.notifications_length
                   : 0}
               </span>
-            </a>
+            </Link>
             <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
               <span className="badge">
@@ -258,14 +259,14 @@ const ProductDetail = (props: Props) => {
           style={{ minHeight: "300px" }}
         >
           <h1 className="font-weight-semi-bold text-uppercase mb-3">
-            Product Detail
+            Chi tiết sản phẩm
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <Link to="/">Home</Link>
+              <Link to="/">Trang chủ</Link>
             </p>
             <p className="m-0 px-2">-</p>
-            <p className="m-0">Product Detail</p>
+            <p className="m-0">Chi tiết sản phẩm</p>
           </div>
         </div>
       </div>
@@ -339,7 +340,7 @@ const ProductDetail = (props: Props) => {
             <p className="mb-4"></p>
 
             <div className="d-flex mb-4">
-              <p className="text-dark font-weight-medium mb-0 mr-3">Colors:</p>
+              <p className="text-dark font-weight-medium mb-0 mr-3">Màu:</p>
               <form>
                 {product.colors.map((item, index) => (
                   <div key={index}>
@@ -361,7 +362,7 @@ const ProductDetail = (props: Props) => {
                           item.color.slice(1).toLowerCase()}
                       </label>
                     </div>
-                    <p>{product.colors[index].quantity} Products</p>
+                    <p>{product.colors[index].quantity} Sản phẩm</p>
                   </div>
                 ))}
               </form>
@@ -387,8 +388,22 @@ const ProductDetail = (props: Props) => {
                 className="btn btn-primary px-3"
                 onClick={() => handleAddtoCart()}
               >
-                <i className="fa fa-shopping-cart mr-1"></i> Add To Cart
+                <i className="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ
               </button>
+            </div>
+            <div className="d-flex pt-2" style={{ alignItems: "center" }}>
+              <p className="text-dark font-weight-medium mb-0 mr-2">
+                Share on:
+              </p>
+              <div className="d-inline-flex">
+                <FacebookShareButton
+                  url={`https://ad-store-10b73.web.app/${location.pathname}`}
+                  quote={"Sản phẩm của AD Store"}
+                  hashtag="#ADStore"
+                >
+                  <FacebookIcon round={true} size={35}></FacebookIcon>
+                </FacebookShareButton>
+              </div>
             </div>
           </div>
         </div>
@@ -400,31 +415,31 @@ const ProductDetail = (props: Props) => {
                 data-toggle="tab"
                 href="#tab-pane-1"
               >
-                Description
+                Mô tả
               </a>
               <a
                 className="nav-item nav-link"
                 data-toggle="tab"
                 href="#tab-pane-2"
               >
-                Information
+                Thông số
               </a>
               <a
                 className="nav-item nav-link"
                 data-toggle="tab"
                 href="#tab-pane-3"
               >
-                Reviews (0)
+                Đánh giá
               </a>
             </div>
             <div className="tab-content">
               <div className="tab-pane fade show active" id="tab-pane-1">
-                <h4 className="mb-3">Product Description</h4>
+                <h4 className="mb-3">Mô tả</h4>
                 <p>{product.desc}</p>
                 <p></p>
               </div>
               <div className="tab-pane fade" id="tab-pane-2">
-                <h4 className="mb-3">Additional Information</h4>
+                <h4 className="mb-3">Thông số kĩ thuạt</h4>
                 <p></p>
 
                 <table
@@ -478,7 +493,7 @@ const ProductDetail = (props: Props) => {
       <div className="container-fluid py-5">
         <div className="text-center mb-4">
           <h2 className="section-title px-5">
-            <span className="px-2">You May Also Like</span>
+            <span className="px-2">Có thể bạn sẽ thích</span>
           </h2>
         </div>
 
@@ -520,18 +535,8 @@ const ProductDetail = (props: Props) => {
             <div className="col-lg-8 col-md-12">
               <div className="row">
                 <div className="col-md-4 mb-5">
-                  <h5 className="font-weight-bold text-dark mb-4">
-                    Newsletter
-                  </h5>
+                  <h5 className="font-weight-bold text-dark mb-4">Đăng ký</h5>
                   <form action="">
-                    <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-control border-0 py-4"
-                        placeholder="Your Name"
-                        required
-                      />
-                    </div>
                     <div className="form-group">
                       <input
                         type="email"
@@ -545,18 +550,12 @@ const ProductDetail = (props: Props) => {
                         className="btn btn-primary btn-block border-0 py-3"
                         type="submit"
                       >
-                        Subscribe Now
+                        Đăng ký
                       </button>
                     </div>
                   </form>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="row border-top border-light mx-xl-5 py-4">
-            <div className="col-md-6 px-xl-0"></div>
-            <div className="col-md-6 px-xl-0 text-center text-md-right">
-              <img className="img-fluid" src={payment} alt="" />
             </div>
           </div>
         </div>

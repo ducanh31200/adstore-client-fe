@@ -94,7 +94,7 @@ export const ProductCard = ({
     <div className="col-lg-3 col-md-6 col-sm-12 pb-1">
       <div className="card product-item border-0 mb-4">
         <div className="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-          <p className="text-right">{product?.colors[0]?.quantity} Products</p>
+          <p className="text-right">{product?.colors[0]?.quantity} Sản phẩm</p>
           <Link to={`/products/${product.category}/${product._id}`}>
             <img
               className="img-fluid h-full w-full object-contain"
@@ -121,7 +121,7 @@ export const ProductCard = ({
               <del>{moneyFormater(product?.price)}</del>
             </h6>
           ) : (
-            ""
+            <div style={{ paddingBottom: "27px" }}></div>
           )}
         </div>
         <div className="card-footer d-flex justify-content-between bg-light border">
@@ -133,7 +133,7 @@ export const ProductCard = ({
             }
             className="btn btn-sm text-dark p-0"
           >
-            <i className="fas fa-eye text-primary mr-1"></i>View Detail
+            <i className="fas fa-eye text-primary mr-1"></i>Xem
           </Link>
           <a
             className="btn btn-sm text-dark p-0"
@@ -142,7 +142,7 @@ export const ProductCard = ({
             }
           >
             <i className="fas fa-shopping-cart text-primary mr-1"></i>
-            {product.colors.length !== 0 ? "Add to cart" : "Coming soon"}
+            {product.colors.length !== 0 ? "Thêm" : "Sắp về"}
           </a>
         </div>
       </div>

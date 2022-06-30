@@ -87,7 +87,8 @@ const Chat = (props: Props) => {
   };
   const submit = async (data: any, e: any) => {
     e.preventDefault();
-    await actionChat.SendMessage({ _id, message: data.message });
+    if (data.message !== "")
+      await actionChat.SendMessage({ _id, message: data.message });
     reset();
   };
   const handleNew = async (data: any) => {
@@ -155,30 +156,29 @@ const Chat = (props: Props) => {
         </div>
         <div className="col-lg-6 col-6 text-left">
           <form action="">
-            <div className="input-group">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search for products"
-              />
-              <div className="input-group-append">
-                <span className="input-group-text bg-transparent text-primary">
-                  <i className="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
+            <div className="input-group"></div>
           </form>
         </div>
         <div className="col-lg-3 col-6 text-right">
           <div>
-            <a href="" className="btn border">
+            <Link to="/notification" className="btn border">
               <i className="fas fa-heart text-primary"></i>
-              <span className="badge">0</span>
-            </a>
-            <a href="" className="btn border">
+              <span className="badge">
+                {!stateAuth.isLoggedIn
+                  ? 0
+                  : stateAuth.data?.data?.notifications_length
+                  ? stateAuth.data?.data?.notifications_length
+                  : 0}
+              </span>
+            </Link>
+            <Link to="/cart" className="btn border">
               <i className="fas fa-shopping-cart text-primary"></i>
-              <span className="badge">0</span>
-            </a>
+              <span className="badge">
+                {stateAuth.isLoggedIn
+                  ? stateAuth.data.data.bag_items_length
+                  : 0}
+              </span>
+            </Link>
           </div>
         </div>
         <div

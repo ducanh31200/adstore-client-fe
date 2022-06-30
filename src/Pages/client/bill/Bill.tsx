@@ -187,14 +187,14 @@ const Bill = () => {
           style={{ minHeight: "300px" }}
         >
           <h1 className="font-weight-semi-bold text-uppercase mb-3">
-            Thông báo
+            Đơn hàng
           </h1>
           <div className="d-inline-flex">
             <p className="m-0">
-              <Link to="/ ">Home</Link>
+              <Link to="/ ">Trang chủ</Link>
             </p>
             <p className="m-0 px-2">-</p>
-            <p className="m-0">Shop</p>
+            <p className="m-0">Đơn hàng</p>
           </div>
         </div>
       </div>
@@ -213,16 +213,16 @@ const Bill = () => {
               <option>Chọn</option>
 
               <option key="1" value="Preparing">
-                Preparing
+                Đâng chuẩn bị
               </option>
               <option key="2" value="Delivering">
-                Delivering
+                Đang giao hàng
               </option>
               <option key="3" value="Done">
-                Done
+                Đã hoàn thành
               </option>
               <option key="4" value="Cancel">
-                Cancelled
+                Dã hủy
               </option>
             </select>
           </div>
