@@ -29,8 +29,12 @@ const BillManagement = () => {
     (async () => {
       const filter: any = {};
       for (const entry of searchParams.entries()) {
-        if (entry[0] === "search") filter.search = entry[1];
-        else if (entry[0] === "status") filter.status = entry[1];
+        if (entry[0] === "search") {
+          const head = "84";
+          const number = entry[1].slice(1);
+          entry[1] = head.concat(number);
+          filter.search = entry[1];
+        } else if (entry[0] === "status") filter.status = entry[1];
       }
       await actionBill.GetListBill(filter);
 

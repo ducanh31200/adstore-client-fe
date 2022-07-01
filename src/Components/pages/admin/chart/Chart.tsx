@@ -189,15 +189,19 @@ const Chart = (props: Props) => {
         </AreaChart>
       </ResponsiveContainer>
       <div className="chart">
-        <div className="title">Sản phẩm bán chạy</div>
+        <div className="title">
+          {type === "import" ? "Sản phẩm nhập kho" : "Sản phẩm bán chạy"}
+        </div>
         <table className="content-table" style={{ width: "100%" }}>
           <thead>
             <tr>
               <th>Mã sản phẩm</th>
               <th>Tên sản phẩm</th>
-              <th>Số lượng đã bán</th>
+              <th>
+                {type === "import" ? "Số lượng nhập kho" : "Số lượng đã bán"}
+              </th>
               <th>Số lượng trong kho</th>
-              <th>Trạng thái</th>
+              <th>Tổng cộng</th>
             </tr>
           </thead>
           <tbody>

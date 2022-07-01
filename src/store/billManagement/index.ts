@@ -1,6 +1,6 @@
 import { createHook, createStore } from "react-sweet-state";
 import { string } from "yup";
-import { GetListBill, UpdateBill } from "./billManagement.action";
+import { GetListBill, UpdateBill, VerifyBill } from "./billManagement.action";
 import { selector } from "./billManagement.selector";
 
 export interface Color {
@@ -25,7 +25,7 @@ const initialState: State = {
   data: [{}],
   count: 0,
 };
-const actions = { GetListBill, UpdateBill };
+const actions = { GetListBill, UpdateBill, VerifyBill };
 
 const Store = createStore({
   initialState,

@@ -31,13 +31,17 @@ const ExportData = (props: Props) => {
       dateEnd: dateEnd,
       reset: stateReset,
     };
-    var results = await axios.post(
-      "https://adstoresv-hint.herokuapp.com/model/build",
-      data,
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    var results = await axios({
+      url: "https://adstoresv-hint.herokuapp.com/model/build",
+      data: data,
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    console.log(results);
+    if (results.status === 200) {
+      if (results.data.success === "Fail") notifyError(results.data.msg);
+      else notifySuccess(results.data.msg);
+    }
   };
   return (
     <div className="new">

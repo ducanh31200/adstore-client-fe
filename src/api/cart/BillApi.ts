@@ -22,6 +22,10 @@ const BillApi = {
     const url = "bill/list";
     return axiosClient.post(url, data);
   },
+  verify(data: any): Promise<ReturnReponse<any>> {
+    const url = "bill/verify";
+    return axiosClient.post(url, data);
+  },
 };
 
 export default BillApi;

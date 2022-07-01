@@ -34,7 +34,19 @@ export const UpdateBill =
       });
       setState({ ...getState(), data: newList });
       return true;
-
+    }
+    return false;
+  };
+export const VerifyBill =
+  (data: any) =>
+  async ({ setState, getState }: Actions) => {
+    const result = await BillApi.verify(data);
+    if (result.status === 200) {
+      const newList = [...getState().data].map((item: any) => {
+        if (item._id === data._id) item.verify = true;
+        return item;
+      });
+      setState({ ...getState(), data: newList });
       return true;
     }
     return false;

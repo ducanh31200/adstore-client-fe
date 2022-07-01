@@ -9,6 +9,7 @@ import { ContainerModal } from "../../../Components/common/ContainerModal";
 import BillDetailModal from "../../../Components/pages/client/Bill/BillDetailModal";
 import CancelModal from "../../../Components/pages/client/Bill/CancelModal";
 import UpdateBill from "../../../Components/pages/admin/bill/UpdateBill";
+import { notifyError, notifySuccess } from "../../../utils/notify";
 
 export const userColumns = [
   { field: "id", headerName: "ID", width: 50 },
@@ -120,11 +121,17 @@ const BillTable = () => {
     setIDBill(_id);
     openUpdateBillModal();
   };
+  const handleVerifyBill = async (_id: any) => {
+    const res = await actionBill.VerifyBill({ _id: _id });
+    if (res) {
+      notifySuccess("Cập nhật đơn thành công !");
+    } else notifyError("Xảy ra lỗi vui lòng thử lại !");
+  };
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 220,
+      width: 300,
       renderCell: (params: any) => {
         return (
           <div className="cellAction">
@@ -147,6 +154,14 @@ const BillTable = () => {
               }
             >
               Cập nhật
+            </div>
+            <div
+              className={!params.row.verify ? "enableButton" : "disableButton"}
+              onClick={() =>
+                !params.row.verify ? handleVerifyBill(params.row._id) : {}
+              }
+            >
+              Xác minh
             </div>
           </div>
         );
